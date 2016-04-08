@@ -1,0 +1,388 @@
+{% extends "base.html" %}
+
+{% block title %} WEBSHELL(MORE SERVER) {% endblock title %}
+
+{% block script %}
+{#    CSS引入#}
+    <link href="/templates/css/word_model/css/progress_bar_default.css" rel="stylesheet" type="text/css">
+    <link href="/templates/css/word_model/css/progress_bar_normalize.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="/templates/js/jquery.progress.js"></script>
+    <link href="/templates/css/base_css.css" rel="stylesheet">
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+    var progress_obj = new Object();
+    var html_random_id = Math.round(Math.random()*100000);
+    console.log(html_random_id);
+    {% for websshbase in class_li  %}
+        var progress_bar_var{{ websshbase.get_ipreplace }} = $("#{{ websshbase.get_ipreplace }}progress_bar").Progress({
+            percent: 0,
+            width: 1200,
+            height: 40,
+            fontSize: 16
+        });
+        progress_obj[{{ websshbase.get_ipreplace }}] = progress_bar_var{{ websshbase.get_ipreplace }};
+    {% endfor %}
+
+
+    $(function(){
+        var s = new WebSocket("ws://" + window.location.host + "{% url 'script_websocket_runshell' %}");
+{#        开启websocket连接#}
+        s.onopen = function(){
+            console.log('open');
+            s.send("thread/"+html_random_id);
+        };
+{#            发送数据方法#}
+        SendServerMessage(s,html_random_id);
+{#        上传下载文件#}
+        UpLoadFile(s,html_random_id);
+        DownLoadFile(s,html_random_id);
+{#        关闭后台线程#}
+        ShutDownConnect(s,html_random_id);
+{#        接收数据#}
+        s.onmessage = function(message){
+{#            后台数据JSON化#}
+            var objJSON = JSON.parse(message.data);
+            HandleJson(objJSON,progress_obj);
+{#            处理JSON序列#}
+        };
+{#        开启线程#}
+        $("#master_connect").click(function(){
+            s.send('start/'+html_random_id);
+            console.log('start thread');
+        });
+{#        关闭连接#}
+{#        s.close();#}
+        ExitWeb(s,html_random_id);
+        window.s = s;
+
+
+{#        });#}
+    });
+        });
+</script>
+
+
+
+
+
+{#    页面处理服务端返回信息#}
+<script>
+{#接收数据类型 数据类型{ip:{'recmessage':'','syserror':'','connectstatu':0,1,2,'uploaddownloadfile':{'statu':n/s/r,'percent':'0-100'},ip:....}#}
+function HandleJson(objJSON,progress_obj){
+{#    循环JSON#}
+    $.each(objJSON,function(ip,val_di){
+        if (ip == 'alert'){
+            document.getElementById("alert_message").innerHTML = val_di;
+        }
+        else {
+            var ip_replace = ip.replace(/[.]/g, '');
+            {#        获取mastre控件#}
+            var master_td = document.getElementById(ip_replace + "masterstatu");
+            {#        获取table控件#}
+{#            var table = document.getElementById(ip_replace);#}
+            {#        展示数据赋值#}
+            {#        修改标签a#}
+            var connect_statu_val = val_di["connectstatu"];
+            ShowAValue(ip_replace, connect_statu_val, master_td);
+            {#        修改textarea控件#}
+            var rec_text_val = val_di["recmessage"];
+            ChangeTextArea(ip_replace, rec_text_val);
+            var syserror_val = val_di["syserror"];
+            {#        修改错误信息控件#}
+            ChangeErrorText(ip_replace, syserror_val);
+            {#        处理上传下载状态#}
+            ChangeOrShowProgressBar(ip_replace, val_di['uploaddownloadfile'], progress_obj[ip_replace]);
+        }
+
+    });
+}
+</script>
+<script>
+{#修改标签A#}
+function ShowAValue(ip_replace,connect_statu_val,master_td){
+{#    给master td中<a>标签赋值，根据值不同展示不同颜色#}
+    {#        获取标签master_a#}
+    var master_a=master_td.children[0];
+    {#    获取table内a标签#}
+    var table_a = document.getElementById(ip_replace+"statu");
+    if (connect_statu_val=="1"){
+        master_a.innerText = "已连接";
+        master_a.style.color="#1EFF0E";
+        table_a.innerText = "已连接";
+        table_a.style.color = "#1EFF0E";
+    }else if (connect_statu_val =="2"){
+        master_a.innerText = "线程错误";
+        master_a.style.color="#FF0FFF";
+        table_a.style.color="#FF0FFF";
+        table_a.innerText="线程错误";
+    }else if (connect_statu_val == "9"){
+        master_a.innerText = "未连接";
+        master_a.style.color="#FF0C15";
+        table_a.style.color="#FF0C15";
+        table_a.innerText="未连接";
+    }
+}
+</script>
+<script>
+{#修改textarea数据#}
+function ChangeTextArea(ip_replace,rec_text_val){
+{#    获取textarea控件#}
+    var table_textarea = document.getElementById(ip_replace+"text");
+    if (rec_text_val.length!=0) {
+        table_textarea.innerHTML += rec_text_val;
+        var end_textarea = table_textarea.scrollHeight;
+        document.getElementById(ip_replace+"text").scrollTop = end_textarea;
+    }
+
+}
+</script>
+<script>
+{#修改错误textarea#}
+function ChangeErrorText(ip_replace,syserror_val){
+{#    获取错误textarea控件#}
+    var error_textarea = document.getElementById(ip_replace+"syserror");
+    if (syserror_val.length!=0){
+        error_textarea.innerHTML += syserror_val+"\r\n"
+    }
+}
+</script>
+{#修改进度条长度/是否显示#}
+<script>
+function ChangeOrShowProgressBar(ip_replace,uploaddownloadfile_di,progress_bar){
+    var statu = uploaddownloadfile_di['statu'];
+    var percent_val = uploaddownloadfile_di['percent'];
+    var tr_id = document.getElementById(ip_replace+"uploadfiletr");
+{#    var progress_bar = document.getElementById(ip_replace+"progress_bar");#}
+    if (statu == 'n') {
+        progress_bar.percent(percent_val);
+        tr_id.style.display = "none";
+
+    }else{
+        tr_id.style.display = "table-row";
+        progress_bar.percent(percent_val)
+    }
+
+}
+</script>
+
+
+
+{#    页面向后台发送信息#}
+<script>
+function SendServerMessage(s,html_random_id){
+{#    全体发送#}
+    $("#master_send").click(function () {
+        var master_send_text = document.getElementById("master_sendtext");
+        var str = "{\"all/"+html_random_id+"\":{\"commander\":\"send\",\"commandertext\":\""+master_send_text.value+"\"}}";
+{#        console.log(str);#}
+        s.send(str);
+    });
+{#    单发送#}
+{% for websshbase in class_li  %}
+    $("#{{ websshbase.get_ipreplace }}send").click(function(){
+        var single_send_text = document.getElementById("{{ websshbase.get_ipreplace }}sendtext");
+        var str = "{\"single/"+html_random_id+"\":{\"commander\":\"send\",\"commandertext\":\""+single_send_text.value+"\",\"ip\":\"{{ websshbase.get_ip}}\"}}";
+        s.send(str);
+    });
+{% endfor %}
+}
+</script>
+
+
+
+
+
+{#    断开连接#}
+<script>
+function ShutDownConnect(s,html_random_id){
+    $("#master_disconnect").click(function(){
+        s.send("disconnect/"+html_random_id);
+{#        s.send("closeconnect");#}
+    });
+{#    单发送#}
+{% for websshbase in class_li  %}
+    $("#{{ websshbase.get_ipreplace }}disconnect").click(function(){
+        var str = "{\"single/"+html_random_id+"\":{\"commander\":\"disconnect\",\"commandertext\":\"\",\"ip\":\"{{ websshbase.get_ip}}\"}}";
+        s.send(str)
+
+    });
+{% endfor %}
+}
+</script>
+
+{#      上传文件#}
+<script>
+function UpLoadFile(s,html_random_id){
+    $("#master_uploadfile").click(function(){
+        var localpath = document.getElementById("master_file_name");
+        var remotepath = document.getElementById("master_linux");
+        var use_user = document.getElementById("use_user");
+        var str = "{\"all/"+html_random_id+"\":{\"commander\":\"uploadfile\",\"localpath\":\""+localpath.value+"\",\"remotepath\":\""+remotepath.value+"\",\"user\":\""+use_user.value+"\"}}";
+        s.send(str)
+    });
+
+    {% for websshbase in class_li  %}
+    $("#{{ websshbase.get_ipreplace }}uploadfile").click(function(){
+        var localpath = document.getElementById("{{ websshbase.get_ipreplace }}file_name");
+        var remotepath = document.getElementById("{{ websshbase.get_ipreplace }}linux");
+        var use_user = document.getElementById("use_user");
+        var str = "{\"single/"+html_random_id+"\":{\"commander\":\"uploadfile\",\"ip\":\"{{websshbase.get_ip}}\",\"localpath\":\""+localpath.value+"\",\"remotepath\":\""+remotepath.value+"\",\"user\":\""+use_user.value+"\"}}";
+        s.send(str)
+
+    });
+{% endfor %}
+}
+{#下载文件#}
+function DownLoadFile(s,html_random_id){
+    $("#master_downloadfile").click(function(){
+        var localpath = document.getElementById("master_windows");
+        var remotepath = document.getElementById("master_downloadlinux");
+        var use_user = document.getElementById("use_user");
+        var str = "{\"all/"+html_random_id+"\":{\"commander\":\"downloadfile\",\"localpath\":\""+localpath.value+"\",\"remotepath\":\""+remotepath.value+"\",\"user\":\""+use_user.value+"\"}}";
+        s.send(str)
+    });
+
+    {% for websshbase in class_li  %}
+    $("#{{ websshbase.get_ipreplace }}downloadfile").click(function(){
+        var localpath = document.getElementById("{{ websshbase.get_ipreplace }}windows");
+        var remotepath = document.getElementById("{{ websshbase.get_ipreplace }}downloadlinux");
+        var use_user = document.getElementById("use_user");
+        var str = "{\"single/"+html_random_id+"\":{\"commander\":\"downloadfile\",\"ip\":\"{{websshbase.get_ip}}\",\"localpath\":\""+localpath.value+"\",\"remotepath\":\""+remotepath.value+"\",\"user\":\""+use_user.value+"\"}}";
+        s.send(str)
+
+    });
+{% endfor %}
+}
+</script>
+
+{#    关闭页面#}
+<script>
+function ExitWeb(s,html_random_id){
+    window.onbeforeunload = function()  //author: meizz
+    {
+      if (s){
+          s.send('shutdown/'+html_random_id);
+          s.close();
+      }
+    }
+}
+</script>
+{% endblock script %}
+
+
+
+
+
+{% block content %}
+<div id="alert_message" style="font-size: large;font-weight: 800"></div>
+<table class="tablec" border="4" id="master_table">
+    <input type="hidden" name="use_user" id="use_user" value="{{ user }}" />
+    <tbody>
+        <tr class="trpublic">
+            <td>IP</td>
+            <td>USER</td>
+            <td>组名</td>
+            <td>连接状态</td>
+        </tr>
+    {% for websshbase in class_li %}
+        <tr>
+            <td>{{ websshbase.get_ip }}</td>
+            <td>{{ websshbase.get_user }}</td>
+            <td>{{ websshbase.get_groupname }}</td>
+            <td id="{{ websshbase.get_ipreplace }}masterstatu"><a style="font-weight:bold;color: #000000">{{ websshbase.get_connectstatu }}</a></td>
+        </tr>
+    {% endfor %}
+        <tr class="trinput">
+            <td colspan="3"><input type="text" id="master_sendtext" class="sendinput"></td>
+            <td><input type="button" id="master_send" value="确定"></td>
+        </tr>
+        <tr class="linux">
+            <td>上传文件</td>
+            <td colspan="2">
+                <select name="master_file_name" id="master_file_name">
+                    {% for file_name in file_name_list %}
+                        <option value = "{{ file_name }}">{{ file_name }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td><label for="master_linux">服务器文件路径<input type="text" id="master_linux" value=""></label> </td>
+        </tr>
+        <tr class="linux">
+            <td>下载文件</td>
+            <td colspan="2"><label for="master_windows">文件名<input type="text" id="master_windows"></label></td>
+            <td><label for="master_downloadlinux">服务器文件路径<input type="text" id="master_downloadlinux"></label></td>
+        </tr>
+        <tr class="trpublic">
+            <td><input type="button" id="master_connect" value="连接"></td>
+            <td><input type="button" id="master_disconnect" value="断开"></td>
+            <td><input type="button" id="master_uploadfile" value="上传文件"></td>
+            <td><input type="button" id="master_downloadfile" value="下载文件"></td>
+        </tr>
+    </tbody>
+</table>
+
+
+
+
+{% for websshbase in class_li %}
+<hr noshade="true" size="8" color="#8DFF94" style="height: 3px">
+<table class="tablec" border="4" id="{{ websshbase.get_ipreplace }}">
+    <tbody>
+        <tr class="trpublic">
+            <td>IP</td>
+            <td>USER</td>
+            <td>组名</td>
+            <td>连接状态</td>
+        </tr>
+        <tr>
+            <td>{{ websshbase.get_ip }}</td>
+            <td>{{ websshbase.get_user }}</td>
+            <td>{{ websshbase.get_groupname }}</td>
+            <td id="{{ websshbase.get_ipreplace }}statu"><a style="font-weight:bold;color: #000000">{{ websshbase.get_connectstatu }}</a></td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                <textarea id="{{ websshbase.get_ipreplace }}text" class="rectextstyl">
+                    {{ websshbase.get_rectext }}
+                </textarea>
+            </td>
+        </tr>
+        <tr class="trinput">
+            <td colspan="3"><input type="text" id="{{ websshbase.get_ipreplace }}sendtext" class="sendinput"></td>
+            <td><input type="button" id="{{ websshbase.get_ipreplace }}send"  value="确定"></td>
+        </tr>
+        <tr class="linux">
+            <td>上传文件</td>
+            <td colspan="2">
+                <select name="{{ websshbase.get_ipreplace }}file_name" id="{{ websshbase.get_ipreplace }}file_name">
+                    {% for file_name in file_name_list %}
+                        <option value = "{{ file_name }}">{{ file_name }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td><label for="{{ websshbase.get_ipreplace }}linux">{{ websshbase.get_ip }}:服务器文件路径<input type="text" id="{{ websshbase.get_ipreplace }}linux"></label> </td>
+        </tr>
+        <tr class="linux">
+            <td>下载文件</td>
+            <td><label for="{{ websshbase.get_ipreplace }}windows">文件名<input type="text" id="{{ websshbase.get_ipreplace }}windows"/></label><td>
+            <td><label for="{{ websshbase.get_ipreplace }}downloadlinux">{{ websshbase.get_ip }}:服务器文件路径<input type="text" id="{{ websshbase.get_ipreplace }}downloadlinux"/></label></td>
+        </tr>
+        <tr id="{{ websshbase.get_ipreplace }}uploadfiletr" style="display: none">
+            <td colspan="4">
+                <div class="htmleaf-content">
+                <svg id="{{ websshbase.get_ipreplace }}progress_bar"></svg>
+                </div>
+            </td>
+        </tr>
+        <tr class="trpublic">
+            <td><textarea id="{{ websshbase.get_ipreplace }}syserror" class="syserrortext"></textarea></td>
+            <td><input type="button" id="{{ websshbase.get_ipreplace }}disconnect" value="断开"></td>
+            <td><input type="button" id="{{ websshbase.get_ipreplace }}uploadfile" value="上传文件"></td>
+            <td><input type="button" id="{{ websshbase.get_ipreplace }}downloadfile" value="下载文件"></td>
+        </tr>
+    </tbody>
+</table>
+{% endfor %}
+{% endblock content %}

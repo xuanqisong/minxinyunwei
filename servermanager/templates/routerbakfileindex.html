@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %} 首页测试 {% endblock title %}
+
+{% block content %}
+<form action="{% url 'servermanager_downloadbakfile' %}" method="post">
+    <table width="96%" border="8">
+    <tr><td colspan="2"><h1>路由器配置文件备份记录</h1></td></tr>
+    <tr>
+        <td width="10%">
+    <div class="container" style="width: 300px">
+
+{#        文件列表左侧#}
+
+      <div class="row" style="text-align: left;">
+        <div class="col-sm-12">
+          <div id="treeview"></div>
+        </div>
+      </div>
+        </div>
+        </td>
+        <td width="90%">
+      {#    文件详细内容右侧#}
+      <div id="detail_file"></div>
+
+        </td>
+
+    </tr>
+    </table>
+</form>
+
+    <script src="/templates/treemodel/js/bootstrap-treeview.js"></script>
+    <script type="text/javascript">
+
+      function buildDomTree() {
+        var data = {{ data|safe }};
+        return data;
+      }
+
+      $(function() {
+
+        var options = {
+          bootstrap2: false,
+          showTags: true,
+          showBorder:false,
+          levels: 1,
+          data: buildDomTree()
+        };
+
+        $('#treeview').treeview(options);
+          $('#treeview').on('nodeSelected',function(event,data){
+{#              子节点数据#}
+        var c_file_name = data.text;
+{#              父节点#}
+             var f_n = $('#treeview').treeview('getParent', data.nodeId);
+        var f_dir_name = f_n.text;
+              {#        详细消息#}
+        var td_detail = document.getElementById("detail_file");
+              var re_detail = '';
+          $.getJSON('{% url 'ajax_servermanagerdetailbakfile' %}',{'c_file_name':c_file_name,'f_dir_name':f_dir_name},function(di){
+              //返回值 di 在这里是一个字典
+              $.each(di,function(name,value){
+                  re_detail += '<input name="fpath" type="text" readOnly="true" value="'+f_dir_name+'/'+c_file_name+' "style="width:50%"/>';
+                  re_detail += '<textarea style="width: 100%;height: 300px;background-color: #d8ffc6;font-weight: bold;">';
+                  re_detail += value;
+                  re_detail += '</textarea>';
+                  re_detail += '<input type="submit" value="下载" />'
+              });
+              td_detail.innerHTML=re_detail;
+          });
+
+});
+
+      });
+
+
+    </script>
+{% endblock content %}

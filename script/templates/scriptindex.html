@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %} 脚本 {% endblock title %}
+
+{% block content %}
+<ul>
+<li>
+    <a href="{% url 'sshmanager' %}">SSH配置</a>
+</li>
+<li>
+    <a href="{% url 'status_ip_ztcxindex' %}">手动连接</a>
+</li>
+<li>
+    <a href="{% url 'script_show_server_group' %}">批量配置</a>
+</li>
+<li>
+    <a href="{% url 'script_file_manager' %}">文件管理</a>
+</li>
+</ul>
+
+{% endblock content %}

@@ -1,0 +1,1 @@
+在linux下启动djnago服务

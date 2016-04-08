@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %} Linux病毒扫描 {% endblock title %}
+
+{% block script %}
+
+    <script>
+        $(document).ready(function(){
+           $("#group_name").change(function(){
+               var group_name =$("#group_name").val();
+               var option_value = "";
+               var obselect = document.getElementById("server_ip");
+               $.getJSON('{% url 'antivirus_group_serverip' %}',{'group_name':group_name},function(di){
+                   $.each(di,function(ind,serveriplist){
+                   for (i=0;i<serveriplist.length;i++){
+                       option_value +='<option value="'+serveriplist[i]+'">'+serveriplist[i]+'</option>'
+                   }
+                   });
+                   obselect.innerHTML = option_value;
+               })
+           }) ;
+        });
+    </script>
+    <script>
+        $(document).ready(function(){
+           $("#add_check_list").click(function(){
+               var group_name = $("#group_name").val();
+               var server_ip = $("#server_ip").val();
+               var dir_name = $("#dir_name").val();
+               var hold_name = server_ip+":"+dir_name;
+               var html_char = '';
+{#               var obtable = document.getElementById("tbody");#}
+               html_char += '<tr><td>'+group_name+'</td>';
+               html_char += '<td><input type="text" name="dir_hole_name" value='+hold_name+' readonly="true"></td></tr>';
+               $("#tbody").prepend(html_char);
+
+           });
+        });
+    </script>
+    <script>
+        $(document).ready(function(){
+            $("#scan_type").change(function () {
+               var scan_valu = $("#scan_type").val();
+                var detail_valu = ''
+                if (scan_valu == 'contscan_file'){
+                    detail_valu = '实现扫描指定的文件或目录，在扫描时发现错误或者病毒将不终止';
+                }
+                else if (scan_valu =='multiscan_file'){
+                    detail_valu = '实现多线程扫描指定的文件或目录，多核环境速度更快，在扫描时发现错误或病毒将不终止';
+                }
+                else{
+                    detail_valu = '实现扫描指定的文件或目录，在扫描时发生错误或发现病毒将终止';
+                }
+                $("#detail").html(detail_valu)
+
+            });
+        })
+    </script>
+{% endblock script %}
+
+{% block content %}
+    <p style="font-size: large;font-weight: bold">{{ alert|safe }}</p>
+<form action="{% url 'antivirus_manual_check' %}" method="post">
+    <select name="group_name" id="group_name">
+            <option value = "">-----请选择---</option>
+        {% for group_name in server_grouplist %}
+            <option value = "{{ group_name }}">{{ group_name }}</option>
+        {% endfor %}
+    </select>
+    <select name="server_ip" id="server_ip">
+    </select>
+    <input type="text" name="dir_name" id="dir_name">
+    <input type="button" name="add_check_list" id="add_check_list" value="添加">
+    <table width="96%" border="5">
+        <tbody id="tbody">
+
+        </tbody>
+    </table>
+    <select name="scan_type" id="scan_type">
+        <option value="contscan_file">---请选择扫描方式--</option>
+        <option value="contscan_file">单线程扫描</option>
+        <option value="multiscan_file">多线程扫描</option>
+        <option value="scan_file">可中断的扫描</option>
+    </select>
+    <div id="detail" style="font-size:large;color: darkred;font-weight:bold"></div>
+    <input type="submit" value="确定扫描">
+</form>
+
+{% endblock content %}

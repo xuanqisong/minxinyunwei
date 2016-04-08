@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %} 首页测试 {% endblock title %}
+
+{% block content %}
+<ul>
+<li>
+    <a href="{% url 'servermanager_routermanager' %}">路由配置</a>
+</li>
+<li>
+    <a href="{% url 'showserverused' %}">使用情况</a>
+</li><li>
+    <a href="{% url 'servernamager_showbakfile' %}">配置文件备份</a>
+</li>
+</ul>
+
+{% endblock content %}

@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %} 图表测试 {% endblock title %}
+
+{% block script %}
+<script type="text/javascript" src="http://cdn.hcharts.cn/jquery/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="/templates/js/jtopo-0.4.8-min.js"></script>
+    <script type="text/javascript" src="/templates/js/toolbar.js"></script>
+
+
+	<script>
+		$(document).ready(function(){
+            var canvas = document.getElementById('canvas');
+            var stage = new JTopo.Stage(canvas); // 创建一个舞台对象
+            showJTopoToobar(stage);
+            var scene = new JTopo.Scene(stage); // 创建一个场景对象
+            var node = new JTopo.Node("Hello");    // 创建一个节点
+            node.setLocation(300,200);    // 设置节点坐标
+            scene.add(node); // 放入到场景中
+            });
+
+	</script>
+
+
+    <script>
+    var stage;
+		$(document).ready(function(){
+			var canvas = document.getElementById('canvas');
+			stage = new JTopo.Stage(canvas);
+			//显示工具栏
+			showJTopoToobar(stage);
+
+			var scene = new JTopo.Scene();
+			scene.background = './img/bg.jpg';
+			stage.add(scene);
+
+			// 不指定布局的时候，容器的布局为自动(容器边界随元素变化）
+			var container = new JTopo.Container('边界自动变化');
+			container.textPosition = 'Middle_Center';
+			container.fontColor = '100,255,0';
+			container.font = '18pt 微软雅黑';
+			container.borderColor = '255,0,0';
+			container.borderRadius = 30; // 圆角
+			scene.add(container);
+
+			for(var i=0; i<5; i++){
+				var node = new JTopo.Node("A_"+i);
+				node.textPosition = "Middle_Center";
+				node.setLocation(300+ Math.random() * 300, 200+ Math.random() * 200);
+				scene.add(node);
+				container.add(node);
+			}
+			scene.add(new JTopo.Link(container.childs[0], container.childs[1]));
+			scene.add(new JTopo.Link(container.childs[2], container.childs[3]));
+
+			// 流式布局（水平、垂直间隔均为10)
+			var flowLayout = JTopo.layout.FlowLayout(10, 10);
+
+			// 网格布局(4行3列)
+			var gridLayout = JTopo.layout.GridLayout(4, 3);
+
+			var container2 = new JTopo.Container('点击切换布局');
+			container2.layout = flowLayout;
+			container2.fillColor = '10,10,100';
+			container2.setBound(10, 10, 300, 200);
+			scene.add(container2);
+
+			for(var i=0; i<12; i++){
+				var node = new JTopo.Node("F_" + i);
+				node.textPosition = "Middle_Center";
+				scene.add(node);
+				container2.add(node);
+			}
+
+			container2.click(function(){
+				if(container2.layout === flowLayout){
+					container2.layout = gridLayout;
+				}else{
+					container2.layout = flowLayout;
+				}
+			});
+		});
+    </script>
+{% endblock script %}
+
+{% block content %}
+				<div id="tool">
+                    <canvas width="850" height="550" id="canvas" style="background-color: #120433"></canvas>
+				</div>
+
+
+{% endblock content %}

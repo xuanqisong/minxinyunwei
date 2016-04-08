@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %} Linux病毒扫描 {% endblock title %}
+
+{% block content %}
+<ul>
+<li>
+    <a href="{% url 'antivirus_configuration_job' %}">定时扫描时间配置</a>
+</li>
+<li>
+    <a href="{% url 'antiviurs_once_configuration' %}">手动扫描</a>
+</li>
+</ul>
+
+{% endblock content %}

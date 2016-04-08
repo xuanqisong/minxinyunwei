@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %} 服务器选择 {% endblock title %}
+
+
+
+{% block script %}
+<script xmlns="http://www.w3.org/1999/html">
+         $(document).ready(function () {
+             $("#group_name").change(function () {
+               //change事件
+                 var name = $("#group_name").val();
+          var table_str = '<tr bgcolor="#fbd5ff"><td>IP</td><td>用户名</td><td>服务器组名</td></tr>';
+
+          $.getJSON('{% url 'script_ajax_server_detail' %}',{'name':name},function(di){
+              //返回值 di 在这里是一个字典
+              $.each(di,function(ip,detaillist){
+                  table_str += '<tr onclick="AddSelected(this)">';
+                  table_str += '<td style="width: 602px;" >'+ip+'</td>';
+                  table_str += '<td>'+detaillist[0]+'</td>'+'<td>'+detaillist[1]+'</td>';
+                  table_str += '</tr>'
+              });
+
+              $("#tbody").html(table_str);
+          })
+             });
+         });
+</script>
+<script>
+function AddSelected(obj){
+{#测试#}
+{#    测试#}
+    var ip_val = obj.children[0].innerText;
+    var user_val = obj.children[1].innerText;
+    var group_val = obj.children[2].innerText;
+
+    var end_table = document.getElementById("tbodyselected");
+    if(end_table.children.length<1){
+        end_table.innerHTML +='<tr bgcolor="#b9ffcd"><td colspan="2">已选取服务器</td><td bgcolor="#2d0534"><input type="submit" value="确定"/></td></tr>';
+        end_table.innerHTML +='<tr bgcolor="#b9ffcd"><td style="width: 602px;">IP</td><td>用户名</td><td>组名</td></tr>';
+    }
+    var check_ip = true;
+    for (var i=0;i<end_table.children.length;i++){
+        var end_table_tr = end_table.children[i];
+        if (i>1) {
+            var end_table_ip = end_table_tr.children[0].innerText;
+            if (ip_val==end_table_ip){
+                check_ip = false;
+            }
+        }
+    }
+    if (check_ip) {
+        end_table.innerHTML += '<tr onclick="RemoveSelect(this)" ><td><input type="checkbox" checked onclick="return false;" name="connect_ip" value="'+ip_val+'">' + ip_val + '</td><td>' + user_val + '</td><td>' + group_val + '</td></tr>';
+    }
+
+}
+</script>
+<script>
+function RemoveSelect(obj){
+    var end_table = obj.parentNode;
+    obj.parentNode.removeChild(obj);
+    if (end_table.children.length==2){
+        end_table.innerHTML = '';
+    }
+}
+</script>
+{% endblock script %}
+
+
+
+{% block content %}
+<form action="{% url 'script_getconnectserverip' %}" method="post">
+	<select name="group_name" id="group_name">
+        <option value="">----请选择服务器---</option>
+		{% for group in servergrouplist %}
+			<option value = "{{ group }}">{{ group }}</option>
+		{% endfor %}
+	</select>
+<br>
+<table width="96%" border="8" id="start">
+    <tbody id="tbody">
+    </tbody>
+
+</table>
+<hr noshade="true" size="10" color="#8DFF94" style="height: 5px">
+<table width="96%" border="8" id="end">
+    <tbody id="tbodyselected">
+    </tbody>
+</table>
+</form>
+{% endblock content %}

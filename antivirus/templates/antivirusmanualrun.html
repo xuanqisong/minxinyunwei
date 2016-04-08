@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %} Linux病毒扫描 {% endblock title %}
+
+{% block script %}
+     <script type="text/javascript">//<![CDATA[
+    $(function () {
+        $('#start').click(function () {
+            var old_vvalue = '';
+            if(window.s){
+                window.s.close()
+            }
+            var s = new WebSocket("ws://" + window.location.host + "/antivirus/antivirusmanualstart");
+{#            var s = new WebSocket("ws://10.10.7.137:8080/antivirus/antivirusmanualstart");#}
+            s.onopen = function () {
+                console.log('WebSocket open');
+                window.s.send("start");
+            };
+            s.onmessage = function (e) {
+                var objJSON = JSON.parse(e.data);
+                var kvalue = '';
+                var vvalue = '';
+                $.each(objJSON,function(k,v){
+                   kvalue = k;
+                   vvalue = v;
+                   if (kvalue == 'message'){
+                       if (vvalue == "check down!"){
+                           if (window.s){
+                               window.s.close();
+                           }
+                       }
+                       $("#messagecontainer").prepend('<a style = "font-size: large;color: #000000;font-weight: bold">'+vvalue+'</a></br>')
+                   }
+                   else {
+                       if (vvalue == '1') {
+                           $('#stat'+kvalue).empty();
+                           {# 测试已经连接 #}
+                           $('#stat'+kvalue).prepend('<a style="font-weight:bold;color: #25FF08">' + '已连接' + '</a>')
+                       }
+                       else if (vvalue == '2') {
+                           $('#stat'+kvalue).empty();
+                           {# 开始检查 #}
+                           $('#stat'+kvalue).prepend('<a style="font-weight:bold;color: #0201FF">' + '正在查毒' + '</a>')
+                       }
+                       else if(vvalue == '3'){
+                           if (old_vvalue != '5'){
+                               $('#stat'+kvalue).empty();
+                           }
+                           {# 检查结束 #}
+                           $('#stat'+kvalue).prepend('<a style="font-weight:bold;color: #FF06D1">' + '检查结束' + '</a>')
+                       }
+                       else if(vvalue == '4'){
+                           $('#stat'+kvalue).empty();
+                           {# 连接异常 #}
+                           $('#stat'+kvalue).prepend('<a style="font-weight:bold;color: #FC0A0C">' + '连接异常' + '</a>')
+                       }
+                       else if(vvalue == '5'){
+                           $('#stat'+kvalue).empty();
+                           {# 手动停止 #}
+                           $('#stat'+kvalue).prepend('<a style="font-weight:bold;color: #FFB506">' + '手动停止' + '</a>')
+                       }
+                       else if(vvalue == '6'){
+                           $('#stat'+kvalue).empty();
+                           {# 手动停止 #}
+                           $('#stat'+kvalue).prepend('<a style="font-weight:bold;color: #0201FF">' + '正在停止' + '</a>')
+                       }
+                        old_vvalue = vvalue
+                   }
+                });
+            };
+            window.s = s;
+        });
+        $('#send_message').click(function () {
+            if(!window.s){
+                alert("Please connect server.");
+            }else{
+                window.s.send($('#message').val());
+            }
+        });
+        $('#close_websocket').click(function () {
+            if(window.s){
+                window.s.close();
+            }
+        });
+        $('#stop').click(function(){
+            if(!window.s){
+                alert("Please connect server.");
+            }else{
+                window.s.send('stop');
+            }
+        });
+
+    });
+    //]]>
+    </script>
+    <script language="javascript">
+    window.onbeforeunload = function()  //author: meizz
+    {
+
+      if (window.s){
+          window.s.close();
+      }
+
+    }
+    </script>
+{% endblock script %}
+
+{% block content %}
+    <p>
+    <a style="font-size: x-large;font-weight: bold;color: #135708">检查模式：</a>
+    <a style="font-size: x-large;font-weight: bold;color: #0b2608;">{{ scan_type }}</a>
+    </p>
+    <p>
+        {% if scan_type == 'contscan_file' %}
+        <a style="font-size: large;color: #120433;font-weight: bold">实现扫描指定的文件或目录，在扫描时发现错误或者病毒将不终止</a>
+        {% elif scan_type == 'multiscan_file' %}
+        <a style="font-size: large;color: #120433;font-weight: bold">实现多线程扫描指定的文件或目录，多核环境速度更快，在扫描时发现错误或病毒将不终止</a>
+        {% elif scan_type == 'scan_file' %}
+        <a style="font-size: large;color: #120433;font-weight: bold">实现扫描指定的文件或目录，在扫描时发生错误或发现病毒将终止</a>
+        {% endif %}
+
+    </p>
+    <table width="96%" border="8">
+        <tr>
+            <td style="font-weight:bold;background-color: #5daea7">服务器IP地址</td>
+            <td style="font-weight:bold;background-color: rgba(120, 154, 137, 0.9)">服务器文件夹绝对路径名</td>
+            <td style="font-weight:bold;">状态</td>
+        </tr>
+        {% for runstatuhtml in ip_dir_diforhtml %}
+            <tr>
+            <td style="font-weight:bold;background-color: #93fff8">{{ runstatuhtml.get_ip }}</td>
+            <td style="font-weight:bold;background-color: rgba(150, 198, 172, 0.9)">{{ runstatuhtml.get_dir_name }}</td>
+            <td><div id="stat{{ runstatuhtml.get_div_id }}"></div></td>
+            </tr>
+        {% endfor %}
+    </table>
+    <input type="button" id="start" value="开始扫描">
+    <input type="button" id="stop" value="停止扫描">
+    <div id="messagecontainer"></div>
+{% endblock content %}

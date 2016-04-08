@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %} error {% endblock title %}
+
+
+
+{% block script %}
+{% endblock script %}
+
+
+
+{% block content %}
+    {% if method == 'no_data' %}
+        <a style="font-weight: bolder;font-size: x-large;color: #000000">没有数据</a>
+        <img src="/templates/gif/no_data.gif" height="400" width="400">
+    {% endif %}
+{% endblock content %}

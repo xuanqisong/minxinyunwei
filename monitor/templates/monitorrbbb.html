@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %} 首页测试 {% endblock title %}
+
+
+
+{% block script %}
+<script>
+         $(document).ready(function () {
+             $("#group_name").change(function () {
+               //change事件
+                 var name = $("#group_name").val();
+          var table_str = '';
+          $.getJSON('{% url 'ajax_group_disk_name' %}',{'name':name},function(di){
+              //返回值 di 在这里是一个字典
+              $.each(di,function(ip,disk){
+                  table_str += '<tr><td>'+ip+'</td><td align="left">';
+                  var len = disk.length;
+                  for (var i =0;i<len;i++){
+                      table_str +='<input name ="ip_disk_name" type="checkbox" value ="'+ip+'@'+disk[i]+'" />'+disk[i];
+                  }
+                  table_str += "</td></tr>";
+              });
+              table_str += '<tr><td colspan="2">'+'<input type="submit" value="确定" />'+'</td></tr>'
+              $("#tbody").html(table_str);
+          })
+             });
+         });
+</script>
+<script>
+    $(document).ready(function(){
+        for (var i=1;i<13;i++){
+            if (i<10){
+                document.getElementById("monitor_day_mounth").options.add(new Option('0'+i, '0'+i));
+            }
+            else {
+                document.getElementById("monitor_day_mounth").options.add(new Option(i, i));
+            }
+        }
+        for (var i=1;i<32;i++){
+            if (i<10){
+                document.getElementById("monitor_day_day").options.add(new Option('0'+i, '0'+i))
+            }
+            else {
+                document.getElementById("monitor_day_day").options.add(new Option(i, i));
+            }
+        }
+    });
+</script>
+{% endblock script %}
+
+
+
+{% block content %}
+<form action="{% url 'rbbb_rbbbdata' %}" method="post">
+	<select name="group_name" id="group_name">
+        <option value="">----请选择服务器---</option>
+		{% for group in server_grouplist %}
+			<option value = "{{ group }}">{{ group }}</option>
+		{% endfor %}
+	</select>
+	<select name="monitor_day_year" id="monitor_day_year">
+		{% for year in monitor_day_list %}
+			<option value = "{{ year }}">{{ year }}</option>
+		{% endfor %}
+	</select>
+    年
+    <select name="monitor_day_mounth" id="monitor_day_mounth">
+    </select>
+    月
+    <select name="monitor_day_day" id="monitor_day_day"></select>
+    日
+    <input name="total" type="checkbox" value="a" checked="true"/>是否合并显示 </label>
+<table width="96%" border="8">
+    <tbody id="tbody">
+
+    </tbody>
+
+</table>
+</form>
+{% endblock content %}

@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %} 语句执行测试 {% endblock title %}
+
+{% block content %}
+    <style type="text/css">
+.error{
+    padding-right: 0px;color:#600000;font-weight:bold
+}
+
+</style>
+<form action="{% url 'script_fwpz_newserver' %}" method="post">
+<div style="padding-top:10px;padding-left:4%;padding-bottom:10px">
+<table width="96%" border="5" >
+	<tr>
+        <td>
+            服务器IP
+        </td>
+        <td>
+            <input type="number" min = "0" max = "255" name = "server_ip1" ><b>.</b>
+            <input type="number" min = "0" max = "255" name = "server_ip2" ><b>.</b>
+            <input type="number" min = "0" max = "255" name = "server_ip3" ><b>.</b>
+            <input type="number" min = "0" max = "255" name = "server_ip4" >
+            <div style="padding-right: 0px;color:#600000;font-weight:bold">{{ server.get_ip }}</div>
+            <div style="padding-right: 0px;color:#600000;font-weight:bold">{{ server_ip }}</div>
+        </td>
+	</tr>
+	<tr>
+        <td>
+            服务器描述
+        </td>
+        <td>
+            <input type="text" name = "server_detail" value = {{ server.get_detail }}><div class="error">{{ server_detail }}</div>
+        </td>
+	</tr>
+    <tr>
+        <td>
+            服务器端口号
+        </td>
+        <td>
+            <input type="number" name = "server_port" min = "0" max = "65535" value= {{ server.get_port }}><div class="error">{{ server_port }}</div>
+        </td>
+	</tr>
+    <tr>
+        <td>
+            服务器组
+        </td>
+        <td>
+            <input type="text" name = "server_group" value = {{ server.get_group }}><div class="error">{{ server_group }}</div>
+        </td>
+	</tr>
+    <tr>
+        <td>
+            监控状态
+        </td>
+        <td>
+            <select name="server_state" >
+                <option value = "2">关闭</option>
+	        </select>
+        </td>
+	</tr>
+    <tr>
+        <td>
+            服务器用户名
+        </td>
+        <td>
+            <input type = "text" name = "server_user" value = {{ server.get_user }}><div class="error">{{ server_user }}</div>
+        </td>
+	</tr>
+    <tr>
+        <td>
+            服务器密码
+        </td>
+        <td>
+            <input type = "password" name = "server_password" value = {{ server.get_password }}><div class="error">{{ server_password }}</div>
+        </td>
+	</tr>
+    <tr>
+        <td>
+            密码确认
+        </td>
+        <td>
+            <input type = "password" name = "server_password_t"><div class="error">{{ server_password_t }}</div>
+        </td>
+    </tr>
+</table>
+    <input type = "submit" value = "确定">
+</div>
+</form>
+{% endblock content %}

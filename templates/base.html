@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %} 原型监控 {% endblock title %}-xqs</title>
+    <link href="http://apps.bdimg.com/libs/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <script src="http://apps.bdimg.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
+    <script src="http://apps.bdimg.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
+    <link href="/templates/css/base_navigation.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="/templates/js/toolbar.js"></script>
+    <script type="text/javascript" src="/templates/js/jtopo-0.4.8-min.js"></script>
+{#    tree#}
+    <link href="http://libs.useso.com/js/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/templates/treemodel/css/bootstrap-treeview.css" rel="stylesheet">
+    <style type="text/css">
+    body {
+        padding-top: 60px;
+    }
+    </style>
+<script>
+         $(document).ready(function () {
+               //change事件
+          var navaigation_bar = '';
+          $.getJSON('/navigation_host/',{'name':"name"},function(di){
+              //返回值 di 在这里是一个字典
+              navaigation_bar += '<div class="container navbar-fixed-top"  style="padding-top: 1% ">';
+              navaigation_bar += '<ul class="menu">';
+              navaigation_bar += '<li><a href="{% url 'index' %}">主页</a></li>';
+              $.each(di,function(bar_name,bar_url){
+                  navaigation_bar += '<li>';
+                  navaigation_bar += '<a href="'+bar_url+'index">'+bar_name+'</a>';
+                    if (bar_name == '性能监控'){
+                        navaigation_bar += '<ul class="submenu">';
+                        navaigation_bar += '<li><a href="{% url 'fwpz' %}">配置服务器</a></li>';
+                        navaigation_bar += '<li><a href="{% url 'status_ip_ztcxindex' %}">状态监控</a></li>';
+                        navaigation_bar += '<li><a href="{% url 'rbbb_rbbbindex' %}">生成日报</a></li>';
+                        navaigation_bar += '<li><a href="/homepage/monitor/zbbb">生成周报</a></li>';
+                        navaigation_bar += '</ul>';
+                    }
+                    if (bar_name == '病毒扫描'){
+                        navaigation_bar += '<ul class="submenu">';
+                        navaigation_bar += '<li><a href="{% url 'antivirus_configuration_job' %}">定时扫描时间配置</a></li>';
+                        navaigation_bar += '<li><a href="{% url 'antiviurs_once_configuration' %}">手动扫描</a></li>';
+                        navaigation_bar += '</ul>'
+                    }
+                    if (bar_name == '服务器'){
+                        navaigation_bar += '<ul class ="submenu">';
+                        navaigation_bar += '<li><a href="{% url 'servermanager_routermanager' %}">路由配置</a></li>';
+                        navaigation_bar += '<li><a href="{% url 'showserverused' %}">使用情况</a></li>';
+                        navaigation_bar += '<li><a href="{% url 'servernamager_showbakfile' %}">配置文件备份</a></li>';
+                        navaigation_bar += '</ul>'
+                    }
+                    if (bar_name == '执行脚本'){
+                        navaigation_bar += '<ul class = "submenu">';
+                        navaigation_bar += '<li><a href="{% url 'sshmanager' %}">ssh配置</a></li>';
+                        navaigation_bar += '<li><a href="#">手动连接</a></li>';
+                        navaigation_bar += '<li><a href="{% url 'script_show_server_group' %}">批量连接</a></li>';
+                        navaigation_bar += '<li><a href="{% url 'script_file_manager' %}">文件管理</a></li>';
+                        navaigation_bar += '</ul>'
+                    }
+                  navaigation_bar += '</li>';
+              });
+              navaigation_bar += '</ul></div>';
+              $("#navigation").html(navaigation_bar);
+          });
+
+         });
+</script>
+
+    {% block css %}
+
+    {% endblock css %}
+
+    {% block js %}
+
+    {% endblock js %}
+
+    {% block script %}
+
+    {% endblock script%}
+</head>
+<body>
+
+    <div id="navigation"></div>
+    <div  style="clear:both"></div>
+{#	<div class="row clearfix" style="padding-top:110px;text-align: center;">#}
+    <div class="row clearfix" style="margin-top: 150px;text-align: center;">
+		<div style="padding-right: 4%;padding-left: 4%">
+			{% block content %}
+			{% endblock content %}
+		</div>
+	</div>
+    <div class="row clearfix" style="padding-top: 120px;">
+      <div>
+       <div class="well well-sm">
+        <div style="padding-top:10px; text-align: center">
+         <a style="color: #222222;font-size: large">自动监控脚本，数据处理，数据库自动分区</a>
+        </div>
+        <div style="padding-top:10px; text-align: center">
+          <a style="color: #222222;font-size: large">MAKE BY MINXIN.XQS#PYTHON 2.7#MYSQL 5.7.9#DJANGO 1.8#AJAX#CSS#HTML</a>
+        </div>
+       </div>
+      </div>
+    </div>
+</body>
+</html>

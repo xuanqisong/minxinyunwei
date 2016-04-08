@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %} 图表测试 {% endblock title %}
+
+{% block script %}
+<script type="text/javascript" src="http://cdn.hcharts.cn/jquery/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
+<script>
+    $(function () {
+    $('#container_quxian').highcharts({
+        title: {
+            text: '{{top_title}}',
+            x: -20 
+        },
+        subtitle: {
+            text: '{{small_title}}',
+            x: -20
+        },
+        xAxis: {
+            categories: {{ quxian_categories | safe }}
+        },
+        yAxis: {
+            title: {
+                text: '{{unit_big}}'
+            },
+            plotLines: [{
+                value: 0,
+                width: 1,
+                color: '#808080'
+            }]
+        },
+        tooltip: {
+            valueSuffix: '{{unit_small}}'
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle',
+            borderWidth: 0
+        },
+        series: [{{ quxian_data| safe}}]
+    });
+})
+</script>
+{% endblock script %}
+
+{% block content %}
+<div id="container_quxian" style="width:1800px;height:400px"></div>
+{% endblock content %}

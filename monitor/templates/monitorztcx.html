@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %} 首页测试 {% endblock title %}
+
+{% block content %}
+<form action="{% url 'status_ip' %}" method="post">
+	<select name="server_ip">
+		{% for ip in servernamelist %}
+			<option value = "{{ ip.get_ip }}">{{ ip.get_detail }}</option>
+		{% endfor %}
+	</select>
+    <label for="starttime">开始时间:</label><input id="starttime" name="starttime" type="date" value="{{ startt }}" >
+    <label for="endtime">结束时间:</label><input id="endtime" name="endtime" type="date" value="{{ endt }}">
+	<input type="submit" value="提交">
+</form>
+
+{% endblock content %}

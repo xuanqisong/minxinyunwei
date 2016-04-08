@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %} 首页测试 {% endblock title %}
+
+{% block content %}
+
+    <script type="text/javascript">
+        function display_alert()
+            {
+            alert("确定删除服务器？"+server_ip)
+            }
+    </script>
+
+
+
+
+    {{ alert|safe }}
+<form  method="post">
+<table width="96%" border="5">
+<tr bgcolor="#B8B8DC">
+    <td>服务器IP</td>
+    <td>用户名</td>
+    <td>端口号</td>
+    <td>服务器描述</td>
+    <td>服务器分组</td>
+    <td>监控状态</td>
+</tr>
+{% for server in server_list %}
+    <tr>
+        <td><input name = "server_ip" type="checkbox" value="{{ server.get_ip }}">{{ server.get_ip }}</td>
+        <td>{{ server.get_user }}</td>
+        <td>{{ server.get_port }}</td>
+        <td>{{ server.get_detail }}</td>
+        <td>{{ server.get_group }}</td>
+        {% if server.get_state == '1' %}<td>开启</td>{% else %}<td>关闭</td>{% endif %}
+    </tr>
+{% endfor %}
+</table>
+<input type="submit" formaction="{% url 'servermanager_fwpz_newserver_mid' %}" value="新建服务器">
+<input type="submit" formaction="{% url 'servermanager_fwpz_deleteserver' %}" value="删除服务器">
+<input type="submit" formaction="{% url 'servermanager_fwpz_changeserver_mid' %}" value="修改服务器">
+</form>
+{% endblock content %}

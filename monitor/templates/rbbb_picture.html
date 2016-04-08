@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+
+{% block title %} 图表测试 {% endblock title %}
+
+{% block script %}
+<script type="text/javascript" src="http://cdn.hcharts.cn/jquery/jquery-1.8.3.min.js"
+        xmlns:word-break="http://www.w3.org/1999/xhtml"></script>
+  <script type="text/javascript" src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
+{#    <script type="text/javascript" src="/templates/js/exporthighcharts.js"></script>#}
+  <script type="text/javascript" src="http://cdn.hcharts.cn/highcharts/modules/exporting.js"></script>
+<script>
+Highcharts.theme = {
+	colors: ['#058DC7', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
+	chart: {
+		backgroundColor: {
+			linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
+			stops: [
+				[0, 'rgb(255, 255, 255)'],
+				[1, 'rgb(240, 240, 255)']
+			]
+		},
+		borderWidth: 2,
+		plotBackgroundColor: 'rgba(255, 255, 255, .9)',
+		plotShadow: true,
+		plotBorderWidth: 1
+	},
+	title: {
+		style: {
+			color: '#000',
+			font: 'bold 16px "Trebuchet MS", Verdana, sans-serif'
+		}
+	},
+	subtitle: {
+		style: {
+			color: '#666666',
+			font: 'bold 12px "Trebuchet MS", Verdana, sans-serif'
+		}
+	},
+	xAxis: {
+		gridLineWidth: 1,
+		lineColor: '#000',
+		tickColor: '#000',
+		labels: {
+			style: {
+				color: '#000',
+				font: '11px Trebuchet MS, Verdana, sans-serif'
+			}
+		},
+		title: {
+			style: {
+				color: '#333',
+				fontWeight: 'bold',
+				fontSize: '12px',
+				fontFamily: 'Trebuchet MS, Verdana, sans-serif'
+
+			}
+		}
+	},
+	yAxis: {
+		minorTickInterval: 'auto',
+		lineColor: '#000',
+		lineWidth: 1,
+		tickWidth: 1,
+		tickColor: '#000',
+		labels: {
+			style: {
+				color: '#000',
+				font: '11px Trebuchet MS, Verdana, sans-serif'
+			}
+		},
+		title: {
+			style: {
+				color: '#333',
+				fontWeight: 'bold',
+				fontSize: '12px',
+				fontFamily: 'Trebuchet MS, Verdana, sans-serif'
+			}
+		}
+	},
+	legend: {
+		itemStyle: {
+			font: '9pt Trebuchet MS, Verdana, sans-serif',
+			color: 'black'
+
+		},
+		itemHoverStyle: {
+			color: '#039'
+		},
+		itemHiddenStyle: {
+			color: 'gray'
+		}
+	},
+	labels: {
+		style: {
+			color: '#99b'
+		}
+	},
+
+	navigation: {
+		buttonOptions: {
+			theme: {
+				stroke: '#CCCCCC'
+			}
+		}
+	}
+};
+
+// Apply the theme
+var highchartsOptions = Highcharts.setOptions(Highcharts.theme);
+</script>
+
+
+
+    {% for quxiantu_list in picture_quxiantu_list %}
+        {% for cpuipuser in quxiantu_list %}
+<script>
+    $(function () {
+    $('#{{ cpuipuser.get_faction_name |safe }}').highcharts({
+        title: {
+            text: '{{cpuipuser.get_big_title_name|safe}}',
+            x: -20
+        },
+        subtitle: {
+            text: '{{cpuipuser.get_small_title_name |safe}}',
+            x: -20
+        },
+        xAxis: {
+            categories: {{ cpuipuser.get_categories | safe }}
+        },
+        yAxis: {
+            title: {
+                text: '{{cpuipuser.get_big_unit|safe}}'
+            },
+            min:0,
+            plotLines: [{
+                value: 0,
+                width: 1,
+                color: '#808080'
+            }]
+        },
+        tooltip: {
+            valueSuffix: '{{cpuipuser.get_small_unit|safe}}'
+        },
+        legend: {
+            layout: 'vertical',
+            align:'right',
+            verticalAlign: 'middle',
+            borderWidth: 0
+        },
+        series: [{{ cpuipuser.get_series| safe}}]
+    });
+})
+</script>
+            {% endfor %}
+    {% endfor %}
+
+<script>
+
+$(function () {
+    var chart = new Highcharts.Chart({
+        chart: {
+            renderTo: "{{ zhuzhuangtugroupfather.get_faction_name }}",
+            type: "column"
+        },
+        title: {
+            text: "{{ zhuzhuangtugroupfather.get_big_title_name }}"
+        },
+        series: [
+            {%  for series in zhuzhuangtugroupfather.get_series %}
+                {
+            name:"{{ series.get_name|safe }}",
+            color: '{{ series.get_color }}',
+            data: {{ series.get_data|safe }}
+                    ,
+            dataLabels: {
+                enabled: true,
+                formatter: function()
+            {
+                return this.y + '%'
+
+            }
+            }
+        },
+            {% endfor %}],
+        tooltip: {
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} %</b></td></tr>',
+            footerFormat: '</table>',
+        },
+         yAxis: {
+            title: {
+                text: '百分比%'
+            },
+
+
+        },
+        xAxis: {
+            categories: [
+                {{ zhuzhuangtugroupfather.get_categories |safe}}
+         ],
+        }
+    });
+});
+</script>
+
+
+
+
+{% endblock script %}
+
+
+
+
+{% block content %}
+
+
+
+
+    <h1>{{ group_name }}</h1>
+    {% for quxiantu_list in picture_quxiantu_list %}
+        {% for cpuipuser in quxiantu_list %}
+
+<div id="{{ cpuipuser.get_faction_name|safe }}" style="width:90%;height:400px;padding-left:5%;padding-right: 5%"></div>
+    {% endfor %}
+    {% endfor %}
+
+    <div id="{{ zhuzhuangtugroupfather.get_faction_name|safe }}" style="width:90%;height:400px;padding-left:5%;padding-right: 5%"></div>
+
+{% endblock content %}

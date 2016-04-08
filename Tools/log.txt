@@ -1,0 +1,63 @@
+[log:2016-04-07 17:46:18]execute sql error: (1146, "Table 'minxinyunwei.tables' doesn't exist") 
+[log:2016-04-07 17:47:05]SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'minxinyunwei' 
+[log:2016-04-07 17:47:06]SELECT * FROM server_list_old WHERE ip='192.168.9.155' 
+[log:2016-04-07 17:47:20]SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'minxinyunwei' 
+[log:2016-04-07 17:48:02]SELECT * FROM server_list_old WHERE ip='192.168.9.155' 
+[log:2016-04-07 17:50:25]SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'minxinyunwei' 
+[log:2016-04-07 17:51:23]SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'minxinyunwei' 
+[log:2016-04-07 17:52:43]SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'minxinyunwei' 
+[log:2016-04-07 17:53:18]execute sql error: (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'null) not null,used double (8.3) not null ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ' at line 1") 
+[log:2016-04-07 17:53:44]SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'minxinyunwei' 
+[log:2016-04-07 17:55:24]SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'minxinyunwei' 
+[log:2016-04-07 17:57:27]SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'minxinyunwei' 
+[log:2016-04-07 17:59:00]SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'minxinyunwei' 
+[log:2016-04-07 18:00:20]SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'minxinyunwei' 
+[log:2016-04-07 18:01:10]SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'minxinyunwei' 
+[log:2016-04-07 18:01:14]create table statu_cpuc ( ip varchar (16) not null,time datetime not null,used double (8,3) not null) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci; 
+[log:2016-04-07 18:01:33]SELECT * FROM server_list_old WHERE ip='192.168.9.155' 
+[log:2016-04-07 18:02:50]SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'minxinyunwei' 
+[log:2016-04-07 18:04:47]SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'minxinyunwei' 
+[log:2016-04-07 18:05:11]SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'minxinyunwei' 
+[log:2016-04-07 18:05:53]SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'minxinyunwei' 
+[log:2016-04-07 18:06:29]SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'minxinyunwei' 
+[log:2016-04-07 18:06:52]SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'minxinyunwei' 
+[log:2016-04-07 18:08:42]SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'minxinyunwei' 
+[log:2016-04-07 18:08:58]SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'minxinyunwei' 
+[log:2016-04-07 18:09:11]SELECT * FROM server_list_old WHERE ip='192.168.9.155' 
+[log:2016-04-07 18:09:39]SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'minxinyunwei' 
+[log:2016-04-07 18:09:51]SELECT * FROM server_list_old WHERE ip='192.168.9.155' 
+[log:2016-04-07 18:10:21]SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'minxinyunwei' 
+[log:2016-04-07 18:10:26]SELECT * FROM server_list_old WHERE ip='192.168.9.155' 
+[log:2016-04-07 18:11:27]SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'minxinyunwei' 
+[log:2016-04-07 18:11:57]SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'minxinyunwei' 
+[log:2016-04-07 18:12:00]SELECT * FROM server_list_old WHERE ip='192.168.9.155' 
+[log:2016-04-07 18:13:27]SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'minxinyunwei' 
+[log:2016-04-07 18:13:27]SELECT * FROM server_list_old WHERE ip='192.168.9.155' 
+[log:2016-04-07 18:14:15]SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'minxinyunwei' 
+[log:2016-04-07 18:14:15]SELECT * FROM server_list_old WHERE ip='192.168.9.155' 
+[log:2016-04-07 18:15:39]SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'minxinyunwei' 
+[log:2016-04-07 18:15:40]SELECT * FROM server_list_old WHERE ip='192.168.9.155' 
+[log:2016-04-07 18:16:56]SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'minxinyunwei' 
+[log:2016-04-07 18:16:56]SELECT * FROM server_list_old WHERE ip='192.168.9.155' 
+[log:2016-04-07 18:24:40]SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'minxinyunwei' 
+[log:2016-04-07 18:24:40]SELECT * FROM server_list_old WHERE ip='192.168.9.155' 
+[log:2016-04-07 18:25:36]SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'minxinyunwei' 
+[log:2016-04-07 18:25:36]SELECT * FROM server_list_old WHERE ip='192.168.9.155' 
+[log:2016-04-07 18:26:12]INSERT INTO statu_cpuc(ip,time,used) VALUES (%s,%s,%s) 
+[log:2016-04-07 18:37:26]SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'minxinyunwei' 
+[log:2016-04-07 18:37:26]create table statu_diskc ( ip varchar (16) not null,time datetime not null,total bigint (20) not null,free bigint (20) not null,busy bigint (20) not null,used double (8,3) not null,disk_name varchar (100) not null) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci; 
+[log:2016-04-07 18:37:26]create table statu_cpuc ( ip varchar (16) not null,time datetime not null,used double (8,3) not null) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci; 
+[log:2016-04-07 18:37:27]create table statu_memoryc ( ip varchar (16) not null,time datetime not null,used double (8,3) not null) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci; 
+[log:2016-04-07 18:37:27]SELECT * FROM server_list_old WHERE ip='192.168.9.155' 
+[log:2016-04-07 18:37:33]INSERT INTO statu_diskc(ip,time,total,free,busy,used,disk_name) VALUES (%s,%s,%s,%s,%s,%s,%s) 
+[log:2016-04-07 18:37:33]INSERT INTO statu_diskc(ip,time,total,free,busy,used,disk_name) VALUES (%s,%s,%s,%s,%s,%s,%s) 
+[log:2016-04-07 18:37:33]INSERT INTO statu_diskc(ip,time,total,free,busy,used,disk_name) VALUES (%s,%s,%s,%s,%s,%s,%s) 
+[log:2016-04-07 18:37:34]INSERT INTO statu_cpuc(ip,time,used) VALUES (%s,%s,%s) 
+[log:2016-04-07 18:37:34]INSERT INTO statu_cpuc(ip,time,used) VALUES (%s,%s,%s) 
+[log:2016-04-07 18:37:34]INSERT INTO statu_cpuc(ip,time,used) VALUES (%s,%s,%s) 
+[log:2016-04-07 18:37:35]execute sql error: not all arguments converted during string formatting 
+[log:2016-04-07 18:37:38]execute sql error: not all arguments converted during string formatting 
+[log:2016-04-07 18:37:38]execute sql error: not all arguments converted during string formatting 
+[log:2016-04-07 18:37:38]execute sql error: not all arguments converted during string formatting 
+[log:2016-04-07 18:37:38]execute sql error: not all arguments converted during string formatting 
+[log:2016-04-07 18:37:38]execute sql error: not all arguments converted during string formatting 

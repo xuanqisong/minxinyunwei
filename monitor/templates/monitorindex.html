@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %} 监控 {% endblock title %}
+
+{% block content %}
+<ul>
+<li>
+    <a href="{% url 'fwpz' %}">配置服务器</a>
+</li>
+<li>
+    <a href="{% url 'status_ip_ztcxindex' %}">状态监控</a>
+</li>
+<li>
+    <a href="{% url 'rbbb_rbbbindex' %}">生成日报</a>
+</li>
+<li>
+    <a href="{% url 'zbbb_zbbbindex' %}">生成周报</a>
+</li>
+</ul>
+
+{% endblock content %}

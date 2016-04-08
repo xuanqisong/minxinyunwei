@@ -1,0 +1,394 @@
+
+Info: The max number of VTY users is 10, and the number
+      of current VTY users on line is 1.
+      The current login time is 2016-02-17 16:13:28-05:13.
+<JF_SW_5700-A>display current-configuration 
+!Software Version V200R003C00SPC300
+#
+sysname JF_SW_5700-A
+#
+FTP server enable
+#
+info-center loghost source Vlanif16
+info-center loghost 10.255.8.80
+info-center loghost 192.168.9.80
+#
+vlan batch 2 to 4 6 to 9 11 to 13 15 to 16 503 512
+#
+lldp enable
+#
+undo http server enable
+undo http secure-server enable
+#
+undo nap slave enable
+#
+dhcp enable
+#
+vlan 1
+ description ZongHeBaoZhangBu
+vlan 2
+ description XiaoShouZhiChiBu
+vlan 3
+ description XinShenZhongXin
+vlan 4
+ description RenLi-WangDian
+#
+dhcp server group 1
+ dhcp-server 10.10.9.54 0
+ dhcp-server 10.10.9.99 1
+#
+ip pool dhcp-pool-vlan1
+ gateway-list 10.10.1.254
+ network 10.10.1.0 mask 255.255.255.0
+ dns-list 10.10.9.99 10.10.9.54
+#
+ip pool dhcp-pool-vlan2
+ gateway-list 10.10.2.254
+ network 10.10.2.0 mask 255.255.255.0
+ dns-list 10.10.9.99 10.10.9.54
+#
+ip pool dhcp-pool-vlan3
+ gateway-list 10.10.3.254
+ network 10.10.3.0 mask 255.255.255.0
+ dns-list 10.10.9.99 10.10.9.54
+#
+ip pool dhcp-pool-vlan4
+ gateway-list 10.10.4.254
+ network 10.10.4.0 mask 255.255.255.0
+ dns-list 10.10.9.99 10.10.9.54
+#
+ip pool dhcp-pool-vlan7
+ gateway-list 10.10.7.254
+ network 10.10.7.0 mask 255.255.255.0
+ dns-list 10.10.9.99 10.10.9.54
+#
+aaa
+ authentication-scheme default
+ authorization-scheme default
+ accounting-scheme default
+ domain default
+ domain default_admin
+ local-user test password cipher %@%@[HnuT13D*7xy/q#yX(RJ,K{K%@%@
+ local-user test privilege level 1
+ local-user test service-type telnet
+ local-user lifei password cipher %@%@lI/(<'nXc~=TCBHqLt<3]u[|%@%@
+ local-user lifei privilege level 15
+ local-user lifei ftp-directory flash:/
+ local-user lifei service-type telnet ssh ftp http
+ local-user zuotao password cipher %@%@kT4B~=VTI+S1HPO}InMH\%*;%@%@
+ local-user zuotao privilege level 15
+ local-user zuotao service-type telnet ssh ftp http
+ local-user caozhimin password cipher %@%@>,P}=p3wJLHVP15:1B%B\r-l%@%@
+ local-user caozhimin privilege level 15
+ local-user caozhimin service-type telnet terminal ssh
+ local-user xuanqisong password cipher %@%@g"&gO]OsY;<;Wk79Q0oV,Gm0%@%@
+ local-user xuanqisong privilege level 5
+ local-user xuanqisong service-type telnet ssh
+ undo local-user admin
+#
+interface Vlanif1
+ ip address 10.10.1.254 255.255.255.0
+ dhcp select relay
+ dhcp relay server-select 1
+#
+interface Vlanif2
+ ip address 10.10.2.254 255.255.255.0
+ dhcp select relay
+ dhcp relay server-select 1
+#
+interface Vlanif3
+ ip address 10.10.3.254 255.255.255.0
+ dhcp select relay
+ dhcp relay server-select 1
+#
+interface Vlanif4
+ ip address 10.10.4.254 255.255.255.0
+ dhcp select relay
+ dhcp relay server-select 1
+#
+interface Vlanif6
+ description to-Flood6
+ ip address 10.10.6.254 255.255.255.0
+ dhcp select relay
+ dhcp relay server-select 1
+#
+interface Vlanif7
+#
+interface Vlanif11
+ ip address 192.168.11.254 255.255.255.0
+#
+interface Vlanif12
+ ip address 192.168.12.254 255.255.255.0
+#
+interface Vlanif13
+ ip address 10.10.13.254 255.255.255.0
+ dhcp select relay
+ dhcp relay server-select 1
+#
+interface Vlanif15
+ ip address 10.10.15.254 255.255.255.240
+#
+interface Vlanif16
+ ip address 10.10.15.126 255.255.255.128
+#
+interface Vlanif503
+ ip address 10.10.8.254 255.255.255.128
+ dhcp select relay
+ dhcp relay server-select 1
+#
+interface Vlanif512
+ ip address 10.10.8.1 255.255.255.128
+ dhcp select relay
+ dhcp relay server-select 1
+#
+interface MEth0/0/1
+#
+interface Eth-Trunk3
+ port link-type trunk
+ port trunk allow-pass vlan 2 to 4094
+#
+interface Eth-Trunk4
+ port link-type trunk
+ port trunk allow-pass vlan 2 to 4094
+#
+interface GigabitEthernet0/0/1
+ port link-type access
+ port default vlan 15
+#
+interface GigabitEthernet0/0/2
+ port link-type access
+#
+interface GigabitEthernet0/0/3
+ port link-type trunk
+ port trunk allow-pass vlan 2 to 4094
+ sflow counter-sampling collector 2
+ sflow counter-sampling interval 120
+ sflow flow-sampling collector 2
+ sflow flow-sampling rate 4000
+#
+interface GigabitEthernet0/0/4
+ port link-type trunk
+ port trunk allow-pass vlan 2 to 4094
+ sflow counter-sampling collector 2
+ sflow counter-sampling interval 120
+ sflow flow-sampling collector 2
+ sflow flow-sampling rate 4000
+#
+interface GigabitEthernet0/0/5
+ port link-type trunk
+ port trunk allow-pass vlan 2 to 4094
+ sflow counter-sampling collector 2
+ sflow counter-sampling interval 120
+ sflow flow-sampling collector 2
+ sflow flow-sampling rate 4000
+#
+interface GigabitEthernet0/0/6
+ port link-type trunk
+ port trunk allow-pass vlan 2 to 4094
+ sflow counter-sampling collector 2
+ sflow counter-sampling interval 120
+ sflow flow-sampling collector 2
+ sflow flow-sampling rate 4000
+#
+interface GigabitEthernet0/0/7
+ port link-type trunk
+ port trunk allow-pass vlan 2 to 4094
+ sflow counter-sampling collector 2
+ sflow counter-sampling interval 120
+ sflow flow-sampling collector 2
+ sflow flow-sampling rate 4000
+#
+interface GigabitEthernet0/0/8
+ port link-type access
+ port default vlan 11
+#
+interface GigabitEthernet0/0/9
+ port link-type access
+ port default vlan 16
+#
+interface GigabitEthernet0/0/10
+ port link-type access
+ port default vlan 11
+#
+interface GigabitEthernet0/0/11
+ port link-type access
+ port default vlan 3
+#
+interface GigabitEthernet0/0/12
+ port link-type access
+#
+interface GigabitEthernet0/0/13
+#
+interface GigabitEthernet0/0/14
+ port link-type access
+ port default vlan 15
+#
+interface GigabitEthernet0/0/15
+ description to-Flood6
+ port link-type access
+ port default vlan 6
+#
+interface GigabitEthernet0/0/16
+ description to-10.10.1.251_weishouquan_shutdow
+ shutdown
+#
+interface GigabitEthernet0/0/17
+ description to-Flood5
+ port link-type access
+ port default vlan 2
+#
+interface GigabitEthernet0/0/18
+ description to-Flood7
+ port link-type access
+ port default vlan 7
+ sflow counter-sampling collector 2
+ sflow counter-sampling interval 120
+ sflow flow-sampling collector 2
+ sflow flow-sampling rate 4000
+#
+interface GigabitEthernet0/0/19
+ description to-Flood5 room-511 and room-512
+ port link-type trunk
+ port trunk allow-pass vlan 2 to 4094
+ sflow counter-sampling collector 2
+ sflow counter-sampling interval 120
+ sflow flow-sampling collector 2
+ sflow flow-sampling rate 4000
+#
+interface GigabitEthernet0/0/20
+ port link-type access
+ port default vlan 7
+#
+interface GigabitEthernet0/0/21
+ description to_floor3_xinxijishubu
+ eth-trunk 3
+ sflow counter-sampling collector 2
+ sflow counter-sampling interval 120
+ sflow flow-sampling collector 2
+ sflow flow-sampling rate 4000
+#
+interface GigabitEthernet0/0/22
+ eth-trunk 3
+#
+interface GigabitEthernet0/0/23
+ eth-trunk 4
+ sflow counter-sampling collector 2
+ sflow counter-sampling interval 120
+ sflow flow-sampling collector 2
+ sflow flow-sampling rate 4000
+#
+interface GigabitEthernet0/0/24
+ eth-trunk 4
+ sflow counter-sampling collector 2
+ sflow counter-sampling interval 120
+ sflow flow-sampling collector 2
+ sflow flow-sampling rate 4000
+#
+interface GigabitEthernet0/0/25
+ port link-type trunk
+ port trunk allow-pass vlan 2 to 4094
+ sflow counter-sampling collector 2
+ sflow counter-sampling interval 120
+ sflow flow-sampling collector 2
+ sflow flow-sampling rate 4000
+#
+interface GigabitEthernet0/0/26
+#
+interface GigabitEthernet0/0/27
+ port link-type trunk
+ port trunk allow-pass vlan 2 to 4094
+ sflow counter-sampling collector 2
+ sflow counter-sampling interval 120
+ sflow flow-sampling collector 2
+ sflow flow-sampling rate 4000
+#
+interface GigabitEthernet0/0/28
+#
+interface GigabitEthernet0/0/29
+ port link-type trunk
+ port trunk allow-pass vlan 2 to 4094
+ sflow counter-sampling collector 2
+ sflow counter-sampling interval 120
+ sflow flow-sampling collector 2
+ sflow flow-sampling rate 4000
+#
+interface GigabitEthernet0/0/30
+#
+interface GigabitEthernet0/0/31
+#
+interface GigabitEthernet0/0/32
+#
+interface GigabitEthernet0/0/33
+#
+interface GigabitEthernet0/0/34
+#
+interface GigabitEthernet0/0/35
+#
+interface GigabitEthernet0/0/36
+#
+interface GigabitEthernet0/0/37
+#
+interface GigabitEthernet0/0/38
+#
+interface GigabitEthernet0/0/39
+#
+interface GigabitEthernet0/0/40
+#
+interface GigabitEthernet0/0/41
+#
+interface GigabitEthernet0/0/42
+#
+interface GigabitEthernet0/0/43
+#
+interface GigabitEthernet0/0/44
+#
+interface GigabitEthernet0/0/45
+#
+interface GigabitEthernet0/0/46
+#
+interface GigabitEthernet0/0/47
+#
+interface GigabitEthernet0/0/48
+#
+interface NULL0
+#
+arp static 10.10.2.2 8825-9382-a756
+arp static 10.10.2.12 b083-fe8c-cdd0
+#
+ip route-static 0.0.0.0 0.0.0.0 10.10.15.253
+ip route-static 10.10.5.0 255.255.255.0 10.10.15.124
+ip route-static 10.10.7.0 255.255.255.0 10.10.15.125
+ip route-static 10.10.9.0 255.255.255.0 10.10.15.124
+ip route-static 192.168.9.0 255.255.255.0 10.10.15.124
+#
+snmp-agent
+snmp-agent local-engineid 800007DB0304F938C65930
+snmp-agent community read cipher %$%$EF32KXr-p2A13c;#j\5"h0/y;\jB&=:X3V!MqdN8uyHB0/|ho~E]&pXc&Sh[K\)_@$gL/(h0%$%$
+snmp-agent sys-info version v2c v3
+#
+sftp server enable
+stelnet server enable
+ssh user lifei
+ssh user lifei authentication-type password
+ssh user lifei service-type stelnet
+ssh user xuanqisong
+ssh user xuanqisong authentication-type password
+ssh user xuanqisong service-type stelnet
+ssh user zuotao
+ssh user zuotao authentication-type password
+ssh user zuotao service-type stelnet
+#
+sflow collector 2 ip 192.168.9.86 description sflow-server
+#
+sflow agent ip 10.10.15.126
+#
+user-interface con 0
+ authentication-mode password
+ set authentication password cipher %@%@DW4xHr~hR4,.4YEaX',.\'Yz."fbA.=9zQVsssQ29=s"'Y}\%@%@
+user-interface vty 0 4
+ authentication-mode aaa
+ protocol inbound all
+user-interface vty 16 20
+#
+return
+<JF_SW_5700-A>

@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block title %} 图表测试 {% endblock title %}
+
+{% block script %}
+	<script>
+        var stage;
+        var scene;
+        var containercolor_object = new Object();
+        $(document).ready(function(){
+            var canvas = document.getElementById('canvas');
+            stage = new JTopo.Stage(canvas);
+
+            showJTopoToobar(stage);
+            scene = new JTopo.Scene();
+            scene.background = '/templates/pic/bg2.jpg';
+            stage.add(scene);
+
+{#            var gridLayout = JTopo.layout.GridLayout(16,16);#}
+              var gridLayout = JTopo.layout.FlowLayout(3,3);
+{#            拼接布局#}
+
+        var x_hb = 80;
+        var y_hb = 10;
+        var table_num = 0;
+        var container_node = new Object();
+        var container_object = new Object();
+            {% for ipsection,serveripjtopolist in ipsection_serveripjtopo_di.items %}
+
+                var containervarname = "container"+'{{  ipsection }}'.replace(/[.]/g,'');
+                container_object[containervarname] =  '{{ ipsection }}';
+                var node_objectlist = [];
+                {% for serveripjtopo in serveripjtopolist %}
+                    var node_object = new Object();
+                    var nodevarname = "node"+'{{ serveripjtopo.get_ip }}'.replace(/[.]/g,'');
+                    node_object['nodevarname'] =  nodevarname;
+                    node_object['nodename'] = '{{ serveripjtopo.get_ip }}';
+                    {% if serveripjtopo.get_color == '1' %}
+                        node_object['nodecolor'] = '12,151,5';
+                    {% else %}
+                        node_object['nodecolor'] = '142,10,17';
+                    {% endif %}
+                    node_objectlist.push(node_object);
+                {% endfor %}
+                container_node[containervarname] = node_objectlist;
+            {% endfor %}
+
+
+        var table_str = '<tr>';
+        for (var containername in container_object){
+            if(x_hb>1600){
+                x_hb = 80;
+                y_hb += 600;
+            }
+            eval("var "+containername+" = new JTopo.Container('"+container_object[containername]+"')");
+            eval(containername+".layout = gridLayout");
+            eval(containername+".fontColor = '255,255,255'");
+
+            eval(containername+".setBound("+x_hb+", "+y_hb+",800,800)");
+
+{#            eval(containername+".font = '18pt 微软雅黑';");#}
+{#            eval(containername+".borderRadius = 30");#}
+
+{#            eval("scene.add("+containername+")");#}
+            if (table_num ==4 ){
+                table_num = 0;
+                table_str += '</tr><tr>';
+            }
+            table_str += '<td><input type="checkbox" value="'+container_object[containername]+'" name="ipgroup" id="ipgroup" >'+container_object[containername]+'</td>';
+            x_hb = x_hb+800;
+            table_num += 1;
+            for (var i=0;i<(container_node[containername]).length;i++){
+                eval("var "+container_node[containername][i]['nodevarname']+" = new JTopo.Node('"+container_node[containername][i]['nodename']+"')");
+                eval(container_node[containername][i]['nodevarname']+".textPosition = 'Middle_Center'");
+                eval(container_node[containername][i]['nodevarname']+".font = '3px Consolas'");
+                eval(container_node[containername][i]['nodevarname']+".setSize(90,15) ");
+{#                eval(container_node[containername][i]['nodevarname']+".setImage('/templates/pic/serverp.jpg') ");#}
+                eval(container_node[containername][i]['nodevarname']+".fillColor = '"+container_node[containername][i]['nodecolor']+"'");
+{#                eval("scene.add("+container_node[containername][i]['nodevarname']+")");#}
+{#                eval(containername+".add("+container_node[containername][i]['nodevarname']+")");#}
+            }
+        }
+
+        for (var i=0;i<(4-table_num);i++){
+            table_str += '<td></td>';
+        }
+        table_str += '</tr>';
+
+
+
+
+
+        $("#rmother").click(function () {
+            var x_hb = 80;
+            var y_hb = 10;
+            var iplist = document.getElementsByName("ipgroup");
+            var iplistnum = iplist.length;
+            var containernamelist = [];
+
+            for (var i=0;i<iplistnum;i++){
+                if(iplist[i].checked == true) {
+                    containernamelist.push("container" + (iplist[i].value).replace(/[.]/g, ''));
+                }
+            }
+
+{#        删除舞台中的所有画面#}
+        scene.clear();
+        for (var j=0;j<containernamelist.length;j++) {
+            for (var i = 0; i < (container_node[containernamelist[j]]).length; i++) {
+                eval(containernamelist[j] + ".remove(" + container_node[containernamelist[j]][i]['nodevarname'] + ")");
+            }
+        }
+{#增加画面#}
+        for (var j=0;j<containernamelist.length;j++) {
+            if(x_hb>1600){
+                x_hb = 80;
+                y_hb += 600;
+            }
+            eval(containernamelist[j]+".setBound("+x_hb+", "+y_hb+", 755, 585)");
+            eval("scene.add(" + containernamelist[j] + ")");
+
+            for (var i = 0; i < (container_node[containernamelist[j]]).length; i++) {
+                eval(containernamelist[j]+".add("+container_node[containernamelist[j]][i]['nodevarname']+")");
+                eval("scene.add(" + container_node[containernamelist[j]][i]['nodevarname'] + ")");
+            }
+            x_hb = x_hb+800;
+
+        }
+        });
+
+
+
+
+{#        增加表格#}
+        $("#tbody").html(table_str);
+{#        增加点击增加事件#}
+
+        });
+
+	</script>
+{% endblock script %}
+
+{% block content %}
+				<div id="tool">
+                <input type="button" id="rmother" value="显示">
+                <table width="100%" border="0">
+
+                    <tbody id="tbody">
+
+                    </tbody>
+                </table>
+                <canvas width="1770" height="1400" id="canvas" style="background-color: #120433"></canvas>
+				</div>
+
+
+{% endblock content %}
