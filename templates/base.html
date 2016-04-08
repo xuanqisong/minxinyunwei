@@ -42,7 +42,7 @@
                     }
                     if (bar_name == '病毒扫描'){
                         navaigation_bar += '<ul class="submenu">';
-                        navaigation_bar += '<li><a href="{% url 'antivirus_configuration_job' %}">定时扫描时间配置</a></li>';
+{#                        navaigation_bar += '<li><a href="{% url 'antivirus_configuration_job' %}">定时扫描时间配置</a></li>';#}
                         navaigation_bar += '<li><a href="{% url 'antiviurs_once_configuration' %}">手动扫描</a></li>';
                         navaigation_bar += '</ul>'
                     }
@@ -59,6 +59,11 @@
                         navaigation_bar += '<li><a href="#">手动连接</a></li>';
                         navaigation_bar += '<li><a href="{% url 'script_show_server_group' %}">批量连接</a></li>';
                         navaigation_bar += '<li><a href="{% url 'script_file_manager' %}">文件管理</a></li>';
+                        navaigation_bar += '</ul>'
+                    }
+                    if (bar_name == '系统配置'){
+                        navaigation_bar += '<ul class = "submenu">';
+                        navaigation_bar += '<li><a href="{% url 'antivirus_configuration_job' %}">计划任务配置</a></li>';
                         navaigation_bar += '</ul>'
                     }
                   navaigation_bar += '</li>';
