@@ -196,37 +196,4 @@ def get_job_detail(f_dir_name):
     return {'job_detail': job_detail}
 
 
-def insert_jobmessage(function_name, year_n, month_n, day_n, hour_n, minute_n, second_n):
-    dir_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    function_dir = dir_path + "/relevance_programme/" + function_name
-    combine_time = change_time_value(year_n, month_n, day_n, hour_n, minute_n, second_n)
-    mysql = MysqlDb('mysql-host')
-
-    sql = "INSERT INTO job_table (t_year,t_month,t_day,t_hour,t_minute,t_second,combine_time,function_name,run_mark) " \
-          "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-    rs_tu = mysql.run_sql(sql, [year_n, month_n, day_n, hour_n, minute_n, second_n, combine_time, function_dir, '1'])
-
-    if len(rs_tu) == 0:
-        return True
-    else:
-        return False
-
-
-def change_time_value(year_n, month_n, day_n, hour_n, minute_n, second_n):
-    combine_time = ''
-    if year_n != '':
-        combine_time += year_n + month_n.rjust(2, "0") + day_n.rjust(2, "0") + hour_n.rjust(2, "0") + minute_n.rjust(2, "0") + second_n.rjust(2, "0")
-    elif month_n != '':
-        combine_time += month_n.rjust(2, "0") + day_n.rjust(2, "0") + hour_n.rjust(2, "0") + minute_n.rjust(2, "0") + second_n.rjust(2, "0")
-    elif day_n != '':
-        combine_time += day_n.rjust(2, "0") + hour_n.rjust(2, "0") + minute_n.rjust(2, "0") + second_n.rjust(2, "0")
-    elif hour_n != '':
-        combine_time += hour_n.rjust(2, "0") + minute_n.rjust(2, "0") + second_n.rjust(2, "0")
-    elif minute_n != '':
-        combine_time += minute_n.rjust(2, "0") + second_n.rjust(2, "0")
-    else:
-        combine_time += second_n.rjust(2, "0")
-
-    return combine_time
-
 

@@ -112,6 +112,7 @@ def start_clamdav(request):
 # job
 def configuration_job(request, di={}):
     di['data'] = use_factions.get_file_data()
+    di['job_detail'] = use_factions.job_detail()
     return render(request, 'job_configuration.html', di)
 
 

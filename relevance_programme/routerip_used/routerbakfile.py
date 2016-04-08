@@ -8,6 +8,7 @@ from Tools.DBtools import MysqlDb
 from Tools import global_value
 from Tools.global_class import Server
 
+
 class ParamikoRun(object):
     def __init__(self, server):
         self.server = server
@@ -53,13 +54,8 @@ if __name__ == "__main__":
             time.sleep(1)
             re_buff += channel.recv(9999)
         # # 清理无用字符
-        # if ip == '10.10.15.126':
         re_buff = re_buff.replace('  ---- More ----\x1b[42D                                          \x1b[42D', '')
-        # else:
-        #     re_buff = re_buff.replace('  ---- More ----\x1b[16D                \x1b[16D', '')
-
         ip_file[ip] = re_buff
-
 
     # 获取文件名
     dir_name = os.path.dirname(os.path.abspath(__file__))
@@ -67,9 +63,9 @@ if __name__ == "__main__":
     # 文件本身路径(出去文件名称)
     dir_name = os.path.dirname(os.path.abspath(__file__))
     # 获取文件上层目录
-    dir_name_up = os.path.abspath(os.path.join(dir_name,os.path.pardir))
+    dir_name_up = os.path.abspath(os.path.join(dir_name, os.path.pardir))
     # 获取文件上层目录
-    dir_name_upup = os.path.abspath(os.path.join(dir_name_up,os.path.pardir))
+    dir_name_upup = os.path.abspath(os.path.join(dir_name_up, os.path.pardir))
 
     dir_name = dir_name_upup + '/servermanager/routerbakfile'
 
@@ -86,5 +82,3 @@ if __name__ == "__main__":
     for ip, file_name in ip_file_name.items():
         txt = ip_file[ip]
         write_file(file_name, txt, 'w')
-
-

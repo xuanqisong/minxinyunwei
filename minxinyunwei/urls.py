@@ -26,6 +26,15 @@ urlpatterns = [
 
     url(r'^$', 'home.views.index', name='index'),
     url(r'^homepage/(?P<values>[^/]+)/$', 'home.views.test', name='homepage'),
+
+    # ajax
+
+    url(r'^navigation_host/', 'home.views.ajax_index', name='ajax_navigation'),
+
+
+]
+# monitor
+urlpatterns += [
     # monitor
     url(r'^homepage/monitor/index/', 'monitor.views.index', name='monitorindex'),
     # monitor configuration
@@ -47,6 +56,11 @@ urlpatterns = [
     url(r'^homepage/monitor/changeserver/', 'monitor.views.changeserver', name='fwpz_changeserver'),
     url(r'^homepage/monitor/deleteserver/', 'monitor.views.deleteserver', name='fwpz_deleteserver'),
 
+    # ajax
+    url(r'^homepage/monitor/ajaxgroup_diskname/', 'monitor.views.ajax_group_disk_name', name='ajax_group_disk_name'),
+]
+# script
+urlpatterns += [
     # script
     url(r'^homepage/script/', 'script.views.index', name='script'),
     url(r'^script/sshmanager/', 'script.views.sshmanager', name='sshmanager'),
@@ -68,19 +82,25 @@ urlpatterns = [
     url(r'^script/uploadfile/', 'script.views.uploadfile', name='script_uploadfile'),
     url(r'^script/downloadfile/', 'script.views.downloadfile', name='script_downloadfile'),
 
+    # ajax
+    url(r'^script/ajax/getserverdetail/', 'script.views.ajax_server_detail', name='script_ajax_server_detail'),
+    url(r'^script/ajax/filemanager/', 'script.views.ajax_file_detail', name='script_ajax_file_detail'),
+]
+# antivirus
+urlpatterns += [
     # antivirus
     url(r'^homepage/antivirus/index/', 'antivirus.views.index', name='antivirus'),
     url(r'^antivirus/once/', 'antivirus.views.mid_onec_antivirus', name='antiviurs_once_configuration'),
     url(r'^antivirus/manualcheck/', 'antivirus.views.manual_check', name='antivirus_manual_check'),
-    # antivirus job
-    url(r'^antivirus/job/', 'antivirus.views.configuration_job', name='antivirus_configuration_job'),
-    url(r'^antivirus/insertjobmessage/', 'antivirus.views.insert_jobmessage', name='antivirus_insert_jobmessage'),
-    # antivirus job_ajax
-    url(r'^antivirus/ajax/jobfiledetail', 'antivirus.views.ajax_configuration_job',
-        name='antivirus_ajax_configuration_job'),
+
     # websocket
     url(r'^antivirus/antivirusmanualstart$', 'antivirus.views.start_clamdav', name='antivirus_run'),
+    # ajax
+    url(r'^antivirus/getserverip/', 'antivirus.views.get_server_ipname', name='antivirus_group_serverip'),
+]
 
+# servermanager
+urlpatterns += [
     # servermanager
     # url(r'^servermanager$','servermanager.views.index',name='servermanagertest'),
     url(r'^homepage/servermanager/routermanager', 'servermanager.views.routermanager',
@@ -101,17 +121,21 @@ urlpatterns = [
     url(r'^servermanager/routerfilebak/', 'servermanager.views.showbakfile', name='servernamager_showbakfile'),
     url(r'^servermanager/download/routerfilebak/', 'servermanager.views.downloadbakfile',
         name='servermanager_downloadbakfile'),
+
     # ajax
-    url(r'^homepage/monitor/ajaxgroup_diskname/', 'monitor.views.ajax_group_disk_name', name='ajax_group_disk_name'),
-    url(r'^navigation_host/', 'home.views.ajax_index', name='ajax_navigation'),
     url(r'^servermanager/detailbakfile/', 'servermanager.views.ajaxdetailbakfile',
         name='ajax_servermanagerdetailbakfile'),
-
-    url(r'^antivirus/getserverip/', 'antivirus.views.get_server_ipname', name='antivirus_group_serverip'),
-
-    url(r'^script/ajax/getserverdetail/', 'script.views.ajax_server_detail', name='script_ajax_server_detail'),
-    url(r'^script/ajax/filemanager/', 'script.views.ajax_file_detail', name='script_ajax_file_detail'),
-
+]
+# home
+urlpatterns += [
+    # job
+    url(r'^home/job/', 'home.views.configuration_job', name='home_configuration_job'),
+    url(r'^home/insertjobmessage/', 'home.views.insert_jobmessage', name='home_insert_jobmessage'),
+    # ajax
+    url(r'^home/ajax/jobfiledetail', 'home.views.ajax_configuration_job',
+        name='home_ajax_configuration_job'),
+    url(r'^home/ajax/changerunmark', 'home.views.ajax_change_run_mark', name='home_change_run_mark'),
+    url(r'^home/ajax/deletejob', 'home.views.ajax_delete_job', name='home_delete_job'),
 ]
 # static files
 import os

@@ -31,7 +31,10 @@ class GetWorkList(Thread, Singleton):
     def run(self):
         while True:
             sql = "select id, combine_time, function_name from job_table WHERE run_mark = '1'"
-            re_li = global_function.tuple_to_list(self.mysql.run_sql(sql, ''))
+            re_tu = self.mysql.run_sql(sql)
+            if len(re_tu) < 1:
+                continue
+            re_li = global_function.tuple_to_list(re_tu)
             re_li = map(global_function.str_just, re_li)
             re_li = filter(global_function.judge_time, re_li)
             if len(re_li) > 0:

@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+
+{% block title %} 首页测试 {% endblock title %}
+
+{% block script %}
+    <script src="/templates/treemodel/js/bootstrap-treeview.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+
+
+
+
+            var options = {
+                bootstrap2: false,
+                showTags: true,
+                showBorder: false,
+                levels: 1,
+                data: {{ data|safe }}
+            };
+            $("#treeview").treeview(options);
+            $("#treeview").on('nodeSelected',function(event,data){
+                var c_file_name = data.text;
+                var f_n = $('#treeview').treeview('getParent', data.nodeId);
+                var f_dir_name = f_n.text;
+                var td_detail = document.getElementById("detail_file");
+                var function_path = document.getElementById("function_path");
+                function_path.value = f_dir_name + "/" + c_file_name;
+                $.getJSON('{% url 'home_ajax_configuration_job' %}',{'f_dir_name':f_dir_name},function(di) {
+                    var job_detail = '';
+                    $.each(di,function(name,value){
+                        job_detail += '<textarea style="width: 100%;height: 100px;background-color: #d8ffc6;font-weight: bold;">';
+                        job_detail += value;
+                        job_detail += '</textarea>';
+                        job_detail += '<input type="submit" value="确定" />'
+                    });
+                    td_detail.innerHTML = job_detail;
+
+                });
+            });
+
+        });
+    </script>
+    <script>
+    function changestatu(b){
+        var id = b.id.replace(/[bvalue]/g, '');
+        var run_mark = document.getElementById("rummark"+id).value;
+        $.getJSON('{% url 'home_change_run_mark' %}',{'id':id,'run_mark':run_mark},function(di){
+            var td_value = document.getElementById("cvalue"+di['id']);
+            var in_value = document.getElementById("bvalue"+di['id']);
+            var r_value = document.getElementById("rummark"+di['id']);
+            r_value.value = di['run_mark'];
+            if (di['run_mark'] == '1')
+            {
+                td_value.innerHTML = "开启运行";
+                in_value.value = "停止";
+            }
+            else
+            {
+                td_value.innerHTML = "停止运行";
+                in_value.value = "开始";
+            }
+        });
+    }
+    </script>
+    <script>
+    function deletejob(b){
+        var id = b.id.replace(/[d]/g, '');
+        $.getJSON('{% url 'home_delete_job' %}',{'id':id},function(di){
+            if (di['id'] != 'false' ){
+                var tr = document.getElementById("tr"+di['id']);
+                tr.innerHTML = '';
+            }
+        });
+    }
+    </script>
+{% endblock script %}
+
+{% block content %}
+<form action="{% url 'home_insert_jobmessage' %}" method="post">
+    <div style="font-size: large;font-weight: 800">{{ alert }}</div>
+    <table width="96%" border="8">
+    <tr><td colspan="2"><h1>计划任务配置</h1></td></tr>
+    <tr>
+        <td width="10%">
+            <div class="container" style="width: 300px">
+
+        {#        文件列表左侧#}
+                <div class="row" style="text-align: left;">
+                    <div class="col-sm-12">
+                      <div id="treeview"></div>
+                    </div>
+                </div>
+            </div>
+        </td>
+        <td width="90%">
+      {#    文件详细内容右侧#}
+            <table border="2" width="100%">
+                <tr>
+                    <td colspan="6"><label for="function_path"></label><input id="function_path" name="function_name" type="text" readonly="true" style="width: 100%;font-size: large;font-weight: bold;text-align: center"/></td>
+                </tr>
+                <tr>
+                    <td><label for="year_n">年</label><input id="year_n" name="year_n" type="number" min="1960" max="3000"></td>
+                    <td><label for="month_n">月</label><input id="month_n" name="month_n" type="number" min="1" max="12"/></td>
+                    <td><label for="day_n">日</label><input id="day_n" name="day_n" type="number" min="1" max=""/></td>
+                    <td><label for="hour_n">小时<input id="hour_n" name="hour_n" type="number" min="0" max="24"/></label></td>
+                    <td><label for="minute_n">分钟<input id="minute_n" name="minute_n" type="number" min="0" max="60"/></label></td>
+                    <td><label for="second_n">秒<input id="second_n" name="second_n" type="number" min="0" max="60"/></label></td>
+                </tr>
+                <tr>
+                    <td colspan="6"><div id="detail_file"></div></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+{#        已经运行job展示#}
+    <tr>
+        <td colspan="2">
+            <table border="2" width="100%" style="background-color: #deffdf">
+                <tbody id="job"></tbody>
+                <tr>
+                    <td width="10%">年</td>
+                    <td width="10%">月</td>
+                    <td width="10%">日</td>
+                    <td width="10%">小时</td>
+                    <td width="10%">分钟</td>
+                    <td width="10%">秒</td>
+                    <td width="10%">函数名称</td>
+                    <td width="10%">执行状态</td>
+                    <td width="10%"></td>
+                </tr>
+                {% for job in job_detail %}
+                <tr id="tr{{ job.id }}">
+                    <td><input type="hidden" name="id" value="{{ job.id }}"/>{{ job.t_year }}</td>
+                    <td>{{ job.t_month }}</td>
+                    <td>{{ job.t_day }}</td>
+                    <td>{{ job.t_hour }}</td>
+                    <td>{{ job.t_minute }}</td>
+                    <td>{{ job.t_second }}</td>
+                    <td>{{ job.function_name }}<input type="hidden" id="rummark{{ job.id }}" value="{{ job.run_mark }}"/></td>
+                    {% if job.run_mark == "1" %}
+                        <td id="cvalue{{ job.id }}">开启运行</td>
+                        <td>
+                            <input type="button" id="bvalue{{ job.id }}" onclick="changestatu(this)" value="停止"/>
+                            <input type="button" id="d{{ job.id }}" onclick="deletejob(this)" value="删除"/>
+                        </td>
+                    {% else %}
+                        <td id="cvalue{{ job.id }}">停止运行</td>
+                        <td>
+                            <input type="button" id="bvalue{{ job.id }}" onclick="changestatu(this)" value="开始"/>
+                            <input type="button" id="d{{ job.id }}" onclick="deletejob(this)" value="删除"/>
+                        </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </table>
+        </td>
+    </tr>
+    </table>
+</form>
+
+{% endblock content %}

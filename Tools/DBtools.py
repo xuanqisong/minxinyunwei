@@ -47,3 +47,31 @@ class MysqlDb(object):
         except Exception as e:
             global_function.write_file(filepath, "get DB connect error: " + str(e), 'a+')
             return False
+
+    def run_uid(self, sql, value_li=''):
+        try:
+            conn = self.get_connect()
+
+            try:
+                cu = conn.cursor()
+                if value_li != "":
+                    cu.execute(sql, value_li)
+                else:
+                    cu.execute(sql)
+
+                count = cu.rowcount
+                conn.commit()
+                cu.close()
+                conn.close()
+                global_function.write_file(filepath, sql, 'a+')
+                return count
+
+            except Exception as e:
+                global_function.write_file(filepath, "execute sql error: " + str(e), 'a+')
+                conn.rollback()
+                conn.close()
+                return False
+
+        except Exception as e:
+            global_function.write_file(filepath, "get DB connect error: " + str(e), 'a+')
+            return False
