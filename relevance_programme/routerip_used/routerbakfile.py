@@ -23,7 +23,7 @@ class ParamikoRun(object):
 
 if __name__ == "__main__":
     mysql = MysqlDb('mysql-host')
-    sql = "SELECT * FROM server_list_old WHERE ip='10.255.254.131'"
+    sql = "SELECT * FROM server_list WHERE servertype='2'"
     rs_tuple = mysql.run_sql(sql)
     rs_list = tuple_to_list(rs_tuple)
     server_list = []

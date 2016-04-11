@@ -121,6 +121,9 @@
         var in_obj = document.getElementById(i_name);
 
         var va = obj.value;
+        if (va == '0'){
+            va = '00'
+        }
         var checked_va = obj.checked;
         if (checked_va == true){
             if (in_obj.value == "*"){

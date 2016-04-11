@@ -38,4 +38,4 @@ class Server(object):
         self.group = self.sql_list[5]
         self.statu = self.sql_list[6]
         self.servertype = self.sql_list[7]
-        self.monitor_value = self.sql_list[8]
+        # self.monitor_value = self.sql_list[8]
