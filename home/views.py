@@ -51,12 +51,12 @@ def configuration_job(request, di=None):
 
 def insert_jobmessage(request):
     function_name = request.POST.get('function_name')
-    year_n = request.POST.get('year_n')
-    month_n = request.POST.get('month_n')
-    day_n = request.POST.get('day_n')
-    hour_n = request.POST.get('hour_n')
-    minute_n = request.POST.get('minute_n')
-    second_n = request.POST.get('second_n')
+    year_n = request.POST.get('year_t')
+    month_n = request.POST.get('month_t')
+    day_n = request.POST.get('day_t')
+    hour_n = request.POST.get('hour_t')
+    minute_n = request.POST.get('minute_t')
+    second_n = request.POST.get('second_t')
     if use_factions.insert_jobmessage(function_name, year_n, month_n, day_n, hour_n, minute_n, second_n):
         di = {'alert': "存储成功"}
     else:

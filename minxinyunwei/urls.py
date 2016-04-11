@@ -129,13 +129,13 @@ urlpatterns += [
 # home
 urlpatterns += [
     # job
-    url(r'^home/job/', 'home.views.configuration_job', name='home_configuration_job'),
-    url(r'^home/insertjobmessage/', 'home.views.insert_jobmessage', name='home_insert_jobmessage'),
+    url(r'^sysconfiguration/job/', 'home.views.configuration_job', name='home_configuration_job'),
+    url(r'^sysconfiguration/insertjobmessage/', 'home.views.insert_jobmessage', name='home_insert_jobmessage'),
     # ajax
-    url(r'^home/ajax/jobfiledetail', 'home.views.ajax_configuration_job',
+    url(r'^sysconfiguration/ajax/jobfiledetail', 'home.views.ajax_configuration_job',
         name='home_ajax_configuration_job'),
-    url(r'^home/ajax/changerunmark', 'home.views.ajax_change_run_mark', name='home_change_run_mark'),
-    url(r'^home/ajax/deletejob', 'home.views.ajax_delete_job', name='home_delete_job'),
+    url(r'^sysconfiguration/ajax/changerunmark', 'home.views.ajax_change_run_mark', name='home_change_run_mark'),
+    url(r'^sysconfiguration/ajax/deletejob', 'home.views.ajax_delete_job', name='home_delete_job'),
 ]
 # static files
 import os

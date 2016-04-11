@@ -39,7 +39,7 @@ class AllocationThread(Thread, Singleton):
             li = self.work_queue.get()
             print "run queue thread and thread li :", li
             for job in li:
-                runfunction = RunFunction(job[1])
+                runfunction = RunFunction(job[2])
                 runfunction.start()
             self.work_queue.task_done()
 

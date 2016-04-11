@@ -6,7 +6,7 @@
     <script src="/templates/treemodel/js/bootstrap-treeview.js"></script>
     <script type="text/javascript">
         $(document).ready(function(){
-
+            ti();
 
 
 
@@ -73,6 +73,82 @@
         });
     }
     </script>
+    <script>
+    function ti(){
+        var today = new Date();
+        var t_year = today.getFullYear();
+        var td_y = document.getElementById("year");
+        var td_mo = document.getElementById("month");
+        var td_d = document.getElementById("day");
+        var td_h = document.getElementById("hour");
+        var td_mi = document.getElementById("minute");
+        var td_s = document.getElementById("second");
+        var year_html = "";
+        var month_html = "";
+        var day_html = "";
+        var hour_html = "";
+        var minute_html = "";
+        var second_html = "";
+        for (var i=0;i<=3;i++){
+            var y_value = t_year+i;
+            year_html += "<input name='t_year' type='checkbox' onclick='add_remove(this,\"year_t\")' value='"+y_value+"'/>"+y_value+"年";
+        }
+        for (var i=1;i<=12;i++){
+            month_html += "<input name='t_month' type='checkbox' onclick='add_remove(this,\"month_t\")' value='"+i+"'/>"+i+"月";
+        }
+        for (var i=1;i<=31;i++){
+            day_html += "<input name='t_day' type='checkbox' onclick='add_remove(this,\"day_t\")' value='"+i+"'/>"+i+"日";
+        }
+        for (var i=0;i<=24;i++){
+            hour_html += "<input name='t_day' type='checkbox' onclick='add_remove(this,\"hour_t\")' value='"+i+"'/>"+i+"时";
+        }
+        for (var i=0;i<=59;i++){
+            minute_html += "<input name='t_day' type='checkbox' onclick='add_remove(this,\"minute_t\")' value='"+i+"'/>"+i+"分";
+        }
+        for (var i=0;i<=59;i++){
+            second_html += "<input name='t_day' type='checkbox' onclick='add_remove(this,\"second_t\")' value='"+i+"'/>"+i+"秒";
+        }
+        td_y.innerHTML = year_html;
+        td_mo.innerHTML = month_html;
+        td_d.innerHTML = day_html;
+        td_h.innerHTML = hour_html;
+        td_mi.innerHTML = minute_html;
+        td_s.innerHTML = second_html;
+    }
+    </script>
+    <script>
+    function add_remove(obj, i_name){
+        var in_obj = document.getElementById(i_name);
+
+        var va = obj.value;
+        var checked_va = obj.checked;
+        if (checked_va == true){
+            if (in_obj.value == "*"){
+                in_obj.value = va;
+            }else
+            {
+                in_obj.value = in_obj.value + "," + va;
+            }
+
+
+        }else
+        {
+            var i_year_list = in_obj.value.split(",");
+            for (var i=0;i<i_year_list.length;i++){
+                if (i_year_list[i] == va){
+                    i_year_list.splice(i,1);
+                }
+            }
+
+            if (i_year_list.length == 0){
+                in_obj.value = "*";
+            }else
+            {
+                in_obj.value = i_year_list;
+            }
+        }
+    }
+    </script>
 {% endblock script %}
 
 {% block content %}
@@ -82,7 +158,7 @@
     <tr><td colspan="2"><h1>计划任务配置</h1></td></tr>
     <tr>
         <td width="10%">
-            <div class="container" style="width: 300px">
+            <div class="container" style="width: 250px">
 
         {#        文件列表左侧#}
                 <div class="row" style="text-align: left;">
@@ -99,12 +175,28 @@
                     <td colspan="6"><label for="function_path"></label><input id="function_path" name="function_name" type="text" readonly="true" style="width: 100%;font-size: large;font-weight: bold;text-align: center"/></td>
                 </tr>
                 <tr>
-                    <td><label for="year_n">年</label><input id="year_n" name="year_n" type="number" min="1960" max="3000"></td>
-                    <td><label for="month_n">月</label><input id="month_n" name="month_n" type="number" min="1" max="12"/></td>
-                    <td><label for="day_n">日</label><input id="day_n" name="day_n" type="number" min="1" max=""/></td>
-                    <td><label for="hour_n">小时<input id="hour_n" name="hour_n" type="number" min="0" max="24"/></label></td>
-                    <td><label for="minute_n">分钟<input id="minute_n" name="minute_n" type="number" min="0" max="60"/></label></td>
-                    <td><label for="second_n">秒<input id="second_n" name="second_n" type="number" min="0" max="60"/></label></td>
+                    <td width="5%">年</td>
+                    <td width="10%">月</td>
+                    <td width="13%">日</td>
+                    <td width="12%">时</td>
+                    <td width="30%">分</td>
+                    <td width="30%">秒</td>
+                </tr>
+                <tr>
+                    <td><input name="year_t" id="year_t" value="*" /></td>
+                    <td><input name="month_t" id="month_t" value="*"/></td>
+                    <td><input name="day_t" id="day_t" value="*"/></td>
+                    <td><input name="hour_t" id="hour_t" value="*"/></td>
+                    <td><input name="minute_t" id="minute_t" value="*"/></td>
+                    <td><input name="second_t" id="second_t" value="*"/></td>
+                </tr>
+                <tr>
+                    <td id="year"></td>
+                    <td id="month"></td>
+                    <td id="day"></td>
+                    <td id="hour"></td>
+                    <td id="minute"></td>
+                    <td id="second"></td>
                 </tr>
                 <tr>
                     <td colspan="6"><div id="detail_file"></div></td>
