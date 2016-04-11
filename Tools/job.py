@@ -6,21 +6,6 @@ import subprocess
 from global_class import Singleton
 
 
-class JobTable(object):
-    def __init__(self, t_id, t_year, t_month, t_day, t_hour, t_minute, t_second, combine_time, function_name,
-                 run_mark):
-        self.id = t_id
-        self.t_year = t_year
-        self.t_mounth = t_month
-        self.t_day = t_day
-        self.t_hour = t_hour
-        self.t_minute = t_minute
-        self.t_second = t_second
-        self.combine_time = combine_time
-        self.function_name = function_name
-        self.run_mari = run_mark
-
-
 class GetWorkList(Thread, Singleton):
     def __init__(self, mysql, work_queue):
         Thread.__init__(self)
@@ -30,17 +15,18 @@ class GetWorkList(Thread, Singleton):
 
     def run(self):
         while True:
-            sql = "select id, combine_time, function_name from job_table WHERE run_mark = '1'"
+            sql = "select t_year,t_month,t_day,t_hour,t_minute,t_second,function_name from job_table WHERE run_mark = '1'"
             re_tu = self.mysql.run_sql(sql)
-            if len(re_tu) < 1:
+            if not re_tu:
                 continue
-            re_li = global_function.tuple_to_list(re_tu)
-            re_li = map(global_function.str_just, re_li)
+            elif len(re_tu) < 1:
+                continue
+            re_li = map(global_function.str_just, re_tu)
             re_li = filter(global_function.judge_time, re_li)
             if len(re_li) > 0:
-                if self.old_time != re_li[0][3]:
+                if self.old_time != re_li[0][1]:
                     self.work_queue.put(re_li)
-                    self.old_time = re_li[0][3]
+                    self.old_time = re_li[0][1]
 
 
 class AllocationThread(Thread, Singleton):

@@ -156,19 +156,63 @@ def decrypt(key, s):
 # job
 def str_just(li):
     now_time = datetime.datetime.now()
-    now_time_str = now_time.strftime("%Y%m%d%H%M%S")
+    now_time_str = now_time.strftime("%Y/%m/%d/%H/%M/%S")
     year = now_time.strftime("%Y")
     month = now_time.strftime("%m")
     day = now_time.strftime("%d")
     hour = now_time.strftime("%H")
     minute = now_time.strftime("%M")
-    ti = li[1].rjust(3, 'a').replace('a', minute)
-    ti = ti.rjust(5, 'a').replace('a', hour)
-    ti = ti.rjust(7, 'a').replace('a', day)
-    ti = ti.rjust(9, 'a').replace('a', month)
-    ti = ti.rjust(11, 'a').replace('a', year)
-    return [li[0], li[2], ti, now_time_str]
+    second = now_time.strftime("%S")
+
+    ti_list = []
+    if li[0] == "*":
+        ti_list.append(year)
+    else:
+        ti_list.append(li[0])
+
+    if li[1] == "*":
+        ti_list.append(month)
+    else:
+        ti_list.append(li[1])
+
+    if li[2] == "*":
+        ti_list.append(day)
+    else:
+        ti_list.append(li[2])
+
+    if li[3] == "*":
+        ti_list.append(hour)
+    else:
+        ti_list.append(li[3])
+
+    if li[4] == "*":
+        ti_list.append(minute)
+    else:
+        ti_list.append(li[4])
+
+    if li[5] == "*":
+        ti_list.append(second)
+    else:
+        ti_list.append(li[5])
+
+    ti = '/'.join(ti_list)
+    return [ti, now_time_str, li[6]]
 
 
 def judge_time(li):
-    return li[2] == li[3]
+    check_run = []
+    job_ti = str(li[0]).split('/')
+    run_ti = str(li[1]).split('/')
+
+    for index, ti in enumerate(job_ti):
+        if job_ti[index] == run_ti[index]:
+            check_run.append(True)
+        else:
+            if run_ti[index] in str(job_ti[index]).split(","):
+                check_run.append(True)
+            else:
+                check_run.append(False)
+    if False in check_run:
+        return False
+    else:
+        return True
