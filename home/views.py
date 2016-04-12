@@ -62,6 +62,7 @@ def insert_jobmessage(request):
     else:
         di = {'alert': "存储失败"}
     di['data'] = use_factions.get_file_data()
+    di['job_detail'] = use_factions.job_message()
     return render(request, 'job_configuration.html', di)
 
 

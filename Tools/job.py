@@ -53,5 +53,6 @@ class RunFunction(Thread):
 
     def run(self):
         # print "run function function_name :", self.function_name, time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-        child = subprocess.Popen("python " + self.function_name)
-        child.wait()
+        # child = subprocess.Popen("python " + self.function_name) # windows
+        # child.wait()
+        execfile(self.function_name)  # linux

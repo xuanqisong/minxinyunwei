@@ -250,23 +250,26 @@ def get_file_data():
         dir_file_di[file_dir_name] = os.listdir(dir_name + '/' + file_dir_name)
 
     # 拼接页面data
-    data = '['
-    for file_dir_name, file_list in dir_file_di.items():
-        data += '{ '
-        data += 'text: "' + file_dir_name + '",'
-        data += 'selectable: false,'
-        data += 'nodes:['
-        for file_name in file_list:
-            data += '{'
-            # data += 'text: "<a href="javascript: clickfile()">'+file_name+'</a>",'
-            data += 'text: "' + file_name + '",'
+    if len(dir_file_di) > 0:
+        data = '['
+        for file_dir_name, file_list in dir_file_di.items():
+            data += '{ '
+            data += 'text: "' + file_dir_name + '",'
+            data += 'selectable: false,'
+            data += 'nodes:['
+            for file_name in file_list:
+                data += '{'
+                # data += 'text: "<a href="javascript: clickfile()">'+file_name+'</a>",'
+                data += 'text: "' + file_name + '",'
+                data += '},'
+            data = data[:-1]
+            data += ']'
             data += '},'
+
         data = data[:-1]
         data += ']'
-        data += '},'
-
-    data = data[:-1]
-    data += ']'
+    else:
+        data = '[]'
 
     return data
 
