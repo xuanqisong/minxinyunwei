@@ -4,6 +4,7 @@ from threading import Thread
 import global_function
 import subprocess
 from global_class import Singleton
+import time
 
 
 class GetWorkList(Thread, Singleton):
@@ -15,6 +16,7 @@ class GetWorkList(Thread, Singleton):
 
     def run(self):
         while True:
+            time.sleep(0.5)
             sql = "select t_year,t_month,t_day,t_hour,t_minute,t_second,function_name from job_table WHERE run_mark = '1'"
             re_tu = self.mysql.run_sql(sql)
             if not re_tu:

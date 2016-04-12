@@ -13,35 +13,34 @@ mysql_ini = dir_name + '/mysql.ini'
 class MysqlDb(object):
     def __init__(self, db_name):
         self.db_name = db_name
+        self.conn = None
 
     def get_connect(self):
         di = global_function.read_ini(mysql_ini, self.db_name)
-        conn = MySQLdb.Connect(host=di['host'], port=int(di['port']), user=di['user'], passwd=di['passwd'], db=di['db'],
-                               charset=di['charset'])
-        return conn
+        self.conn = MySQLdb.Connect(host=di['host'], port=int(di['port']), user=di['user'], passwd=di['passwd'], db=di['db'],
+                                    charset=di['charset'])
 
     def run_sql(self, sql, value_li=''):
         try:
-            conn = self.get_connect()
-
+            self.get_connect()
             try:
-                cu = conn.cursor()
+                cu = self.conn.cursor()
                 if value_li != "":
                     cu.execute(sql, value_li)
                 else:
                     cu.execute(sql)
 
                 rs = cu.fetchall()
-                conn.commit()
+                self.conn.commit()
                 cu.close()
-                conn.close()
+                self.conn.close()
                 global_function.write_file(filepath, sql, 'a+')
                 return rs
 
             except Exception as e:
                 global_function.write_file(filepath, "execute sql error: " + str(e), 'a+')
-                conn.rollback()
-                conn.close()
+                self.conn.rollback()
+                self.conn.close()
                 return False
 
         except Exception as e:
@@ -50,26 +49,25 @@ class MysqlDb(object):
 
     def run_uid(self, sql, value_li=''):
         try:
-            conn = self.get_connect()
-
+            self.get_connect()
             try:
-                cu = conn.cursor()
+                cu = self.conn.cursor()
                 if value_li != "":
                     cu.execute(sql, value_li)
                 else:
                     cu.execute(sql)
 
                 count = cu.rowcount
-                conn.commit()
+                self.conn.commit()
                 cu.close()
-                conn.close()
+                self.conn.close()
                 global_function.write_file(filepath, sql, 'a+')
                 return count
 
             except Exception as e:
                 global_function.write_file(filepath, "execute sql error: " + str(e), 'a+')
-                conn.rollback()
-                conn.close()
+                self.conn.rollback()
+                self.conn.close()
                 return False
 
         except Exception as e:
