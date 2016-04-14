@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %} 添加服务器 {% endblock title %}
+
+{% block script %}
+    <script>
+    $(document).ready(function(){
+
+
+        $("#new_group").click(function () {
+            var c_box = document.getElementById("new_group");
+            var checked = c_box.checked;
+            var div_ngroup = document.getElementById("group_new");
+            var div_ogroup = document.getElementById("group_old");
+            if (checked == true) {
+                div_ogroup.style.visibility = "hidden";
+                div_ngroup.style.visibility = "visible";
+                document.getElementById("input_group").name = "server_group";
+                document.getElementById("select_group").name = "";
+            }
+            else {
+                div_ogroup.style.visibility = "visible";
+                div_ngroup.style.visibility = "hidden";
+                document.getElementById("input_group").name = "";
+                document.getElementById("select_group").name = "server_group";
+            }
+        })
+
+    })
+    </script>
+{% endblock %}
+{% block content %}
+    <style type="text/css">
+.error{
+    padding-right: 0px;color:#600000;font-weight:bold
+}
+
+</style>
+<form action="{% url 'home_new_server' %}" method="post">
+<div style="padding-top:10px;padding-left:4%;padding-bottom:10px">
+<table width="96%" border="5" >
+	<tr>
+        <td>
+            服务器IP
+        </td>
+        <td>
+            <input type="number" min = "0" max = "255" name = "server_ip1" ><b>.</b>
+            <input type="number" min = "0" max = "255" name = "server_ip2" ><b>.</b>
+            <input type="number" min = "0" max = "255" name = "server_ip3" ><b>.</b>
+            <input type="number" min = "0" max = "255" name = "server_ip4" >
+            <div style="padding-right: 0px;color:#600000;font-weight:bold">{{ server.ip }}</div>
+            <div style="padding-right: 0px;color:#600000;font-weight:bold">{{ server_ip }}</div>
+        </td>
+	</tr>
+	<tr>
+        <td>
+            服务器描述
+        </td>
+        <td>
+            <input type="text" name = "server_detail" value = {{ server.detail }}><div class="error">{{ server_detail }}</div>
+        </td>
+	</tr>
+    <tr>
+        <td>
+            服务器端口号
+        </td>
+        <td>
+            <input type="number" name = "server_port" min = "0" max = "65535" value= {{ server.port }}><div class="error">{{ server_port }}</div>
+        </td>
+	</tr>
+    <tr>
+        <td>
+            服务器组
+        </td>
+        <td>
+            <input type="checkbox" id="new_group" checked="checked"/>使用新分组
+            <div id="group_old" style="display: inline;visibility: hidden">
+{#                <input type="text" name = "server_group" value = {{ server.get_group }}>#}
+                <select name="server_group" id="select_group">
+                    {% for group_name in service_group %}
+                    <option value="{{ group_name }}">{{ group_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div id="group_new" style="display: inline;visibility: visible"><input type="text" id="input_group" value = {{ server.group }}></div>
+            <div class="error">{{ server_group }}</div>
+        </td>
+	</tr>
+    <tr>
+        <td>
+            监控状态
+        </td>
+        <td>
+            <select name="server_state" >
+                <option value = "2" selected = "selected">关闭</option>
+			    <option value = "1">开启</option>
+	        </select>
+        </td>
+	</tr>
+    <tr>
+        <td>
+            服务器用户名
+        </td>
+        <td>
+            <input type = "text" name = "server_user" value = {{ server.user }}><div class="error">{{ server_user }}</div>
+        </td>
+	</tr>
+    <tr>
+        <td>
+            服务器密码
+        </td>
+        <td>
+            <input type = "password" name = "server_password" value = {{ server.password }}><div class="error">{{ server_password }}</div>
+        </td>
+	</tr>
+    <tr>
+        <td>
+            确认密码
+        </td>
+        <td>
+            <input type = "password" name = "server_password_t"><div class="error">{{ server_password_t }}</div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            服务器类型
+        </td>
+        <td>
+            <select name="server_type">
+                <option value="1">应用服务器</option>
+                <option value="2">路由器</option>
+                <option value="3">SSH连接服务器</option>
+            </select>
+        </td>
+    </tr>
+</table>
+    <input type = "submit" value = "确定">
+</div>
+</form>
+{% endblock content %}

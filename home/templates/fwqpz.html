@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %} 服务器配置 {% endblock title %}
+
+{% block content %}
+
+    <script type="text/javascript">
+        function display_alert()
+            {
+            alert("确定删除服务器？"+server_ip)
+            }
+    </script>
+
+
+
+
+    {{ alert|safe }}
+<form  method="post">
+<table width="96%" border="5">
+    <tr bgcolor="#B8B8DC">
+        <td>服务器IP</td>
+        <td>用户名</td>
+        <td>端口号</td>
+        <td>服务器描述</td>
+        <td>服务器分组</td>
+        <td>监控状态</td>
+    </tr>
+    <tr bgcolor="#B8B8DC"><td colspan="6">应用服务器</td></tr>
+{% for server in server_list %}
+    {% if server.servertype == '1' %}
+    <tr>
+        <td><input name = "server_ip" type="checkbox" value="{{ server.ip }}">{{ server.ip }}</td>
+        <td>{{ server.user }}</td>
+        <td>{{ server.port }}</td>
+        <td>{{ server.detail }}</td>
+        <td>{{ server.group }}</td>
+        {% if server.status == '1' %}<td>开启</td>{% else %}<td>关闭</td>{% endif %}
+    </tr>
+    {% endif %}
+{% endfor %}
+    <tr bgcolor="#B8B8DC"><td colspan="6">路由器</td></tr>
+{% for server in server_list %}
+    {% if server.servertype == '2' %}
+    <tr>
+        <td><input name = "server_ip" type="checkbox" value="{{ server.ip }}">{{ server.ip }}</td>
+        <td>{{ server.user }}</td>
+        <td>{{ server.port }}</td>
+        <td>{{ server.detail }}</td>
+        <td>{{ server.group }}</td>
+        {% if server.status == '1' %}<td>开启</td>{% else %}<td>关闭</td>{% endif %}
+    </tr>
+    {% endif %}
+{% endfor %}
+    <tr bgcolor="#B8B8DC"><td colspan="6">SSH连接服务器</td></tr>
+{% for server in server_list %}
+    {%  if server.servertype == '3' %}
+    <tr>
+        <td><input name = "server_ip" type="checkbox" value="{{ server.ip }}">{{ server.ip }}</td>
+        <td>{{ server.user }}</td>
+        <td>{{ server.port }}</td>
+        <td>{{ server.detail }}</td>
+        <td>{{ server.group }}</td>
+        {% if server.status == '1' %}<td>开启</td>{% else %}<td>关闭</td>{% endif %}
+    </tr>
+    {% endif %}
+{% endfor %}
+</table>
+<input type="submit" formaction="{% url 'home_new_server_mid' %}" value="新建服务器">
+<input type="submit" formaction="{% url 'fwpz_deleteserver' %}" value="删除服务器">
+<input type="submit" formaction="{% url 'fwpz_changeserver_mid' %}" value="修改服务器">
+</form>
+{% endblock content %}

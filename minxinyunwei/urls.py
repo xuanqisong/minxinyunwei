@@ -136,6 +136,11 @@ urlpatterns += [
         name='home_ajax_configuration_job'),
     url(r'^sysconfiguration/ajax/changerunmark', 'home.views.ajax_change_run_mark', name='home_change_run_mark'),
     url(r'^sysconfiguration/ajax/deletejob', 'home.views.ajax_delete_job', name='home_delete_job'),
+
+    # server manager
+    url(r'^sysconfiguration/servermanager/', 'home.views.fwqpz', name='home_fwqpz'),
+    url(r'^sysconfiguration/newservermid/', 'home.views.new_server_mid', name='home_new_server_mid'),
+    url(r'^sysconfiguration/newserver/', 'home.views.newserver', name='home_new_server'),
 ]
 # static files
 import os

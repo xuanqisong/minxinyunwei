@@ -17,25 +17,23 @@ class Singleton2(type):
 
 
 class Server(object):
-    def __init__(self, sql_list):
-        self.sql_list = sql_list
+    def __init__(self, value_list):
+        self.value_list = value_list
         self.ip = ''
         self.user = ''
         self.password = ''
         self.port = ''
         self.detail = ''
         self.group = ''
-        self.statu = ''
+        self.status = ''
         self.servertype = ''
-        self.monitor_value = ''
 
     def binding_server_value(self):
-        self.ip = self.sql_list[0]
-        self.user = self.sql_list[1]
-        self.password = self.sql_list[2]
-        self.port = self.sql_list[3]
-        self.detail = self.sql_list[4]
-        self.group = self.sql_list[5]
-        self.statu = self.sql_list[6]
-        self.servertype = self.sql_list[7]
-        # self.monitor_value = self.sql_list[8]
+        self.ip = self.value_list[0]
+        self.user = self.value_list[1]
+        self.password = self.value_list[2]
+        self.port = self.value_list[3]
+        self.detail = self.value_list[4]
+        self.group = self.value_list[5]
+        self.status = self.value_list[6]
+        self.servertype = self.value_list[7]

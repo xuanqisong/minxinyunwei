@@ -87,3 +87,29 @@ def ajax_delete_job(request):
         return JsonResponse({'id': pid})
     else:
         return JsonResponse({'id': 'false'})
+
+
+# service manager
+def fwqpz(request, di={}):
+    di = {'server_list': use_factions.service_detail()}
+    return render(request, 'fwqpz.html', di)
+
+
+def new_server_mid(request):
+    di = {'service_group': use_factions.service_group()}
+    return render(request, 'fwq_new.html', di)
+
+
+def newserver(request):
+    check_report = use_factions.check_server_field(request, "new")
+    if check_report['report']:
+        if use_factions.insert_server(check_report['server']):
+            use_factions.call_procedure('new_partition', 'new', 'statu_cpu')
+            use_factions.call_procedure('new_partition', 'new', 'statu_disk')
+            use_factions.call_procedure('new_partition', 'new', 'statu_memory')
+            check_report['alert'] = '<Script Language="JavaScript"> alert("服务器存储成功"); </Script>'
+        else:
+            check_report['alert'] = '<Script Language="JavaScript"> alert("服务器存储失败"); </Script>'
+        return fwqpz(request, check_report)
+    else:
+        return render(request, 'new_server.html', check_report)

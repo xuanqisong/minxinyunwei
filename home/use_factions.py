@@ -2,6 +2,9 @@
 import os
 from Tools.DBtools import MysqlDb
 from home.baseclass import *
+from Tools.global_class import Server
+from Tools.global_function import encrypt
+from Tools import global_value
 
 
 def get_file_data():
@@ -106,3 +109,137 @@ def delete_job(pid):
         return True
     else:
         return False
+
+
+# service manager
+def service_detail():
+    re_li = []
+    mysql = MysqlDb('mysql-host')
+    sql = "SELECT * FROM server_list"
+    re_tu = mysql.run_sql(sql)
+    for tu in re_tu:
+        server = Server(tu)
+        server.binding_server_value()
+        re_li.append(server)
+    return re_li
+
+
+def service_group():
+    re_li = []
+    mysql = MysqlDb('mysql-host')
+    sql = "SELECT DISTINCT(`group`) FROM server_list"
+    re_tu = mysql.run_sql(sql)
+    for tu in re_tu:
+        re_li.append(tu[0])
+    return re_li
+
+
+# 服务器增删改查
+# 检验服务器字段
+def check_server_field(request, method):
+    # 检验重复IP
+    server_list = service_detail()
+    server_iplist = []
+    for old_server in server_list:
+        server_iplist.append(old_server.ip)
+    # 校对字段
+    check_report = {'report': True}
+    if method == "new":
+        server_ip1 = request.POST.get('server_ip1')
+        server_ip2 = request.POST.get('server_ip2')
+        server_ip3 = request.POST.get('server_ip3')
+        server_ip4 = request.POST.get('server_ip4')
+
+        server_ip = str(server_ip1) + "." + str(server_ip2) + "." + str(server_ip3) + "." + str(server_ip4)
+    else:
+        server_ip = request.POST.get('server_ip')
+
+    if request.POST.get('server_detail') == '':
+        server_detail = "未描述"
+    else:
+        server_detail = request.POST.get('server_detail')
+
+    if request.POST.get('server_group') == '':
+        server_group = 'nogroup'
+    else:
+        server_group = request.POST.get('server_group')
+
+    server = Server((server_ip, request.POST.get('server_user'),
+                     encrypt(global_value.ENCRYPT_KEY_VALUE, request.POST.get('server_password')),
+                    request.POST.get('server_port'), server_detail,
+                    server_group, request.POST.get('server_state'), request.POST.get('server_type')))
+    server.binding_server_value()
+    # check ip
+    if method == "new":
+        if server_ip in server_iplist:
+            check_report['server_ip'] = "此服务器已存在"
+            check_report['report'] = False
+
+        if server_ip1 == '' or server_ip2 == '' or server_ip3 == '' or server_ip4 == '':
+            check_report['server_ip'] = "IP不可为空"
+            check_report['report'] = False
+
+    # check_server_user
+    if server.user == '':
+        check_report['server_user'] = "服务器用户名不可为空"
+        check_report['report'] = False
+
+    # check_server_user
+    if method == "change":
+        if not check_old_password(server_ip, request.POST.get('server_password_o')):
+            check_report['server_password_o'] = "旧服务密码输入错误"
+            check_report['report'] = False
+
+    if server.password == '':
+        check_report['server_password'] = "密码不能为空"
+        check_report['report'] = False
+
+    if request.POST.get('server_password_t') != server.password:
+        check_report['server_password_t'] = "两次输入的密码不同"
+        check_report['report'] = False
+
+    # check_server_port
+    if server.port == '':
+        check_report['server_port'] = "端口号不能为空"
+        check_report['report'] = False
+
+    check_report['server'] = server
+
+    return check_report
+
+
+# 插入修改server信息
+def insert_server(server):
+    mysql = MysqlDb('mysql-host')
+    # server_list = [server.ip, server.password, int(server.port), server.detail,
+    #                server.group, server.status, server.servertype]
+    server_list = server.value_list
+    value_list = (server.user, server.password, int(server.port), server.detail,
+                  server.group,
+                  int(server.status), server.servertype)
+    sql = "insert into server_list values(%s,%s,%s,%s,%s,%s,%s,%s) on duplicate key update user=%s,password=%s,port=%s,detail=%s,`group`=%s,status=%s,servertype=%s"
+    rs_tu = mysql.run_sql(sql, server_list + value_list)
+    if len(rs_tu) == 0:
+        return True
+    else:
+        return False
+
+
+def check_old_password(ip, pas):
+    mysql = MysqlDb('mysql-host')
+    sql = "select count(1) from server_list where ip=%s and password=%s"
+    rs_tu = mysql.run_sql(sql, [ip, pas])
+    if rs_tu[0][0] > 0:
+        return True
+    else:
+        return False
+
+
+def call_procedure(procedure_name, methon, table_name):
+    mysql = MysqlDb('mysql-host')
+    cur = mysql.conn.cursor()
+    if methon == 'new':
+        cur.callproc(procedure_name, (table_name,))
+    else:
+        cur.callproc(procedure_name, (table_name,))
+    return True
