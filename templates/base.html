@@ -34,7 +34,7 @@
                   navaigation_bar += '<a href="'+bar_url+'index">'+bar_name+'</a>';
                     if (bar_name == '性能监控'){
                         navaigation_bar += '<ul class="submenu">';
-                        navaigation_bar += '<li><a href="{% url 'fwpz' %}">配置服务器</a></li>';
+{#                        navaigation_bar += '<li><a href="{% url 'fwpz' %}">配置服务器</a></li>';#}
                         navaigation_bar += '<li><a href="{% url 'status_ip_ztcxindex' %}">状态监控</a></li>';
                         navaigation_bar += '<li><a href="{% url 'rbbb_rbbbindex' %}">生成日报</a></li>';
                         navaigation_bar += '<li><a href="/homepage/monitor/zbbb">生成周报</a></li>';
@@ -48,14 +48,14 @@
                     }
                     if (bar_name == '服务器'){
                         navaigation_bar += '<ul class ="submenu">';
-                        navaigation_bar += '<li><a href="{% url 'servermanager_routermanager' %}">路由配置</a></li>';
+{#                        navaigation_bar += '<li><a href="{% url 'servermanager_routermanager' %}">路由配置</a></li>';#}
                         navaigation_bar += '<li><a href="{% url 'showserverused' %}">使用情况</a></li>';
                         navaigation_bar += '<li><a href="{% url 'servernamager_showbakfile' %}">配置文件备份</a></li>';
                         navaigation_bar += '</ul>'
                     }
                     if (bar_name == '执行脚本'){
                         navaigation_bar += '<ul class = "submenu">';
-                        navaigation_bar += '<li><a href="{% url 'sshmanager' %}">ssh配置</a></li>';
+{#                        navaigation_bar += '<li><a href="{% url 'sshmanager' %}">ssh配置</a></li>';#}
                         navaigation_bar += '<li><a href="#">手动连接</a></li>';
                         navaigation_bar += '<li><a href="{% url 'script_show_server_group' %}">批量连接</a></li>';
                         navaigation_bar += '<li><a href="{% url 'script_file_manager' %}">文件管理</a></li>';

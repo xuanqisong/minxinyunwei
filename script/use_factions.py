@@ -10,151 +10,153 @@ from Tools import global_value
 import hashlib
 
 
-def get_serverlist():
-    sql_server_list = "select * from server_list WHERE servertype='3'"
-    mysql = MysqlDb('mysql-host')
-    rs_tu = mysql.run_sql(sql_server_list, '')
-    rs_li = global_function.tuple_to_list(rs_tu)
-    servernamelist = []
-    for li in rs_li:
-        a = Serverlist(li[0], li[1], li[2], li[3], li[4])
-        servernamelist.append(a)
-    return servernamelist
+# def get_serverlist():
+#     sql_server_list = "select * from server_list WHERE servertype='3'"
+#     mysql = MysqlDb('mysql-host')
+#     rs_tu = mysql.run_sql(sql_server_list, '')
+#     rs_li = global_function.tuple_to_list(rs_tu)
+#     servernamelist = []
+#     for li in rs_li:
+#         a = Serverlist(li[0], li[1], li[2], li[3], li[4])
+#         servernamelist.append(a)
+#     return servernamelist
 
 
 # 获取服务器，组别列表
 def get_server_grouplist():
+    re_li = []
     sql = "SELECT DISTINCT(`group`) FROM server_list WHERE  servertype='3'"
 
     mysql = MysqlDb('mysql-host')
     rs_tu = mysql.run_sql(sql, '')
-    rs_li = global_function.tuple_to_list(rs_tu)
-    return rs_li
+    for tu in rs_tu:
+        re_li.append(tu[0])
+    return re_li
 
 
-# 服务器增删改查
-# 检验服务器字段
-def check_server_field(request, method):
-    # 检验重复IP
-    server_list = get_serverlist()
-    server_iplist = []
-    for old_server in server_list:
-        server_iplist.append(old_server.get_ip())
-    # 校对字段
-    check_report = {'report': True}
-    if method == "new":
-        server_ip1 = request.POST.get('server_ip1')
-        server_ip2 = request.POST.get('server_ip2')
-        server_ip3 = request.POST.get('server_ip3')
-        server_ip4 = request.POST.get('server_ip4')
-
-        server_ip = str(server_ip1) + "." + str(server_ip2) + "." + str(server_ip3) + "." + str(server_ip4)
-    else:
-        server_ip = request.POST.get('server_ip')
-
-    if request.POST.get('server_detail') == '':
-        server_detail = server_ip
-    else:
-        server_detail = request.POST.get('server_detail')
-
-    if request.POST.get('server_group') == '':
-        server_group = 'test'
-    else:
-        server_group = request.POST.get('server_group')
-    # 对密码进行加密
-    encrypt_pas = global_function.encrypt(global_value.ENCRYPT_KEY_VALUE, request.POST.get('server_password'))
-    # server = Server(server_ip, request.POST.get('server_user'), request.POST.get('server_password'),
-    #                 request.POST.get('server_port'), server_detail,
-    #                 server_group, request.POST.get('server_state'))
-    server = Server(server_ip, request.POST.get('server_user'), encrypt_pas,
-                    request.POST.get('server_port'), server_detail,
-                    server_group, request.POST.get('server_state'))
-    # check ip
-    if method == "new":
-        if server_ip in server_iplist:
-            check_report['server_ip'] = "此服务器已存在"
-            check_report['report'] = False
-
-        if server_ip1 == '' or server_ip2 == '' or server_ip3 == '' or server_ip4 == '':
-            check_report['server_ip'] = "IP不可为空"
-            check_report['report'] = False
-
-    # check_server_user
-    if server.get_user() == '':
-        check_report['server_user'] = "服务器用户名不可为空"
-        check_report['report'] = False
-
-    # check_server_user
-    if method == "change":
-        if not check_old_password(server_ip, request.POST.get('server_password_o')):
-            check_report['server_password_o'] = "旧服务密码输入错误"
-            check_report['report'] = False
-
-    if server.get_password() == '':
-        check_report['server_password'] = "密码不能为空"
-        check_report['report'] = False
-
-    if request.POST.get('server_password_t') != global_function.decrypt(global_value.ENCRYPT_KEY_VALUE,
-                                                                        server.get_password()):
-        check_report['server_password_t'] = "两次输入的密码不同"
-        check_report['report'] = False
-
-    # check_server_port
-    if server.get_port() == '':
-        check_report['server_port'] = "端口号不能为空"
-        check_report['report'] = False
-
-    check_report['server'] = server
-
-    return check_report
-
-
-# 插入修改server信息
-def insert_server(server):
-    mysql = MysqlDb('mysql-host')
-    server_list = [server.get_ip(), server.get_user(), server.get_password(), int(server.get_port()),
-                   server.get_detail(),
-                   server.get_group(), int(server.get_state())]
-    value_list = [server.get_user(), server.get_password(), int(server.get_port()), server.get_detail(),
-                  server.get_group(),
-                  int(server.get_state())]
-    sql = "insert into server_list values(%s,%s,%s,%s,%s,%s,%s,'3') on duplicate key update user=%s,password=%s,port=%s,detail=%s,`group`=%s,state=%s,servertype='3'"
-    rs_tu = mysql.run_sql(sql, server_list + value_list)
-    if len(rs_tu) == 0:
-        return True
-    else:
-        return False
+# # 服务器增删改查
+# # 检验服务器字段
+# def check_server_field(request, method):
+#     # 检验重复IP
+#     server_list = get_serverlist()
+#     server_iplist = []
+#     for old_server in server_list:
+#         server_iplist.append(old_server.get_ip())
+#     # 校对字段
+#     check_report = {'report': True}
+#     if method == "new":
+#         server_ip1 = request.POST.get('server_ip1')
+#         server_ip2 = request.POST.get('server_ip2')
+#         server_ip3 = request.POST.get('server_ip3')
+#         server_ip4 = request.POST.get('server_ip4')
+#
+#         server_ip = str(server_ip1) + "." + str(server_ip2) + "." + str(server_ip3) + "." + str(server_ip4)
+#     else:
+#         server_ip = request.POST.get('server_ip')
+#
+#     if request.POST.get('server_detail') == '':
+#         server_detail = server_ip
+#     else:
+#         server_detail = request.POST.get('server_detail')
+#
+#     if request.POST.get('server_group') == '':
+#         server_group = 'test'
+#     else:
+#         server_group = request.POST.get('server_group')
+#     # 对密码进行加密
+#     encrypt_pas = global_function.encrypt(global_value.ENCRYPT_KEY_VALUE, request.POST.get('server_password'))
+#     # server = Server(server_ip, request.POST.get('server_user'), request.POST.get('server_password'),
+#     #                 request.POST.get('server_port'), server_detail,
+#     #                 server_group, request.POST.get('server_state'))
+#     server = Server(server_ip, request.POST.get('server_user'), encrypt_pas,
+#                     request.POST.get('server_port'), server_detail,
+#                     server_group, request.POST.get('server_state'))
+#     # check ip
+#     if method == "new":
+#         if server_ip in server_iplist:
+#             check_report['server_ip'] = "此服务器已存在"
+#             check_report['report'] = False
+#
+#         if server_ip1 == '' or server_ip2 == '' or server_ip3 == '' or server_ip4 == '':
+#             check_report['server_ip'] = "IP不可为空"
+#             check_report['report'] = False
+#
+#     # check_server_user
+#     if server.get_user() == '':
+#         check_report['server_user'] = "服务器用户名不可为空"
+#         check_report['report'] = False
+#
+#     # check_server_user
+#     if method == "change":
+#         if not check_old_password(server_ip, request.POST.get('server_password_o')):
+#             check_report['server_password_o'] = "旧服务密码输入错误"
+#             check_report['report'] = False
+#
+#     if server.get_password() == '':
+#         check_report['server_password'] = "密码不能为空"
+#         check_report['report'] = False
+#
+#     if request.POST.get('server_password_t') != global_function.decrypt(global_value.ENCRYPT_KEY_VALUE,
+#                                                                         server.get_password()):
+#         check_report['server_password_t'] = "两次输入的密码不同"
+#         check_report['report'] = False
+#
+#     # check_server_port
+#     if server.get_port() == '':
+#         check_report['server_port'] = "端口号不能为空"
+#         check_report['report'] = False
+#
+#     check_report['server'] = server
+#
+#     return check_report
 
 
-# 删除指定IP，非删除，将IP备份的备份表中
-def delete_bak_server(server_ip_list):
-    mysql = MysqlDb('mysql-host')
-    ip_list = ''
-    for ip in server_ip_list:
-        ip_list = ip_list + "'" + ip + "',"
-    sql = "insert into server_list_bak SELECT *,now() from server_list where ip in (" + ip_list[:-1] + ")"
-    rs_tu = mysql.run_sql(sql, '')
-    if len(rs_tu) == 0:
-        sql = "delete from server_list where ip in (" + ip_list[:-1] + ")"
-        rs_tu = mysql.run_sql(sql, '')
-        if len(rs_tu) == 0:
-            return True
-        else:
-            return False
-    else:
-        return False
+# # 插入修改server信息
+# def insert_server(server):
+#     mysql = MysqlDb('mysql-host')
+#     server_list = [server.get_ip(), server.get_user(), server.get_password(), int(server.get_port()),
+#                    server.get_detail(),
+#                    server.get_group(), int(server.get_state())]
+#     value_list = [server.get_user(), server.get_password(), int(server.get_port()), server.get_detail(),
+#                   server.get_group(),
+#                   int(server.get_state())]
+#     sql = "insert into server_list values(%s,%s,%s,%s,%s,%s,%s,'3') on duplicate key update user=%s,password=%s,port=%s,detail=%s,`group`=%s,state=%s,servertype='3'"
+#     rs_tu = mysql.run_sql(sql, server_list + value_list)
+#     if len(rs_tu) == 0:
+#         return True
+#     else:
+#         return False
 
 
-# 修改指定服务器参数
-def read_server(ip):
-    mysql = MysqlDb('mysql-host')
-    sql = "select * from server_list where ip = %s"
-    rs_tu = mysql.run_sql(sql, ip)
-    rs_li = global_function.tuple_to_list(rs_tu)
-    for li in rs_li:
-        server = Server(li[0], li[1], li[2], li[3], li[4], li[5], li[6])
+# # 删除指定IP，非删除，将IP备份的备份表中
+# def delete_bak_server(server_ip_list):
+#     mysql = MysqlDb('mysql-host')
+#     ip_list = ''
+#     for ip in server_ip_list:
+#         ip_list = ip_list + "'" + ip + "',"
+#     sql = "insert into server_list_bak SELECT *,now() from server_list where ip in (" + ip_list[:-1] + ")"
+#     rs_tu = mysql.run_sql(sql, '')
+#     if len(rs_tu) == 0:
+#         sql = "delete from server_list where ip in (" + ip_list[:-1] + ")"
+#         rs_tu = mysql.run_sql(sql, '')
+#         if len(rs_tu) == 0:
+#             return True
+#         else:
+#             return False
+#     else:
+#         return False
 
-    return server
+
+# # 修改指定服务器参数
+# def read_server(ip):
+#     mysql = MysqlDb('mysql-host')
+#     sql = "select * from server_list where ip = %s"
+#     rs_tu = mysql.run_sql(sql, ip)
+#     rs_li = global_function.tuple_to_list(rs_tu)
+#     for li in rs_li:
+#         server = Server(li[0], li[1], li[2], li[3], li[4], li[5], li[6])
+#
+#     return server
 
 
 def check_old_password(ip, pas):
@@ -167,16 +169,16 @@ def check_old_password(ip, pas):
         return False
 
 
-def call_procedure(procedure_name, methon, table_name):
-    mysql = MysqlDb('mysql-host')
-    conn = mysql.get_connect()
-    cur = conn.cursor()
-    if methon == 'new':
-        cur.callproc(procedure_name, (table_name,))
-    else:
-        cur.callproc(procedure_name, (table_name,))
-    data = cur.fetchall()
-    return True
+# def call_procedure(procedure_name, methon, table_name):
+#     mysql = MysqlDb('mysql-host')
+#     conn = mysql.get_connect()
+#     cur = conn.cursor()
+#     if methon == 'new':
+#         cur.callproc(procedure_name, (table_name,))
+#     else:
+#         cur.callproc(procedure_name, (table_name,))
+#     data = cur.fetchall()
+#     return True
 
 
 # 获取服务器详细信息

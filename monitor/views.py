@@ -178,82 +178,82 @@ def zbbbdata(request):
     return render(request, 'rbbb_picture.html', di)
 
 
-# fwpz
-@user_passes_test(lambda u: u.has_perm('monitor.Show'), login_url='/no_power/')
-def fwpz(request, di={}):
-    server_list = use_factions.get_serverlist()
+# # fwpz
+# @user_passes_test(lambda u: u.has_perm('monitor.Show'), login_url='/no_power/')
+# def fwpz(request, di={}):
+#     server_list = use_factions.get_serverlist()
+#
+#     di['server_list'] = server_list
+#     return render(request, 'monitorfwpz.html', di)
 
-    di['server_list'] = server_list
-    return render(request, 'monitorfwpz.html', di)
-
-
-def newserver_mid(request):
-    di = {}
-    server_group = []
-    for group in use_factions.get_server_grouplist():
-        server_group.append(group[0])
-    di['server_groupa'] = server_group
-    return render(request, 'new_server.html', di)
-
-
-@user_passes_test(lambda u: u.has_perm('monitor.New'), login_url='/no_power/')
-def newserver(request):
-    check_report = use_factions.check_server_field(request, "new")
-    if check_report['report']:
-        if use_factions.insert_server(check_report['server']):
-            use_factions.call_procedure('new_partition', 'new', 'statu_cpu')
-            use_factions.call_procedure('new_partition', 'new', 'statu_disk')
-            use_factions.call_procedure('new_partition', 'new', 'statu_memory')
-            check_report['alert'] = '<Script Language="JavaScript"> alert("服务器存储成功"); </Script>'
-        else:
-            check_report['alert'] = '<Script Language="JavaScript"> alert("服务器存储失败"); </Script>'
-        return fwpz(request, check_report)
-    else:
-        return render(request, 'new_server.html', check_report)
+#
+# def newserver_mid(request):
+#     di = {}
+#     server_group = []
+#     for group in use_factions.get_server_grouplist():
+#         server_group.append(group[0])
+#     di['server_groupa'] = server_group
+#     return render(request, 'new_server.html', di)
 
 
-def changeserver_mid(request, di={}):
-    server_ip = request.POST.getlist('server_ip')
-    if len(server_ip) == 0:
-        di['alert'] = '<Script Language="JavaScript"> alert("请选择要修改服务器"); </Script>'
-        return fwpz(request, di)
-    elif len(server_ip) > 1:
-        di['alert'] = '<Script Language="JavaScript"> alert("请选择一个服务器"); </Script>'
-        return fwpz(request, di)
-    else:
-        di['server'] = use_factions.read_server(server_ip[0])
-        return render(request, 'change_server.html', di)
+# @user_passes_test(lambda u: u.has_perm('monitor.New'), login_url='/no_power/')
+# def newserver(request):
+#     check_report = use_factions.check_server_field(request, "new")
+#     if check_report['report']:
+#         if use_factions.insert_server(check_report['server']):
+#             use_factions.call_procedure('new_partition', 'new', 'statu_cpu')
+#             use_factions.call_procedure('new_partition', 'new', 'statu_disk')
+#             use_factions.call_procedure('new_partition', 'new', 'statu_memory')
+#             check_report['alert'] = '<Script Language="JavaScript"> alert("服务器存储成功"); </Script>'
+#         else:
+#             check_report['alert'] = '<Script Language="JavaScript"> alert("服务器存储失败"); </Script>'
+#         return fwpz(request, check_report)
+#     else:
+#         return render(request, 'new_server.html', check_report)
 
 
-@user_passes_test(lambda u: u.has_perm('monitor.Change'), login_url='/no_power/')
-def changeserver(request):
-    check_report = use_factions.check_server_field(request, "change")
-    if check_report['report']:
-        if use_factions.insert_server(check_report['server']):
-            check_report['alert'] = '<Script Language="JavaScript"> alert("服务器更新成功"); </Script>'
-        else:
-            check_report['alert'] = '<Script Language="JavaScript"> alert("服务器更新失败"); </Script>'
-        return fwpz(request, check_report)
-    else:
-        return render(request, 'change_server.html', check_report)
+# def changeserver_mid(request, di={}):
+#     server_ip = request.POST.getlist('server_ip')
+#     if len(server_ip) == 0:
+#         di['alert'] = '<Script Language="JavaScript"> alert("请选择要修改服务器"); </Script>'
+#         return fwpz(request, di)
+#     elif len(server_ip) > 1:
+#         di['alert'] = '<Script Language="JavaScript"> alert("请选择一个服务器"); </Script>'
+#         return fwpz(request, di)
+#     else:
+#         di['server'] = use_factions.read_server(server_ip[0])
+#         return render(request, 'change_server.html', di)
 
 
-@user_passes_test(lambda u: u.has_perm('monitor.Delete'), login_url='/no_power/')
-def deleteserver(request):
-    di = {}
-    server_ip = request.POST.getlist('server_ip')
-    if len(server_ip) == 0:
-        di['alert'] = '<Script Language="JavaScript"> alert("请选择要删除的服务器"); </Script>'
-        return fwpz(request, di)
-    else:
-        if use_factions.delete_bak_server(server_ip):
-            use_factions.call_procedure('delete_partition', 'delete', 'statu_cpu')
-            use_factions.call_procedure('delete_partition', 'delete', 'statu_disk')
-            use_factions.call_procedure('delete_partition', 'delete', 'statu_memory')
-            di['alert'] = '<Script Language="JavaScript"> alert("服务器删除成功"); </Script>'
-        else:
-            di['alert'] = '<Script Language="JavaScript"> alert("服务器删除失败"); </Script>'
-        return fwpz(request, di)
+# @user_passes_test(lambda u: u.has_perm('monitor.Change'), login_url='/no_power/')
+# def changeserver(request):
+#     check_report = use_factions.check_server_field(request, "change")
+#     if check_report['report']:
+#         if use_factions.insert_server(check_report['server']):
+#             check_report['alert'] = '<Script Language="JavaScript"> alert("服务器更新成功"); </Script>'
+#         else:
+#             check_report['alert'] = '<Script Language="JavaScript"> alert("服务器更新失败"); </Script>'
+#         return fwpz(request, check_report)
+#     else:
+#         return render(request, 'change_server.html', check_report)
+
+
+# @user_passes_test(lambda u: u.has_perm('monitor.Delete'), login_url='/no_power/')
+# def deleteserver(request):
+#     di = {}
+#     server_ip = request.POST.getlist('server_ip')
+#     if len(server_ip) == 0:
+#         di['alert'] = '<Script Language="JavaScript"> alert("请选择要删除的服务器"); </Script>'
+#         return fwpz(request, di)
+#     else:
+#         if use_factions.delete_bak_server(server_ip):
+#             use_factions.call_procedure('delete_partition', 'delete', 'statu_cpu')
+#             use_factions.call_procedure('delete_partition', 'delete', 'statu_disk')
+#             use_factions.call_procedure('delete_partition', 'delete', 'statu_memory')
+#             di['alert'] = '<Script Language="JavaScript"> alert("服务器删除成功"); </Script>'
+#         else:
+#             di['alert'] = '<Script Language="JavaScript"> alert("服务器删除失败"); </Script>'
+#         return fwpz(request, di)
 
 
 # ajax

@@ -13,89 +13,88 @@ def index(request):
     return render(request, 'scriptindex.html', {})
 
 
-# SSH服务器配置
-@user_passes_test(lambda u: u.has_perm('script.Show'), login_url='/no_power/')
-def sshmanager(request, di={}):
-    server_list = use_factions.get_serverlist()
-
-    di['server_list'] = server_list
-    return render(request, 'scriptfwpz.html', di)
-
-
-def newserver_mid(request):
-    di = {}
-    server_group = []
-    for group in use_factions.get_server_grouplist():
-        server_group.append(group[0])
-    di['server_groupa'] = server_group
-    return render(request, 'scriptnew_server.html', di)
+# # SSH服务器配置
+# @user_passes_test(lambda u: u.has_perm('script.Show'), login_url='/no_power/')
+# def sshmanager(request, di={}):
+#     server_list = use_factions.get_serverlist()
+#
+#     di['server_list'] = server_list
+#     return render(request, 'scriptfwpz.html', di)
 
 
-@user_passes_test(lambda u: u.has_perm('script.New'), login_url='/no_power/')
-def newserver(request):
-    check_report = use_factions.check_server_field(request, "new")
-    if check_report['report']:
-        if use_factions.insert_server(check_report['server']):
-            use_factions.call_procedure('new_partition', 'new', 'statu_cpu')
-            use_factions.call_procedure('new_partition', 'new', 'statu_disk')
-            use_factions.call_procedure('new_partition', 'new', 'statu_memory')
-            check_report['alert'] = '<Script Language="JavaScript"> alert("服务器存储成功"); </Script>'
-        else:
-            check_report['alert'] = '<Script Language="JavaScript"> alert("服务器存储失败"); </Script>'
-        return sshmanager(request, check_report)
-    else:
-        return render(request, 'scriptnew_server.html', check_report)
+# def newserver_mid(request):
+#     di = {}
+#     server_group = []
+#     for group in use_factions.get_server_grouplist():
+#         server_group.append(group[0])
+#     di['server_groupa'] = server_group
+#     return render(request, 'scriptnew_server.html', di)
 
 
-@user_passes_test(lambda u: u.has_perm('script.Change'), login_url='/no_power/')
-def changeserver_mid(request, di={}):
-    server_ip = request.POST.getlist('server_ip')
-    if len(server_ip) == 0:
-        di['alert'] = '<Script Language="JavaScript"> alert("请选择要修改服务器"); </Script>'
-        return sshmanager(request, di)
-    elif len(server_ip) > 1:
-        di['alert'] = '<Script Language="JavaScript"> alert("请选择一个服务器"); </Script>'
-        return sshmanager(request, di)
-    else:
-        di['server'] = use_factions.read_server(server_ip[0])
-        return render(request, 'scriptchange_server.html', di)
+# @user_passes_test(lambda u: u.has_perm('script.New'), login_url='/no_power/')
+# def newserver(request):
+#     check_report = use_factions.check_server_field(request, "new")
+#     if check_report['report']:
+#         if use_factions.insert_server(check_report['server']):
+#             use_factions.call_procedure('new_partition', 'new', 'statu_cpu')
+#             use_factions.call_procedure('new_partition', 'new', 'statu_disk')
+#             use_factions.call_procedure('new_partition', 'new', 'statu_memory')
+#             check_report['alert'] = '<Script Language="JavaScript"> alert("服务器存储成功"); </Script>'
+#         else:
+#             check_report['alert'] = '<Script Language="JavaScript"> alert("服务器存储失败"); </Script>'
+#         return sshmanager(request, check_report)
+#     else:
+#         return render(request, 'scriptnew_server.html', check_report)
 
 
-def changeserver(request):
-    check_report = use_factions.check_server_field(request, "change")
-    if check_report['report']:
-        if use_factions.insert_server(check_report['server']):
-            check_report['alert'] = '<Script Language="JavaScript"> alert("服务器更新成功"); </Script>'
-        else:
-            check_report['alert'] = '<Script Language="JavaScript"> alert("服务器更新失败"); </Script>'
-        return sshmanager(request, check_report)
-    else:
-        return render(request, 'scriptchange_server.html', check_report)
+# @user_passes_test(lambda u: u.has_perm('script.Change'), login_url='/no_power/')
+# def changeserver_mid(request, di={}):
+#     server_ip = request.POST.getlist('server_ip')
+#     if len(server_ip) == 0:
+#         di['alert'] = '<Script Language="JavaScript"> alert("请选择要修改服务器"); </Script>'
+#         return sshmanager(request, di)
+#     elif len(server_ip) > 1:
+#         di['alert'] = '<Script Language="JavaScript"> alert("请选择一个服务器"); </Script>'
+#         return sshmanager(request, di)
+#     else:
+#         di['server'] = use_factions.read_server(server_ip[0])
+#         return render(request, 'scriptchange_server.html', di)
 
 
-@user_passes_test(lambda u: u.has_perm('script.Delete'), login_url='/no_power/')
-def deleteserver(request):
-    di = {}
-    server_ip = request.POST.getlist('server_ip')
-    if len(server_ip) == 0:
-        di['alert'] = '<Script Language="JavaScript"> alert("请选择要删除的服务器"); </Script>'
-        return sshmanager(request, di)
-    else:
-        if use_factions.delete_bak_server(server_ip):
-            use_factions.call_procedure('delete_partition', 'delete', 'statu_cpu')
-            use_factions.call_procedure('delete_partition', 'delete', 'statu_disk')
-            use_factions.call_procedure('delete_partition', 'delete', 'statu_memory')
-            di['alert'] = '<Script Language="JavaScript"> alert("服务器删除成功"); </Script>'
-        else:
-            di['alert'] = '<Script Language="JavaScript"> alert("服务器删除失败"); </Script>'
-        return sshmanager(request, di)
+# def changeserver(request):
+#     check_report = use_factions.check_server_field(request, "change")
+#     if check_report['report']:
+#         if use_factions.insert_server(check_report['server']):
+#             check_report['alert'] = '<Script Language="JavaScript"> alert("服务器更新成功"); </Script>'
+#         else:
+#             check_report['alert'] = '<Script Language="JavaScript"> alert("服务器更新失败"); </Script>'
+#         return sshmanager(request, check_report)
+#     else:
+#         return render(request, 'scriptchange_server.html', check_report)
+
+
+# @user_passes_test(lambda u: u.has_perm('script.Delete'), login_url='/no_power/')
+# def deleteserver(request):
+#     di = {}
+#     server_ip = request.POST.getlist('server_ip')
+#     if len(server_ip) == 0:
+#         di['alert'] = '<Script Language="JavaScript"> alert("请选择要删除的服务器"); </Script>'
+#         return sshmanager(request, di)
+#     else:
+#         if use_factions.delete_bak_server(server_ip):
+#             use_factions.call_procedure('delete_partition', 'delete', 'statu_cpu')
+#             use_factions.call_procedure('delete_partition', 'delete', 'statu_disk')
+#             use_factions.call_procedure('delete_partition', 'delete', 'statu_memory')
+#             di['alert'] = '<Script Language="JavaScript"> alert("服务器删除成功"); </Script>'
+#         else:
+#             di['alert'] = '<Script Language="JavaScript"> alert("服务器删除失败"); </Script>'
+#         return sshmanager(request, di)
 
 
 # 选择连接连接组
 @user_passes_test(lambda u: u.has_perm('script.Show'), login_url='/no_power/')
 def showservergroup(request):
-    servergourplist = use_factions.get_server_grouplist()
-    di = {'servergrouplist': [servergourplist[0][0], servergourplist[1][0]]}
+    di = {'servergrouplist': use_factions.get_server_grouplist()}
     return render(request, 'script_selectgroup.html', di)
 
 

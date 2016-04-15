@@ -49,12 +49,12 @@ urlpatterns += [
     url(r'^homepage/monitor/zbbb', 'monitor.views.zbbbindex', name='zbbb_zbbbindex'),
     url(r'^homepage/monitor/zbdata/', 'monitor.views.zbbbdata', name='rbbb_zbbbdata'),
     # monitor fwqpz
-    url(r'^homepage/monitor/configuration/', 'monitor.views.fwpz', name='fwpz'),
-    url(r'^monitor/templates/new_server/', 'monitor.views.newserver_mid', name='fwpz_newserver_mid'),
-    url(r'^homepage/monitor/newserver/', 'monitor.views.newserver', name='fwpz_newserver'),
-    url(r'^homepage/monitor/change_server/', 'monitor.views.changeserver_mid', name='fwpz_changeserver_mid'),
-    url(r'^homepage/monitor/changeserver/', 'monitor.views.changeserver', name='fwpz_changeserver'),
-    url(r'^homepage/monitor/deleteserver/', 'monitor.views.deleteserver', name='fwpz_deleteserver'),
+    # url(r'^homepage/monitor/configuration/', 'monitor.views.fwpz', name='fwpz'),
+    # url(r'^monitor/templates/new_server/', 'monitor.views.newserver_mid', name='fwpz_newserver_mid'),
+    # url(r'^homepage/monitor/newserver/', 'monitor.views.newserver', name='fwpz_newserver'),
+    # url(r'^homepage/monitor/change_server/', 'monitor.views.changeserver_mid', name='fwpz_changeserver_mid'),
+    # url(r'^homepage/monitor/changeserver/', 'monitor.views.changeserver', name='fwpz_changeserver'),
+    # url(r'^homepage/monitor/deleteserver/', 'monitor.views.deleteserver', name='fwpz_deleteserver'),
 
     # ajax
     url(r'^homepage/monitor/ajaxgroup_diskname/', 'monitor.views.ajax_group_disk_name', name='ajax_group_disk_name'),
@@ -63,7 +63,7 @@ urlpatterns += [
 urlpatterns += [
     # script
     url(r'^homepage/script/', 'script.views.index', name='script'),
-    url(r'^script/sshmanager/', 'script.views.sshmanager', name='sshmanager'),
+    # url(r'^script/sshmanager/', 'script.views.sshmanager', name='sshmanager'),
     url(r'^script/showservergroup/', 'script.views.showservergroup', name='script_show_server_group'),
     url(r'^script/getconnectserverip/', 'script.views.base_view', name='script_getconnectserverip'),
     # websocket
@@ -71,11 +71,11 @@ urlpatterns += [
     url(r'^script/runshell$', 'script.views.start_shell', name='script_websocket_runshell'),
 
     # script_fwpz
-    url(r'^script/new_server/', 'script.views.newserver_mid', name='script_fwpz_newserver_mid'),
-    url(r'^script/newserver/', 'script.views.newserver', name='script_fwpz_newserver'),
-    url(r'^script/change_server/', 'script.views.changeserver_mid', name='script_fwpz_changeserver_mid'),
-    url(r'^script/changeserver/', 'script.views.changeserver', name='script_fwpz_changeserver'),
-    url(r'^script/deleteserver/', 'script.views.deleteserver', name='script_fwpz_deleteserver'),
+    # url(r'^script/new_server/', 'script.views.newserver_mid', name='script_fwpz_newserver_mid'),
+    # url(r'^script/newserver/', 'script.views.newserver', name='script_fwpz_newserver'),
+    # url(r'^script/change_server/', 'script.views.changeserver_mid', name='script_fwpz_changeserver_mid'),
+    # url(r'^script/changeserver/', 'script.views.changeserver', name='script_fwpz_changeserver'),
+    # url(r'^script/deleteserver/', 'script.views.deleteserver', name='script_fwpz_deleteserver'),
 
     # script_file_manager
     url(r'^script/filemanager/', 'script.views.file_manager', name='script_file_manager'),
@@ -103,20 +103,20 @@ urlpatterns += [
 urlpatterns += [
     # servermanager
     # url(r'^servermanager$','servermanager.views.index',name='servermanagertest'),
-    url(r'^homepage/servermanager/routermanager', 'servermanager.views.routermanager',
-        name='servermanager_routermanager'),
+    # url(r'^homepage/servermanager/routermanager', 'servermanager.views.routermanager',
+    #     name='servermanager_routermanager'),
     url(r'^homepage/servermanager/index', 'servermanager.views.index', name='servermanagertest'),
     url(r'^homepage/servermanager/showserverused', 'servermanager.views.showserverused', name='showserverused'),
     # servermanager_fwpz
-    url(r'^servermanager/templates/new_server/', 'servermanager.views.newserver_mid',
-        name='servermanager_fwpz_newserver_mid'),
-    url(r'^homepage/servermanager/newserver/', 'servermanager.views.newserver', name='servermanager_fwpz_newserver'),
-    url(r'^homepage/servermanager/change_server/', 'servermanager.views.changeserver_mid',
-        name='servermanager_fwpz_changeserver_mid'),
-    url(r'^homepage/servermanager/changeserver/', 'servermanager.views.changeserver',
-        name='servermanager_fwpz_changeserver'),
-    url(r'^homepage/servermanager/deleteserver/', 'servermanager.views.deleteserver',
-        name='servermanager_fwpz_deleteserver'),
+    # url(r'^servermanager/templates/new_server/', 'servermanager.views.newserver_mid',
+    #     name='servermanager_fwpz_newserver_mid'),
+    # url(r'^homepage/servermanager/newserver/', 'servermanager.views.newserver', name='servermanager_fwpz_newserver'),
+    # url(r'^homepage/servermanager/change_server/', 'servermanager.views.changeserver_mid',
+    #     name='servermanager_fwpz_changeserver_mid'),
+    # url(r'^homepage/servermanager/changeserver/', 'servermanager.views.changeserver',
+    #     name='servermanager_fwpz_changeserver'),
+    # url(r'^homepage/servermanager/deleteserver/', 'servermanager.views.deleteserver',
+    #     name='servermanager_fwpz_deleteserver'),
     # servermanager_bakrouterfile
     url(r'^servermanager/routerfilebak/', 'servermanager.views.showbakfile', name='servernamager_showbakfile'),
     url(r'^servermanager/download/routerfilebak/', 'servermanager.views.downloadbakfile',

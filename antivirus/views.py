@@ -109,32 +109,32 @@ def start_clamdav(request):
             clients.remove(request.websocket)
 
 
-# job
-def configuration_job(request, di={}):
-    di['data'] = use_factions.get_file_data()
-    di['job_detail'] = use_factions.job_detail()
-    return render(request, 'job_configuration.html', di)
-
-
-def insert_jobmessage(request):
-    function_name = request.POST.get('function_name')
-    year_n = request.POST.get('year_n')
-    month_n = request.POST.get('month_n')
-    day_n = request.POST.get('day_n')
-    hour_n = request.POST.get('hour_n')
-    minute_n = request.POST.get('minute_n')
-    second_n = request.POST.get('second_n')
-    if use_factions.insert_jobmessage(function_name, year_n, month_n, day_n, hour_n, minute_n, second_n):
-        di = {'alert': "存储成功"}
-    else:
-        di = {'alert': "存储失败"}
-    di['data'] = use_factions.get_file_data()
-    return render(request, 'job_configuration.html', di)
-
-
-# job ajax
-def ajax_configuration_job(request):
-    f_dir_name = request.GET['f_dir_name']
-    return JsonResponse(use_factions.get_job_detail(f_dir_name))
+# # job
+# def configuration_job(request, di={}):
+#     di['data'] = use_factions.get_file_data()
+#     di['job_detail'] = use_factions.job_detail()
+#     return render(request, 'job_configuration.html', di)
+#
+#
+# def insert_jobmessage(request):
+#     function_name = request.POST.get('function_name')
+#     year_n = request.POST.get('year_n')
+#     month_n = request.POST.get('month_n')
+#     day_n = request.POST.get('day_n')
+#     hour_n = request.POST.get('hour_n')
+#     minute_n = request.POST.get('minute_n')
+#     second_n = request.POST.get('second_n')
+#     if use_factions.insert_jobmessage(function_name, year_n, month_n, day_n, hour_n, minute_n, second_n):
+#         di = {'alert': "存储成功"}
+#     else:
+#         di = {'alert': "存储失败"}
+#     di['data'] = use_factions.get_file_data()
+#     return render(request, 'job_configuration.html', di)
+#
+#
+# # job ajax
+# def ajax_configuration_job(request):
+#     f_dir_name = request.GET['f_dir_name']
+#     return JsonResponse(use_factions.get_job_detail(f_dir_name))
 
 
