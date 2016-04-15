@@ -274,6 +274,6 @@ def delete_bak_server(server_ip_list):
 
 def get_status_table():
     mysql = MysqlDb('mysql-host')
-    sql = "SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'minxinyunwei' AND table_name like 'stat%'"
+    sql = "SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'minxinyunwei' AND table_name like 'status%'"
     re_tu = mysql.run_sql(sql)
     return re_tu

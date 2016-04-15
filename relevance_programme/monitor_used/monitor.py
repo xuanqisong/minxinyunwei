@@ -73,7 +73,7 @@ class RunShell(object):
 
 def create_table(attribute):
     if check_table_columns(attribute.table_column, attribute.column_type, attribute.type_value):
-        c_table_sql = "create table " + attribute.table_name
+        c_table_sql = "create table status_" + attribute.table_name
         c_table_sql += " ( "
         c_table_sql_list = []
         for index, table_column in enumerate(attribute.table_column):
@@ -97,7 +97,7 @@ def check_table_columns(table_column_list, column_type_list, type_value_list):
 
 
 def get_sql(attribute):
-    sql = "INSERT INTO " + attribute.table_name + "("
+    sql = "INSERT INTO status_" + attribute.table_name + "("
     sql += ",".join(attribute.table_column)
     sql += ") VALUES ("
     s_list = []
@@ -138,6 +138,7 @@ if __name__ == '__main__':
     rs_tuple = mysql.run_sql(sql)
     rs_list = get_list(tuple_to_list(rs_tuple))
     for table_name in attribute_se_list:
+        table_name = "status_" + table_name
         if table_name not in rs_list:
             # 创建表
             for se, attribute in attribute_di.items():
@@ -148,11 +149,10 @@ if __name__ == '__main__':
     # linux 服务器参数抽取
     # 获取待抽取服务器列表
     # sql = "select * from server_list where state = 1"
-    sql = "SELECT * FROM server_list_old WHERE ip='192.168.9.155'"
+    sql = "SELECT * FROM server_list WHERE status = '1'"
     rs_tuple = mysql.run_sql(sql)
-    rs_list = tuple_to_list(rs_tuple)
     server_list = []
-    for li in rs_list:
+    for li in rs_tuple:
         server = Server(li)
         server.binding_server_value()
         server_list.append(server)
@@ -192,7 +192,7 @@ if __name__ == '__main__':
 
         sql = get_sql(attribute)
         for i in sql_value_list:
-            if isinstance(i,list):
+            if isinstance(i, list):
                 mysql.run_sql(sql, i)
             else:
                 mysql.run_sql(sql, sql_value_list)
