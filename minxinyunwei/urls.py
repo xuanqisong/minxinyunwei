@@ -141,6 +141,9 @@ urlpatterns += [
     url(r'^sysconfiguration/servermanager/', 'home.views.fwqpz', name='home_fwqpz'),
     url(r'^sysconfiguration/newservermid/', 'home.views.new_server_mid', name='home_new_server_mid'),
     url(r'^sysconfiguration/newserver/', 'home.views.newserver', name='home_new_server'),
+    url(r'^sysconfiguration/changeservermid/', 'home.views.change_service_mid', name='home_change_service_mid'),
+    url(r'^sysconfiguration/changeserver/', 'home.views.change_service', name='home_change_server'),
+    url(r'^sysconfiguration/deleteserver/', 'home.views.delete_server', name='home_delete_server'),
 ]
 # static files
 import os

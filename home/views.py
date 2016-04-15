@@ -91,7 +91,7 @@ def ajax_delete_job(request):
 
 # service manager
 def fwqpz(request, di={}):
-    di = {'server_list': use_factions.service_detail()}
+    di['server_list'] = use_factions.service_detail()
     return render(request, 'fwqpz.html', di)
 
 
@@ -113,3 +113,46 @@ def newserver(request):
         return fwqpz(request, check_report)
     else:
         return render(request, 'new_server.html', check_report)
+
+
+def change_service_mid(request):
+    di = {}
+    server_ip = request.POST.getlist('server_ip')
+    if len(server_ip) == 0:
+        di['alert'] = '<Script Language="JavaScript"> alert("请选择要修改服务器"); </Script>'
+        return fwqpz(request, di)
+    elif len(server_ip) > 1:
+        di['alert'] = '<Script Language="JavaScript"> alert("请选择一个服务器"); </Script>'
+        return fwqpz(request, di)
+    else:
+        di['server'] = use_factions.read_service(server_ip[0])
+        return render(request, 'fwq_change.html', di)
+
+
+def change_service(request):
+    check_report = use_factions.check_server_field(request, "change")
+    if check_report['report']:
+        if use_factions.insert_server(check_report['server']):
+            check_report['alert'] = '<Script Language="JavaScript"> alert("服务器更新成功"); </Script>'
+        else:
+            check_report['alert'] = '<Script Language="JavaScript"> alert("服务器更新失败"); </Script>'
+        return fwqpz(request, check_report)
+    else:
+        return render(request, 'fwq_change.html', check_report)
+
+
+def delete_server(request):
+    di = {}
+    server_ip = request.POST.getlist('server_ip')
+    if len(server_ip) == 0:
+        di['alert'] = '<Script Language="JavaScript"> alert("请选择要删除的服务器"); </Script>'
+        return fwqpz(request, di)
+    else:
+        if use_factions.delete_bak_server(server_ip):
+            use_factions.call_procedure('delete_partition', 'delete', 'statu_cpu')
+            use_factions.call_procedure('delete_partition', 'delete', 'statu_disk')
+            use_factions.call_procedure('delete_partition', 'delete', 'statu_memory')
+            di['alert'] = '<Script Language="JavaScript"> alert("服务器删除成功"); </Script>'
+        else:
+            di['alert'] = '<Script Language="JavaScript"> alert("服务器删除失败"); </Script>'
+        return fwqpz(request, di)

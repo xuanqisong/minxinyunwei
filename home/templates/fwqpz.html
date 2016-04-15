@@ -66,7 +66,7 @@
 {% endfor %}
 </table>
 <input type="submit" formaction="{% url 'home_new_server_mid' %}" value="新建服务器">
-<input type="submit" formaction="{% url 'fwpz_deleteserver' %}" value="删除服务器">
-<input type="submit" formaction="{% url 'fwpz_changeserver_mid' %}" value="修改服务器">
+<input type="submit" formaction="{% url 'home_delete_server' %}" value="删除服务器">
+<input type="submit" formaction="{% url 'home_change_service_mid' %}" value="修改服务器">
 </form>
 {% endblock content %}

@@ -166,8 +166,8 @@ def check_server_field(request, method):
 
     server = Server((server_ip, request.POST.get('server_user'),
                      encrypt(global_value.ENCRYPT_KEY_VALUE, request.POST.get('server_password')),
-                    request.POST.get('server_port'), server_detail,
-                    server_group, request.POST.get('server_state'), request.POST.get('server_type')))
+                     request.POST.get('server_port'), server_detail,
+                     server_group, request.POST.get('server_state'), request.POST.get('server_type')))
     server.binding_server_value()
     # check ip
     if method == "new":
@@ -186,7 +186,8 @@ def check_server_field(request, method):
 
     # check_server_user
     if method == "change":
-        if not check_old_password(server_ip, request.POST.get('server_password_o')):
+        if not check_old_password(server_ip,
+                                  encrypt(global_value.ENCRYPT_KEY_VALUE, request.POST.get('server_password_o'))):
             check_report['server_password_o'] = "旧服务密码输入错误"
             check_report['report'] = False
 
@@ -194,7 +195,7 @@ def check_server_field(request, method):
         check_report['server_password'] = "密码不能为空"
         check_report['report'] = False
 
-    if request.POST.get('server_password_t') != server.password:
+    if encrypt(global_value.ENCRYPT_KEY_VALUE, request.POST.get('server_password_t')) != server.password:
         check_report['server_password_t'] = "两次输入的密码不同"
         check_report['report'] = False
 
@@ -211,15 +212,13 @@ def check_server_field(request, method):
 # 插入修改server信息
 def insert_server(server):
     mysql = MysqlDb('mysql-host')
-    # server_list = [server.ip, server.password, int(server.port), server.detail,
-    #                server.group, server.status, server.servertype]
     server_list = server.value_list
     value_list = (server.user, server.password, int(server.port), server.detail,
                   server.group,
                   int(server.status), server.servertype)
     sql = "insert into server_list values(%s,%s,%s,%s,%s,%s,%s,%s) on duplicate key update user=%s,password=%s,port=%s,detail=%s,`group`=%s,status=%s,servertype=%s"
-    rs_tu = mysql.run_sql(sql, server_list + value_list)
-    if len(rs_tu) == 0:
+    l_count = mysql.run_uid(sql, server_list + value_list)
+    if l_count > 0:
         return True
     else:
         return False
@@ -237,9 +236,37 @@ def check_old_password(ip, pas):
 
 def call_procedure(procedure_name, methon, table_name):
     mysql = MysqlDb('mysql-host')
+    mysql.get_connect()
     cur = mysql.conn.cursor()
     if methon == 'new':
         cur.callproc(procedure_name, (table_name,))
     else:
         cur.callproc(procedure_name, (table_name,))
     return True
+
+
+def read_service(ip):
+    mysql = MysqlDb('mysql-host')
+    sql = "select * from server_list where ip = %s"
+    rs_tu = mysql.run_sql(sql, ip)
+    server = Server(rs_tu[0])
+    server.binding_server_value()
+    return server
+
+
+def delete_bak_server(server_ip_list):
+    mysql = MysqlDb('mysql-host')
+    ip_list = ''
+    for ip in server_ip_list:
+        ip_list = ip_list + "'" + ip + "',"
+    sql = "insert into server_list_bak SELECT *,now() from server_list where ip in (" + ip_list[:-1] + ")"
+    l_count = mysql.run_uid(sql)
+    if l_count > 0:
+        sql = "delete from server_list where ip in (" + ip_list[:-1] + ")"
+        ll_count = mysql.run_uid(sql)
+        if ll_count > 0:
+            return True
+        else:
+            return False
+    else:
+        return False
