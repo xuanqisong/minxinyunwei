@@ -270,3 +270,10 @@ def delete_bak_server(server_ip_list):
             return False
     else:
         return False
+
+
+def get_status_table():
+    mysql = MysqlDb('mysql-host')
+    sql = "SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'minxinyunwei' AND table_name like 'stat%'"
+    re_tu = mysql.run_sql(sql)
+    return re_tu

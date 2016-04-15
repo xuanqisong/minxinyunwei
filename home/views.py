@@ -102,11 +102,15 @@ def new_server_mid(request):
 
 def newserver(request):
     check_report = use_factions.check_server_field(request, "new")
+    # 读取需要加分区的表
+    status_table_list = use_factions.get_status_table()
     if check_report['report']:
         if use_factions.insert_server(check_report['server']):
-            use_factions.call_procedure('new_partition', 'new', 'statu_cpu')
-            use_factions.call_procedure('new_partition', 'new', 'statu_disk')
-            use_factions.call_procedure('new_partition', 'new', 'statu_memory')
+            for tu in status_table_list:
+                use_factions.call_procedure('new_partition', 'new', tu[0])
+            # use_factions.call_procedure('new_partition', 'new', 'statu_cpu')
+            # use_factions.call_procedure('new_partition', 'new', 'statu_disk')
+            # use_factions.call_procedure('new_partition', 'new', 'statu_memory')
             check_report['alert'] = '<Script Language="JavaScript"> alert("服务器存储成功"); </Script>'
         else:
             check_report['alert'] = '<Script Language="JavaScript"> alert("服务器存储失败"); </Script>'
@@ -144,14 +148,17 @@ def change_service(request):
 def delete_server(request):
     di = {}
     server_ip = request.POST.getlist('server_ip')
+    status_table_list = use_factions.get_status_table()
     if len(server_ip) == 0:
         di['alert'] = '<Script Language="JavaScript"> alert("请选择要删除的服务器"); </Script>'
         return fwqpz(request, di)
     else:
         if use_factions.delete_bak_server(server_ip):
-            use_factions.call_procedure('delete_partition', 'delete', 'statu_cpu')
-            use_factions.call_procedure('delete_partition', 'delete', 'statu_disk')
-            use_factions.call_procedure('delete_partition', 'delete', 'statu_memory')
+            for tu in status_table_list:
+                use_factions.call_procedure('delete_partition', 'delete', tu[0])
+            # use_factions.call_procedure('delete_partition', 'delete', 'statu_cpu')
+            # use_factions.call_procedure('delete_partition', 'delete', 'statu_disk')
+            # use_factions.call_procedure('delete_partition', 'delete', 'statu_memory')
             di['alert'] = '<Script Language="JavaScript"> alert("服务器删除成功"); </Script>'
         else:
             di['alert'] = '<Script Language="JavaScript"> alert("服务器删除失败"); </Script>'
