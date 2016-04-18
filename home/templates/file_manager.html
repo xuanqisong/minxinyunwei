@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %} 文件管理 {% endblock title %}
+
+{% block script %}
+    <style type="text/css">
+    .tr{
+        text-align: center;
+    }
+    .td{
+        width: 30%;
+    }
+    </style>
+    <script src="/templates/treemodel/js/bootstrap-treeview.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var options = {
+                bootstrap2: false,
+                showTags: true,
+                showBorder: false,
+                levels: 1,
+                data: [{{ data|safe }}]
+            };
+            $("#treeview").treeview(options);
+            $("#treeview").on('nodeSelected',function(event,data){
+                var c_file_name = data.text;
+                $.getJSON('{% url 'script_ajax_file_detail' %}',{'file_name':c_file_name},function(di){
+                    $.each(di,function(name,value){
+                        if (name == "file_size") {
+                            document.getElementById(name).innerHTML = value + "(B)";
+                        }else if (name == "file_name"){
+                            document.getElementById(name).value = value;
+                        }else {
+                            document.getElementById(name).innerHTML = value;
+                        }
+                    })
+                });
+            })
+
+        });
+    </script>
+{% endblock script %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+    <div style="font-size: large;font-weight: 800">{{ alert }}</div>
+    <table width="96%" border="8">
+    <tr><td colspan="2"><h1>服务器文件管理</h1></td></tr>
+    <tr>
+        <td width="10%">
+            <div class="container" style="width: 300px">
+
+        {#        文件列表左侧#}
+                <div class="row" style="text-align: left;">
+                    <div class="col-sm-12">
+                      <div id="treeview"></div>
+                    </div>
+                </div>
+            </div>
+        </td>
+        <td width="90%">
+      {#    文件详细内容右侧#}
+            <table border="2" width="100%">
+                <tr class="tr"><td class="td">文件名</td><td><input type="text" name="file_name" id="file_name" readOnly="true" style="width: 100%"></td></tr>
+                <tr class="tr"><td class="td">文件大小</td><td id="file_size"></td></tr>
+                <tr class="tr"><td class="td">MD5</td><td id="file_md5"></td></tr>
+                <tr class="tr"><td class="td">创建时间</td><td id="file_create_time"></td></tr>
+                <tr class="tr"><td class="td">修改时间</td><td id="file_change_time"></td></tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+        <table width="100%" style="text-align: center">
+            <tr>
+                <td width="40%" style="text-align: right">
+                    <input formaction="{% url 'script_downloadfile' %}" type="submit" value="下载"/>
+                </td>
+                <td style="text-align: left">
+                    <input id="uploadfile" name="upfile" type="file"/>
+                </td>
+                <td width="40%" style="text-align: left">
+                    <input formaction="{% url 'script_uploadfile' %}" type="submit" value="上传" />
+                </td>
+            </tr>
+        </table>
+        </td>
+    </tr>
+    </table>
+</form>
+
+{% endblock content %}

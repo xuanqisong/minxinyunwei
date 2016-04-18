@@ -27,3 +27,18 @@ class Homelist(models.Model):
         ordering = ['homename']
 
 
+class Home(models.Model):
+    #
+    class Meta:
+        permissions = (
+            ("home_backupfiledir_download", "home_backupfiledir_download"),
+            ("home_backupfiledir_upload", "home_backupfiledir_upload"),
+            ("home_backupfiledir_show", "home_backupfiledir_show"),
+            ("home_linuxdownloadfiledir_download", "home_linuxdownloadfiledir_download"),
+            ("home_linuxdownloadfiledir_upload", "home_linuxdownloadfiledir_upload"),
+            ("home_linuxdownloadfiledir_show", "home_linuxdownloadfiledir_show"),
+            ("home_uploadfiledir_download", "home_uploadfiledir_download"),
+            ("home_uploadfiledir_upload", "home_uploadfiledir_upload"),
+            ("home_uploadfiledir_show", "home_uploadfiledir_show"),
+        )
+

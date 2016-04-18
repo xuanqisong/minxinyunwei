@@ -80,7 +80,7 @@ urlpatterns += [
     # script_file_manager
     url(r'^script/filemanager/', 'script.views.file_manager', name='script_file_manager'),
     url(r'^script/uploadfile/', 'script.views.uploadfile', name='script_uploadfile'),
-    url(r'^script/downloadfile/', 'script.views.downloadfile', name='script_downloadfile'),
+    url(r'^script/servicefilemanager/', 'script.views.downloadfile', name='script_downloadfile'),
 
     # ajax
     url(r'^script/ajax/getserverdetail/', 'script.views.ajax_server_detail', name='script_ajax_server_detail'),
@@ -144,6 +144,9 @@ urlpatterns += [
     url(r'^sysconfiguration/changeservermid/', 'home.views.change_service_mid', name='home_change_service_mid'),
     url(r'^sysconfiguration/changeserver/', 'home.views.change_service', name='home_change_server'),
     url(r'^sysconfiguration/deleteserver/', 'home.views.delete_server', name='home_delete_server'),
+
+    # file manager
+    url(r'^sysconfiguration/filedetail/', 'home.views.file_detail', name='home_file_detail'),
 ]
 # static files
 import os

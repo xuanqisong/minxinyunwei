@@ -163,3 +163,11 @@ def delete_server(request):
         else:
             di['alert'] = '<Script Language="JavaScript"> alert("服务器删除失败"); </Script>'
         return fwqpz(request, di)
+
+
+# file manager
+def file_detail(request):
+    di = {'data': use_factions.get_file_detail(request)}
+    return render(request, 'file_manager.html', di)
+
+

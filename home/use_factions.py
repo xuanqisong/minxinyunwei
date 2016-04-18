@@ -277,3 +277,68 @@ def get_status_table():
     sql = "SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'minxinyunwei' AND table_name like 'status%'"
     re_tu = mysql.run_sql(sql)
     return re_tu
+
+
+# file manager
+def get_file_detail(request):
+    # 文件夹列表
+    dir_set = global_value.HOME_FILE_SHOW_PERMISSIONS
+    # 获取用户
+    u = request.user
+    # 获取用户所有权限
+    p = u.get_all_permissions()
+    # # 权限列表
+    # p_list = global_value.HOME_FILE_MANAGER_PERMISSIONS
+    # 此文件的文件夹名称
+    path = os.path.dirname(__file__)
+    # 文件总目录
+    file_manager_path = os.path.dirname(path) + "/servicefilemanager"
+    # 展示权限列表
+    show_dir_p = ([])
+    for d in dir_set:
+        dd = "home.home_" + d + "_show"
+        if dd in p:
+            show_dir_p.append(d)
+
+    data_li = []
+    for d in show_dir_p:
+        string = "{"
+        d_name = global_value.HOME_FILE_SHOW_DICT[d]
+        string += 'text: "' + d_name + '"'
+        re_string = get_tree_date(file_manager_path + "/" + d)
+        if len(re_string) > 0:
+            string += ", selectable: false,"
+            string += "nodes: [" + re_string + "]"
+        string += "}"
+        data_li.append(string)
+
+    return ",".join(data_li)
+
+
+# 获取文件展示list p_name是文件路径 dir_path_list是文件路径的列表dir_path_list = os.path.listdir(p_name)
+def get_tree_date(p_name, dir_path_list=None):
+    if dir_path_list is None:
+        dir_path_list = os.listdir(p_name)
+    str_list = []
+    if len(dir_path_list) == 0:
+        string = '{'
+        string += 'text: "' + str(p_name).split("/")[-1] + '"'
+        string += '}'
+        str_list.append(string)
+    else:
+        for dirorfilename in dir_path_list:
+            string = '{'
+            string += 'text: "' + dirorfilename + '"'
+            if os.path.isdir(p_name + "/" + dirorfilename):
+                string += ',selectable: false ,'
+                string += 'nodes:'
+                string += '['
+
+                string += get_tree_date(p_name + "/" + dirorfilename, os.listdir(p_name + "/" + dirorfilename))
+
+                string += ']'
+                string += '}'
+            else:
+                string += '}'
+            str_list.append(string)
+    return ",".join(str_list)

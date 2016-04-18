@@ -210,9 +210,9 @@ def get_file_name_list(request):
     path = os.path.dirname(os.path.dirname(__file__))
     user = request.user
     if request == '':
-        dir_name = path + "/downloadfile/"
+        dir_name = path + "/servicefilemanager/"
     else:
-        dir_name = path + "/downloadfile/" + str(user) + "/"
+        dir_name = path + "/servicefilemanager/" + str(user) + "/"
 
     if os.path.isdir(dir_name):
         file_name_list = os.listdir(dir_name)
@@ -247,7 +247,7 @@ def get_downloadfile(request):
 def get_file_detail(file_name, request):
     path = os.path.dirname(os.path.dirname(__file__))
     user = request.user
-    dir_file_name = path + "/downloadfile/" + str(user) + "/" + file_name
+    dir_file_name = path + "/servicefilemanager/" + str(user) + "/" + file_name
     file_attribute = os.stat(dir_file_name)
     # create time
     file_create_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(file_attribute.st_ctime))
@@ -271,7 +271,7 @@ def save_file(request):
     try:
         path = os.path.dirname(os.path.dirname(__file__))
         user = request.user
-        dir_file = path + "/downloadfile/"
+        dir_file = path + "/servicefilemanager/"
         if not os.path.exists(dir_file):
             os.mkdir(dir_file)
 
@@ -289,13 +289,13 @@ def save_file(request):
         return False
 
 
-# downloadfile
+# servicefilemanager
 def downloadfile(request):
     path = os.path.dirname(os.path.dirname(__file__))
     file_name = request.POST.get('file_name')
     # 获取文件迭代
     user = request.user
-    yield_bit = file_iterator(path + "/downloadfile/" + str(user) + "/" + file_name)
+    yield_bit = file_iterator(path + "/servicefilemanager/" + str(user) + "/" + file_name)
     return yield_bit
 
 
@@ -371,7 +371,7 @@ def detection_message(messages, web_ssh_server_list, clients):
         disconnect_all_thread(html_random_id)
     else:
         # 解析json字符串
-        # 页面回传格式,第一种：{single:{commander:'shutdown/send/uploadfile/downloadfile',commandertext:'',ip:''}},第二种：{all:{commander:'send/uploadfile/downloadfile',commandertext:''}}
+        # 页面回传格式,第一种：{single:{commander:'shutdown/send/uploadfile/servicefilemanager',commandertext:'',ip:''}},第二种：{all:{commander:'send/uploadfile/servicefilemanager',commandertext:''}}
         # message_di = json.loads(messages)
         if not isinstance(message_di, dict):
             print message_di
@@ -404,7 +404,7 @@ def analyze_message(message_di, clients):
             elif com_di['commander'] == 'uploadfile':
                 upload_download_file(com_di['ip'], com_di['localpath'], com_di['remotepath'], clients, com_di['user'],
                                      'send', html_random_id)
-            elif com_di['commander'] == 'downloadfile':
+            elif com_di['commander'] == 'servicefilemanager':
                 upload_download_file(com_di['ip'], com_di['localpath'], com_di['remotepath'], clients, com_di['user'],
                                      'receive', html_random_id)
 
@@ -416,7 +416,7 @@ def analyze_message(message_di, clients):
             elif com_di['commander'] == 'uploadfile':
                 upload_download_file(None, com_di['localpath'], com_di['remotepath'], clients, com_di['user'], 'send',
                                      html_random_id)
-            elif com_di['commander'] == 'downloadfile':
+            elif com_di['commander'] == 'servicefilemanager':
                 upload_download_file(None, com_di['localpath'], com_di['remotepath'], clients, com_di['user'],
                                      'receive', html_random_id)
 
@@ -486,7 +486,7 @@ def new_and_start_thread(web_ssh_server_list, client, html_random_id):
 def upload_download_file(ip, local_path, remote_path, clients, user, file_type, html_random_id):
     send_str = {'alert': ''}
     path = os.path.dirname(os.path.dirname(__file__))
-    lo_path = path + "/downloadfile/" + user + "/" + local_path
+    lo_path = path + "/servicefilemanager/" + user + "/" + local_path
 
     monitor = monitor_random_id_di[html_random_id]
     if not monitor.is_alive():
@@ -497,7 +497,7 @@ def upload_download_file(ip, local_path, remote_path, clients, user, file_type, 
         for ip_name, file_send_receive in monitor.thread_file_send_receive.items():
             if not file_send_receive.start_t:
                 if file_type == 'receive':
-                    lo_path = path + "/downloadfile/" + user + "/" + str(ip_name).replace('.', '') + local_path
+                    lo_path = path + "/servicefilemanager/" + user + "/" + str(ip_name).replace('.', '') + local_path
                 file_send_receive.local_path = lo_path
                 file_send_receive.remote_path = remote_path
                 file_send_receive.file_type = file_type
@@ -508,7 +508,7 @@ def upload_download_file(ip, local_path, remote_path, clients, user, file_type, 
         # if not paramiko_file_sendreceive_di[ip].start_t:
         if not monitor.thread_file_send_receive[ip].start_t:
             if file_type == 'receive':
-                lo_path = path + "/downloadfile/" + user + "/" + str(ip).replace('.', '') + local_path
+                lo_path = path + "/servicefilemanager/" + user + "/" + str(ip).replace('.', '') + local_path
             monitor.thread_file_send_receive[ip].local_path = lo_path
             monitor.thread_file_send_receive[ip].remote_path = remote_path
             monitor.thread_file_send_receive[ip].file_type = file_type

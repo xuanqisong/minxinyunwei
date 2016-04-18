@@ -168,7 +168,7 @@ def uploadfile(request):
         return file_manager(request, {'alert': 'uploadfile faile'})
 
 
-# downloadfile for file manager
+# servicefilemanager for file manager
 def downloadfile(request):
     response = StreamingHttpResponse(use_factions.downloadfile(request))
     response['Content-Type'] = 'application/octet-stream'
