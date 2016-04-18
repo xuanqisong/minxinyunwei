@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+import hashlib
 import os
+import time
 from Tools.DBtools import MysqlDb
 from home.baseclass import *
 from Tools.global_class import Server
@@ -342,3 +344,53 @@ def get_tree_date(p_name, dir_path_list=None):
                 string += '}'
             str_list.append(string)
     return ",".join(str_list)
+
+
+def get_dir_list(file_path):
+    di = {}
+    if os.path.isdir(file_path):
+        for ob in os.listdir(file_path):
+            di.update(get_dir_list(file_path + "/" + ob))
+
+    else:
+        di[str(file_path).split('/')[-1]] = file_path
+    return di
+
+
+# 获取文件属性
+def file_attribute(file_name):
+    base_path = os.path.dirname(os.path.dirname(__file__))
+    file_name_file_path_di = get_dir_list(base_path + "/servicefilemanager")
+    file_path = file_name_file_path_di[file_name]
+
+    file_detail = os.stat(file_path)
+    # create time
+    file_create_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(file_detail.st_ctime))
+    # change time
+    file_change_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(file_detail.st_mtime))
+
+    # MD5
+    m = hashlib.md5()
+    with open(file_path, 'rb') as f:
+        m.update(f.read())
+
+    file_md5 = m.hexdigest()
+    di = {'file_name': file_name, 'file_size': file_detail.st_size, 'file_create_time': file_create_time,
+          'file_change_time': file_change_time, 'file_md5': file_md5}
+
+    return di
+
+
+# 获取用户上传下载权限
+def user_permissions(request):
+    # 获取用户
+    u = request.user
+    # 获取用户所有权限
+    p = u.get_all_permissions()
+    permissions_list = ['home.home_file_download', 'home.home_file_upload']
+    re_per = {"u_p": []}
+    for li in permissions_list:
+        if li in p:
+            re_per["u_p"].append(li)
+
+    return re_per

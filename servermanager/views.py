@@ -26,82 +26,82 @@ def showserverused(request):
     return render(request, 'showserverused.html', di)
 
 
-# 路由器配置
-@user_passes_test(lambda u: u.has_perm('servermanager.Show'), login_url='/no_power/')
-def routermanager(request, di={}):
-    server_list = use_factions.get_serverlist()
-
-    di['server_list'] = server_list
-    return render(request, 'servermanagerfwpz.html', di)
-
-
-def newserver_mid(request):
-    di = {}
-    server_group = []
-    for group in use_factions.get_server_grouplist():
-        server_group.append(group[0])
-    di['server_groupa'] = server_group
-    return render(request, 'servermanagernew_server.html', di)
+# # 路由器配置
+# @user_passes_test(lambda u: u.has_perm('servermanager.Show'), login_url='/no_power/')
+# def routermanager(request, di={}):
+#     server_list = use_factions.get_serverlist()
+#
+#     di['server_list'] = server_list
+#     return render(request, 'servermanagerfwpz.html', di)
 
 
-@user_passes_test(lambda u: u.has_perm('servermanager.New'), login_url='/no_power/')
-def newserver(request):
-    check_report = use_factions.check_server_field(request, "new")
-    if check_report['report']:
-        if use_factions.insert_server(check_report['server']):
-            use_factions.call_procedure('new_partition', 'new', 'statu_cpu')
-            use_factions.call_procedure('new_partition', 'new', 'statu_disk')
-            use_factions.call_procedure('new_partition', 'new', 'statu_memory')
-            check_report['alert'] = '<Script Language="JavaScript"> alert("服务器存储成功"); </Script>'
-        else:
-            check_report['alert'] = '<Script Language="JavaScript"> alert("服务器存储失败"); </Script>'
-        return routermanager(request, check_report)
-    else:
-        return render(request, 'servermanagernew_server.html', check_report)
+# def newserver_mid(request):
+#     di = {}
+#     server_group = []
+#     for group in use_factions.get_server_grouplist():
+#         server_group.append(group[0])
+#     di['server_groupa'] = server_group
+#     return render(request, 'servermanagernew_server.html', di)
 
 
-@user_passes_test(lambda u: u.has_perm('servermanager.Change'), login_url='/no_power/')
-def changeserver_mid(request, di={}):
-    server_ip = request.POST.getlist('server_ip')
-    if len(server_ip) == 0:
-        di['alert'] = '<Script Language="JavaScript"> alert("请选择要修改服务器"); </Script>'
-        return routermanager(request, di)
-    elif len(server_ip) > 1:
-        di['alert'] = '<Script Language="JavaScript"> alert("请选择一个服务器"); </Script>'
-        return routermanager(request, di)
-    else:
-        di['server'] = use_factions.read_server(server_ip[0])
-        return render(request, 'servermanagerchange_server.html', di)
+# @user_passes_test(lambda u: u.has_perm('servermanager.New'), login_url='/no_power/')
+# def newserver(request):
+#     check_report = use_factions.check_server_field(request, "new")
+#     if check_report['report']:
+#         if use_factions.insert_server(check_report['server']):
+#             use_factions.call_procedure('new_partition', 'new', 'statu_cpu')
+#             use_factions.call_procedure('new_partition', 'new', 'statu_disk')
+#             use_factions.call_procedure('new_partition', 'new', 'statu_memory')
+#             check_report['alert'] = '<Script Language="JavaScript"> alert("服务器存储成功"); </Script>'
+#         else:
+#             check_report['alert'] = '<Script Language="JavaScript"> alert("服务器存储失败"); </Script>'
+#         return routermanager(request, check_report)
+#     else:
+#         return render(request, 'servermanagernew_server.html', check_report)
 
 
-def changeserver(request):
-    check_report = use_factions.check_server_field(request, "change")
-    if check_report['report']:
-        if use_factions.insert_server(check_report['server']):
-            check_report['alert'] = '<Script Language="JavaScript"> alert("服务器更新成功"); </Script>'
-        else:
-            check_report['alert'] = '<Script Language="JavaScript"> alert("服务器更新失败"); </Script>'
-        return routermanager(request, check_report)
-    else:
-        return render(request, 'servermanagerchange_server.html', check_report)
+# @user_passes_test(lambda u: u.has_perm('servermanager.Change'), login_url='/no_power/')
+# def changeserver_mid(request, di={}):
+#     server_ip = request.POST.getlist('server_ip')
+#     if len(server_ip) == 0:
+#         di['alert'] = '<Script Language="JavaScript"> alert("请选择要修改服务器"); </Script>'
+#         return routermanager(request, di)
+#     elif len(server_ip) > 1:
+#         di['alert'] = '<Script Language="JavaScript"> alert("请选择一个服务器"); </Script>'
+#         return routermanager(request, di)
+#     else:
+#         di['server'] = use_factions.read_server(server_ip[0])
+#         return render(request, 'servermanagerchange_server.html', di)
 
 
-@user_passes_test(lambda u: u.has_perm('servermanager.Delete'), login_url='/no_power/')
-def deleteserver(request):
-    di = {}
-    server_ip = request.POST.getlist('server_ip')
-    if len(server_ip) == 0:
-        di['alert'] = '<Script Language="JavaScript"> alert("请选择要删除的服务器"); </Script>'
-        return routermanager(request, di)
-    else:
-        if use_factions.delete_bak_server(server_ip):
-            use_factions.call_procedure('delete_partition', 'delete', 'statu_cpu')
-            use_factions.call_procedure('delete_partition', 'delete', 'statu_disk')
-            use_factions.call_procedure('delete_partition', 'delete', 'statu_memory')
-            di['alert'] = '<Script Language="JavaScript"> alert("服务器删除成功"); </Script>'
-        else:
-            di['alert'] = '<Script Language="JavaScript"> alert("服务器删除失败"); </Script>'
-        return routermanager(request, di)
+# def changeserver(request):
+#     check_report = use_factions.check_server_field(request, "change")
+#     if check_report['report']:
+#         if use_factions.insert_server(check_report['server']):
+#             check_report['alert'] = '<Script Language="JavaScript"> alert("服务器更新成功"); </Script>'
+#         else:
+#             check_report['alert'] = '<Script Language="JavaScript"> alert("服务器更新失败"); </Script>'
+#         return routermanager(request, check_report)
+#     else:
+#         return render(request, 'servermanagerchange_server.html', check_report)
+
+
+# @user_passes_test(lambda u: u.has_perm('servermanager.Delete'), login_url='/no_power/')
+# def deleteserver(request):
+#     di = {}
+#     server_ip = request.POST.getlist('server_ip')
+#     if len(server_ip) == 0:
+#         di['alert'] = '<Script Language="JavaScript"> alert("请选择要删除的服务器"); </Script>'
+#         return routermanager(request, di)
+#     else:
+#         if use_factions.delete_bak_server(server_ip):
+#             use_factions.call_procedure('delete_partition', 'delete', 'statu_cpu')
+#             use_factions.call_procedure('delete_partition', 'delete', 'statu_disk')
+#             use_factions.call_procedure('delete_partition', 'delete', 'statu_memory')
+#             di['alert'] = '<Script Language="JavaScript"> alert("服务器删除成功"); </Script>'
+#         else:
+#             di['alert'] = '<Script Language="JavaScript"> alert("服务器删除失败"); </Script>'
+#         return routermanager(request, di)
 
 
 # 路由备份文件查看

@@ -168,6 +168,12 @@ def delete_server(request):
 # file manager
 def file_detail(request):
     di = {'data': use_factions.get_file_detail(request)}
+    di.update(use_factions.user_permissions(request))
     return render(request, 'file_manager.html', di)
 
 
+# file manager ajax
+def ajax_file_attribute(request):
+    file_name = request.GET['file_name']
+    di = use_factions.file_attribute(file_name)
+    return JsonResponse(di)

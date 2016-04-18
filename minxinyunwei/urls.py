@@ -131,7 +131,7 @@ urlpatterns += [
     # job
     url(r'^sysconfiguration/job/', 'home.views.configuration_job', name='home_configuration_job'),
     url(r'^sysconfiguration/insertjobmessage/', 'home.views.insert_jobmessage', name='home_insert_jobmessage'),
-    # ajax
+    # job ajax
     url(r'^sysconfiguration/ajax/jobfiledetail', 'home.views.ajax_configuration_job',
         name='home_ajax_configuration_job'),
     url(r'^sysconfiguration/ajax/changerunmark', 'home.views.ajax_change_run_mark', name='home_change_run_mark'),
@@ -147,6 +147,8 @@ urlpatterns += [
 
     # file manager
     url(r'^sysconfiguration/filedetail/', 'home.views.file_detail', name='home_file_detail'),
+    # file manager ajax
+    url(r'^sysconfiguration/ajax/filedetail/', 'home.views.ajax_file_attribute', name='home_file_attribute'),
 ]
 # static files
 import os
