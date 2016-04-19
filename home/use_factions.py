@@ -323,7 +323,7 @@ def get_tree_date(p_name, dir_path_list=None):
         if os.path.exists(p_name):
             dir_path_list = os.listdir(p_name)
         else:
-            return "{ text: no file}"
+            return '{ text: "no file"}'
     str_list = []
     if len(dir_path_list) == 0:
         string = '{'

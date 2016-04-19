@@ -1,4 +1,5 @@
 # -*- coding:utf-8 -*-
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse, StreamingHttpResponse
 
@@ -182,6 +183,7 @@ def file_downloadfile(request):
 
 
 # file manager
+@login_required(login_url='/login/')
 def file_detail(request, di=None):
     if di is None:
         di = {}
