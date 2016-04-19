@@ -77,14 +77,14 @@ urlpatterns += [
     # url(r'^script/changeserver/', 'script.views.changeserver', name='script_fwpz_changeserver'),
     # url(r'^script/deleteserver/', 'script.views.deleteserver', name='script_fwpz_deleteserver'),
 
-    # script_file_manager
-    url(r'^script/filemanager/', 'script.views.file_manager', name='script_file_manager'),
-    url(r'^script/uploadfile/', 'script.views.uploadfile', name='script_uploadfile'),
-    url(r'^script/servicefilemanager/', 'script.views.downloadfile', name='script_downloadfile'),
+    # # script_file_manager
+    # url(r'^script/filemanager/', 'script.views.file_manager', name='script_file_manager'),
+    # url(r'^script/uploadfile/', 'script.views.uploadfile', name='script_uploadfile'),
+    # url(r'^script/servicefilemanager/', 'script.views.downloadfile', name='script_downloadfile'),
 
     # ajax
     url(r'^script/ajax/getserverdetail/', 'script.views.ajax_server_detail', name='script_ajax_server_detail'),
-    url(r'^script/ajax/filemanager/', 'script.views.ajax_file_detail', name='script_ajax_file_detail'),
+    # url(r'^script/ajax/filemanager/', 'script.views.ajax_file_detail', name='script_ajax_file_detail'),
 ]
 # antivirus
 urlpatterns += [
@@ -118,13 +118,13 @@ urlpatterns += [
     # url(r'^homepage/servermanager/deleteserver/', 'servermanager.views.deleteserver',
     #     name='servermanager_fwpz_deleteserver'),
     # servermanager_bakrouterfile
-    url(r'^servermanager/routerfilebak/', 'servermanager.views.showbakfile', name='servernamager_showbakfile'),
-    url(r'^servermanager/download/routerfilebak/', 'servermanager.views.downloadbakfile',
-        name='servermanager_downloadbakfile'),
+    # url(r'^servermanager/routerfilebak/', 'servermanager.views.showbakfile', name='servernamager_showbakfile'),
+    # url(r'^servermanager/download/routerfilebak/', 'servermanager.views.downloadbakfile',
+    #     name='servermanager_downloadbakfile'),
 
-    # ajax
-    url(r'^servermanager/detailbakfile/', 'servermanager.views.ajaxdetailbakfile',
-        name='ajax_servermanagerdetailbakfile'),
+    # # ajax
+    # url(r'^servermanager/detailbakfile/', 'servermanager.views.ajaxdetailbakfile',
+    #     name='ajax_servermanagerdetailbakfile'),
 ]
 # home
 urlpatterns += [

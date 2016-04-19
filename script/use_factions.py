@@ -222,92 +222,92 @@ def get_file_name_list(request):
     return file_name_list
 
 
-def get_downloadfile(request):
-    file_name_list = get_file_name_list(request)
-    data = '['
-    data += '{ '
-    data += 'text: "' + "文件夹" + '",'
-    data += 'selectable: false,'
-    data += 'nodes:['
-    for file_name in file_name_list:
-        data += '{'
-        # data += 'text: "<a href="javascript: clickfile()">'+file_name+'</a>",'
-        data += 'text: "' + file_name + '",'
-        data += '},'
-    data = data[:-1]
-    data += ']'
-    data += '},'
-
-    data = data[:-1]
-    data += ']'
-    return data
-
-
-# create time, change time, MD5, file size, file name
-def get_file_detail(file_name, request):
-    path = os.path.dirname(os.path.dirname(__file__))
-    user = request.user
-    dir_file_name = path + "/servicefilemanager/" + str(user) + "/" + file_name
-    file_attribute = os.stat(dir_file_name)
-    # create time
-    file_create_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(file_attribute.st_ctime))
-    # change time
-    file_change_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(file_attribute.st_mtime))
-
-    # MD5
-    m = hashlib.md5()
-    with open(dir_file_name, 'rb') as f:
-        m.update(f.read())
-
-    file_md5 = m.hexdigest()
-    di = {'file_name': file_name, 'file_size': file_attribute.st_size, 'file_create_time': file_create_time,
-          'file_change_time': file_change_time, 'file_md5': file_md5}
-
-    return di
+# def get_downloadfile(request):
+#     file_name_list = get_file_name_list(request)
+#     data = '['
+#     data += '{ '
+#     data += 'text: "' + "文件夹" + '",'
+#     data += 'selectable: false,'
+#     data += 'nodes:['
+#     for file_name in file_name_list:
+#         data += '{'
+#         # data += 'text: "<a href="javascript: clickfile()">'+file_name+'</a>",'
+#         data += 'text: "' + file_name + '",'
+#         data += '},'
+#     data = data[:-1]
+#     data += ']'
+#     data += '},'
+#
+#     data = data[:-1]
+#     data += ']'
+#     return data
 
 
-# uploadfile and save file in localpath
-def save_file(request):
-    try:
-        path = os.path.dirname(os.path.dirname(__file__))
-        user = request.user
-        dir_file = path + "/servicefilemanager/"
-        if not os.path.exists(dir_file):
-            os.mkdir(dir_file)
-
-        dir_file += str(user) + "/"
-
-        web_f = request.FILES['upfile']
-        file_name = web_f.name
-        f = open(dir_file + file_name, 'wb+')
-        for chunk in web_f.chunks():
-            f.write(chunk)
-        f.close()
-        return True
-    except Exception as e:
-        print e
-        return False
-
-
-# servicefilemanager
-def downloadfile(request):
-    path = os.path.dirname(os.path.dirname(__file__))
-    file_name = request.POST.get('file_name')
-    # 获取文件迭代
-    user = request.user
-    yield_bit = file_iterator(path + "/servicefilemanager/" + str(user) + "/" + file_name)
-    return yield_bit
+# # create time, change time, MD5, file size, file name
+# def get_file_detail(file_name, request):
+#     path = os.path.dirname(os.path.dirname(__file__))
+#     user = request.user
+#     dir_file_name = path + "/servicefilemanager/" + str(user) + "/" + file_name
+#     file_attribute = os.stat(dir_file_name)
+#     # create time
+#     file_create_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(file_attribute.st_ctime))
+#     # change time
+#     file_change_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(file_attribute.st_mtime))
+#
+#     # MD5
+#     m = hashlib.md5()
+#     with open(dir_file_name, 'rb') as f:
+#         m.update(f.read())
+#
+#     file_md5 = m.hexdigest()
+#     di = {'file_name': file_name, 'file_size': file_attribute.st_size, 'file_create_time': file_create_time,
+#           'file_change_time': file_change_time, 'file_md5': file_md5}
+#
+#     return di
 
 
-# gei file yield
-def file_iterator(file_name, chunk_size=512):
-    with open(file_name) as f:
-        while True:
-            c = f.read(chunk_size)
-            if c:
-                yield c
-            else:
-                break
+# # uploadfile and save file in localpath
+# def save_file(request):
+#     try:
+#         path = os.path.dirname(os.path.dirname(__file__))
+#         user = request.user
+#         dir_file = path + "/servicefilemanager/"
+#         if not os.path.exists(dir_file):
+#             os.mkdir(dir_file)
+#
+#         dir_file += str(user) + "/"
+#
+#         web_f = request.FILES['upfile']
+#         file_name = web_f.name
+#         f = open(dir_file + file_name, 'wb+')
+#         for chunk in web_f.chunks():
+#             f.write(chunk)
+#         f.close()
+#         return True
+#     except Exception as e:
+#         print e
+#         return False
+
+
+# # servicefilemanager
+# def downloadfile(request):
+#     path = os.path.dirname(os.path.dirname(__file__))
+#     file_name = request.POST.get('file_name')
+#     # 获取文件迭代
+#     user = request.user
+#     yield_bit = file_iterator(path + "/servicefilemanager/" + str(user) + "/" + file_name)
+#     return yield_bit
+#
+#
+# # gei file yield
+# def file_iterator(file_name, chunk_size=512):
+#     with open(file_name) as f:
+#         while True:
+#             c = f.read(chunk_size)
+#             if c:
+#                 yield c
+#             else:
+#                 break
 
 
 # monitor = Monitor()

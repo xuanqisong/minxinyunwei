@@ -106,35 +106,35 @@ def showserverused(request):
 
 # 路由备份文件查看
 # 展示首页
-@user_passes_test(lambda u: u.has_perm('servermanager.Show'), login_url='/no_power/')
-def showbakfile(request):
-    di = {'data': use_factions.get_file_data()}
-    # 获取文件序列
-    return render(request, 'routerbakfileindex.html', di)
+# @user_passes_test(lambda u: u.has_perm('servermanager.Show'), login_url='/no_power/')
+# def showbakfile(request):
+#     di = {'data': use_factions.get_file_data()}
+#     # 获取文件序列
+#     return render(request, 'routerbakfileindex.html', di)
 
 
-# 下载备份文件
-def downloadbakfile(request):
-    dir_name = os.path.dirname(os.path.abspath(__file__))
-    file_path = request.POST.get('fpath')
+# # 下载备份文件
+# def downloadbakfile(request):
+#     dir_name = os.path.dirname(os.path.abspath(__file__))
+#     file_path = request.POST.get('fpath')
+#
+#     the_file_name = dir_name + '\\' + 'routerbakfile\\' + file_path.replace('/', '\\')
+#     file_name = file_path.replace('/', '\\')[:-1]
+#
+#     # 获取文件迭代
+#     yield_bit = use_factions.file_iterator(the_file_name)
+#
+#     response = StreamingHttpResponse(yield_bit)
+#     response['Content-Type'] = 'application/octet-stream'
+#     response['Content-Disposition'] = 'attachment;filename="{0}"'.format(file_name)
+#
+#     return response
 
-    the_file_name = dir_name + '\\' + 'routerbakfile\\' + file_path.replace('/', '\\')
-    file_name = file_path.replace('/', '\\')[:-1]
 
-    # 获取文件迭代
-    yield_bit = use_factions.file_iterator(the_file_name)
-
-    response = StreamingHttpResponse(yield_bit)
-    response['Content-Type'] = 'application/octet-stream'
-    response['Content-Disposition'] = 'attachment;filename="{0}"'.format(file_name)
-
-    return response
-
-
-# ajax
-def ajaxdetailbakfile(request):
-    f_dir_name = request.GET['f_dir_name']
-    c_file_name = request.GET['c_file_name']
-    bakfiledetail = use_factions.get_bakfile_detail(f_dir_name, c_file_name)
-    di = {'bakfiledetail': bakfiledetail}
-    return JsonResponse(di)
+# # ajax
+# def ajaxdetailbakfile(request):
+#     f_dir_name = request.GET['f_dir_name']
+#     c_file_name = request.GET['c_file_name']
+#     bakfiledetail = use_factions.get_bakfile_detail(f_dir_name, c_file_name)
+#     di = {'bakfiledetail': bakfiledetail}
+#     return JsonResponse(di)

@@ -160,31 +160,31 @@ def start_shell(request):
             clients.remove(request.websocket)
 
 
-# uploadfile for file manager
-def uploadfile(request):
-    if use_factions.save_file(request):
-        return file_manager(request, {'alert': 'uploadfile success'})
-    else:
-        return file_manager(request, {'alert': 'uploadfile faile'})
+# # uploadfile for file manager
+# def uploadfile(request):
+#     if use_factions.save_file(request):
+#         return file_manager(request, {'alert': 'uploadfile success'})
+#     else:
+#         return file_manager(request, {'alert': 'uploadfile faile'})
 
 
-# servicefilemanager for file manager
-def downloadfile(request):
-    response = StreamingHttpResponse(use_factions.downloadfile(request))
-    response['Content-Type'] = 'application/octet-stream'
-    response['Content-Disposition'] = 'attachment;filename="{0}"'.format(request.POST.get('file_name'))
-    return response
+# # servicefilemanager for file manager
+# def downloadfile(request):
+#     response = StreamingHttpResponse(use_factions.downloadfile(request))
+#     response['Content-Type'] = 'application/octet-stream'
+#     response['Content-Disposition'] = 'attachment;filename="{0}"'.format(request.POST.get('file_name'))
+#     return response
 
 
-# file_manager
-@login_required(login_url="/login/")
-def file_manager(request, di={}):
-    di['data'] = use_factions.get_downloadfile(request)
-    return render(request, 'downloadfilemanager.html', di)
+# # file_manager
+# @login_required(login_url="/login/")
+# def file_manager(request, di={}):
+#     di['data'] = use_factions.get_downloadfile(request)
+#     return render(request, 'downloadfilemanager.html', di)
 
 
-# ajax
-def ajax_file_detail(request):
-    file_name = request.GET['file_name']
-    di = use_factions.get_file_detail(file_name, request)
-    return JsonResponse(di)
+# # ajax
+# def ajax_file_detail(request):
+#     file_name = request.GET['file_name']
+#     di = use_factions.get_file_detail(file_name, request)
+#     return JsonResponse(di)

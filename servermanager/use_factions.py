@@ -234,65 +234,65 @@ def hole_ip(ip_section):
 #     return True
 
 
-# 获取文件序列
-def get_file_data():
-    dir_name = os.path.dirname(os.path.abspath(__file__))
-    dir_file_di = {}
-    # 进入备份路径
-    dir_name += '/routerbakfile'
-
-    if not os.path.isdir(dir_name):
-        return False
-
-    dir_list = os.listdir(dir_name)
-
-    for file_dir_name in dir_list:
-        dir_file_di[file_dir_name] = os.listdir(dir_name + '/' + file_dir_name)
-
-    # 拼接页面data
-    if len(dir_file_di) > 0:
-        data = '['
-        for file_dir_name, file_list in dir_file_di.items():
-            data += '{ '
-            data += 'text: "' + file_dir_name + '",'
-            data += 'selectable: false,'
-            data += 'nodes:['
-            for file_name in file_list:
-                data += '{'
-                # data += 'text: "<a href="javascript: clickfile()">'+file_name+'</a>",'
-                data += 'text: "' + file_name + '",'
-                data += '},'
-            data = data[:-1]
-            data += ']'
-            data += '},'
-
-        data = data[:-1]
-        data += ']'
-    else:
-        data = '[]'
-
-    return data
-
-
-# 获取文件内容
-def get_bakfile_detail(f_dir_name, c_file_name):
-    dir_name = os.path.dirname(os.path.abspath(__file__))
-    file_hole_name = dir_name + '/routerbakfile/' + f_dir_name + '/' + c_file_name
-    if not os.path.isfile(file_hole_name):
-        return False
-
-    with open(file_hole_name) as f:
-        bakfiledetail = f.read()
-
-    return bakfiledetail
+# # 获取文件序列
+# def get_file_data():
+#     dir_name = os.path.dirname(os.path.abspath(__file__))
+#     dir_file_di = {}
+#     # 进入备份路径
+#     dir_name += '/routerbakfile'
+#
+#     if not os.path.isdir(dir_name):
+#         return False
+#
+#     dir_list = os.listdir(dir_name)
+#
+#     for file_dir_name in dir_list:
+#         dir_file_di[file_dir_name] = os.listdir(dir_name + '/' + file_dir_name)
+#
+#     # 拼接页面data
+#     if len(dir_file_di) > 0:
+#         data = '['
+#         for file_dir_name, file_list in dir_file_di.items():
+#             data += '{ '
+#             data += 'text: "' + file_dir_name + '",'
+#             data += 'selectable: false,'
+#             data += 'nodes:['
+#             for file_name in file_list:
+#                 data += '{'
+#                 # data += 'text: "<a href="javascript: clickfile()">'+file_name+'</a>",'
+#                 data += 'text: "' + file_name + '",'
+#                 data += '},'
+#             data = data[:-1]
+#             data += ']'
+#             data += '},'
+#
+#         data = data[:-1]
+#         data += ']'
+#     else:
+#         data = '[]'
+#
+#     return data
 
 
-# 获取文件编码
-def file_iterator(file_name, chunk_size=512):
-    with open(file_name) as f:
-        while True:
-            c = f.read(chunk_size)
-            if c:
-                yield c
-            else:
-                break
+# # 获取文件内容
+# def get_bakfile_detail(f_dir_name, c_file_name):
+#     dir_name = os.path.dirname(os.path.abspath(__file__))
+#     file_hole_name = dir_name + '/routerbakfile/' + f_dir_name + '/' + c_file_name
+#     if not os.path.isfile(file_hole_name):
+#         return False
+#
+#     with open(file_hole_name) as f:
+#         bakfiledetail = f.read()
+#
+#     return bakfiledetail
+
+
+# # 获取文件编码
+# def file_iterator(file_name, chunk_size=512):
+#     with open(file_name) as f:
+#         while True:
+#             c = f.read(chunk_size)
+#             if c:
+#                 yield c
+#             else:
+#                 break
