@@ -198,7 +198,7 @@ if __name__ == "__main__":
     # 获取文件上层目录
     dir_name_upup = os.path.abspath(os.path.join(dir_name_up, os.path.pardir))
 
-    dir_name = dir_name_upup + '/servermanager/routerbakfile'
+    dir_name = dir_name_upup + '/servicefilemanager/backupfiledir'
 
     if not os.path.exists(dir_name):
         os.mkdir(dir_name)
