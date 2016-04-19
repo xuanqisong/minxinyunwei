@@ -320,7 +320,10 @@ def get_file_detail(request):
 # 获取文件展示list p_name是文件路径 dir_path_list是文件路径的列表dir_path_list = os.path.listdir(p_name)
 def get_tree_date(p_name, dir_path_list=None):
     if dir_path_list is None:
-        dir_path_list = os.listdir(p_name)
+        if os.path.exists(p_name):
+            dir_path_list = os.listdir(p_name)
+        else:
+            return "{ text: no file}"
     str_list = []
     if len(dir_path_list) == 0:
         string = '{'
