@@ -394,3 +394,73 @@ def user_permissions(request):
             re_per["u_p"].append(li)
 
     return re_per
+
+
+# uploadfile and save file in localpath
+def save_file(request):
+    try:
+        path = os.path.dirname(os.path.dirname(__file__))
+        user = request.user
+        dir_file = path + "/servicefilemanager/uploadfiledir/"
+        dir_exists_or_create(dir_file)
+
+        # dir_file += str(user) + "/"
+        ymr = time.strftime("%Y%m%d", time.localtime(time.time()))
+        dir_file += ymr + "/"
+
+        dir_exists_or_create(dir_file)
+
+        ymrhms = time.strftime("%Y%m%d%H", time.localtime(time.time()))
+        dir_file += ymrhms + "/"
+
+        dir_exists_or_create(dir_file)
+        dir_exists_or_create(dir_file + "sqlscript")
+        dir_exists_or_create(dir_file + "softfile")
+
+        # 获取文件名称
+        web_f = request.FILES['upfile']
+        f_type = str(web_f).split('.')[-1]
+
+        if f_type == 'txt' or f_type == 'sql':
+            dir_file += "sqlscript/"
+        else:
+            dir_file += "softfile/"
+
+        file_name = web_f.name
+        f = open(dir_file + file_name, 'wb+')
+        for chunk in web_f.chunks():
+            f.write(chunk)
+        f.close()
+        return True
+    except Exception as e:
+        print e
+        return False
+
+
+# yield file
+def download_file(request):
+    base_path = os.path.dirname(os.path.dirname(__file__))
+    file_name_file_path_di = get_dir_list(base_path + "/servicefilemanager")
+
+    file_name = request.POST.get('file_name')
+    path = file_name_file_path_di[file_name]
+    # 获取文件迭代
+    yield_bit = file_iterator(path)
+    return yield_bit
+
+
+# 检查文件夹是否存在，不存在则创建
+def dir_exists_or_create(file_dir):
+    if not os.path.exists(file_dir):
+        os.mkdir(file_dir)
+
+
+# 文件迭代
+def file_iterator(file_name, chunk_size=512):
+    with open(file_name) as f:
+        while True:
+            c = f.read(chunk_size)
+            if c:
+                yield c
+            else:
+                break

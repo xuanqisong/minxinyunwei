@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, StreamingHttpResponse
 
 from home.models import Homelist
 import use_factions
@@ -165,9 +165,27 @@ def delete_server(request):
         return fwqpz(request, di)
 
 
+# file manager uploadfile
+def file_uploadfile(request):
+    if use_factions.save_file(request):
+        return file_detail(request, {'alert': 'uploadfile success'})
+    else:
+        return file_detail(request, {'alert': 'uploadfile faile'})
+
+
+# file manager downloadfile
+def file_downloadfile(request):
+    response = StreamingHttpResponse(use_factions.download_file(request))
+    response['Content-Type'] = 'application/octet-stream'
+    response['Content-Disposition'] = 'attachment;filename="{0}"'.format(request.POST.get('file_name'))
+    return response
+
+
 # file manager
-def file_detail(request):
-    di = {'data': use_factions.get_file_detail(request)}
+def file_detail(request, di=None):
+    if di is None:
+        di = {}
+    di['data'] = use_factions.get_file_detail(request)
     di.update(use_factions.user_permissions(request))
     return render(request, 'file_manager.html', di)
 

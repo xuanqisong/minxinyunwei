@@ -76,14 +76,14 @@
                     {% for li in u_p %}
                     {% if li == 'home.home_file_download' %}
                     <td width="40%" style="text-align: right">
-                        <input formaction="{% url 'script_downloadfile' %}" type="submit" value="下载"/>
+                        <input formaction="{% url 'home_file_downloadfile' %}" type="submit" value="下载"/>
                     </td>
                     {% elif li == 'home.home_file_upload' %}
                     <td style="text-align: left">
                         <input id="uploadfile" name="upfile" type="file"/>
                     </td>
                     <td width="40%" style="text-align: left">
-                        <input formaction="{% url 'script_uploadfile' %}" type="submit" value="上传" />
+                        <input formaction="{% url 'home_file_uploadfile' %}" type="submit" value="上传" />
                     </td>
                     {% endif %}
                     {% endfor %}

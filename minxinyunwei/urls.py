@@ -147,6 +147,10 @@ urlpatterns += [
 
     # file manager
     url(r'^sysconfiguration/filedetail/', 'home.views.file_detail', name='home_file_detail'),
+    # file upload
+    url(r'^sysconfiguration/fileupload/', 'home.views.file_uploadfile', name='home_file_uploadfile'),
+    # file download
+    url(r'^sysconfiguration/filedownload/', 'home.views.file_downloadfile', name='home_file_downloadfile'),
     # file manager ajax
     url(r'^sysconfiguration/ajax/filedetail/', 'home.views.ajax_file_attribute', name='home_file_attribute'),
 ]
