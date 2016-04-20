@@ -190,7 +190,7 @@ if __name__ == "__main__":
 
     # 获取文件名
     dir_name = os.path.dirname(os.path.abspath(__file__))
-    time_now = time.strftime("%Y%m%d%H%M%S", time.localtime())
+    time_now = time.strftime("%Y%m%d%H%M", time.localtime())
     # 文件本身路径(出去文件名称)
     dir_name = os.path.dirname(os.path.abspath(__file__))
     # 获取文件上层目录
