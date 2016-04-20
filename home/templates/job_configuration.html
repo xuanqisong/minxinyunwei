@@ -232,6 +232,7 @@
                     <td>{{ job.t_minute }}</td>
                     <td>{{ job.t_second }}</td>
                     <td>{{ job.function_name }}<input type="hidden" id="rummark{{ job.id }}" value="{{ job.run_mark }}"/></td>
+                    {% if job.id != 1 %}
                     {% if job.run_mark == "1" %}
                         <td id="cvalue{{ job.id }}">开启运行</td>
                         <td>
@@ -244,6 +245,7 @@
                             <input type="button" id="bvalue{{ job.id }}" onclick="changestatu(this)" value="开始"/>
                             <input type="button" id="d{{ job.id }}" onclick="deletejob(this)" value="删除"/>
                         </td>
+                    {% endif %}
                     {% endif %}
                 </tr>
                 {% endfor %}
