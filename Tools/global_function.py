@@ -216,3 +216,28 @@ def judge_time(li):
         return False
     else:
         return True
+
+
+def check_run_job(re_tu):
+    bool_list = []
+    for i in range(1, 7):
+        if re_tu[0][i] == "*":
+            bool_list.append(True)
+        else:
+            bool_list.append(False)
+    if False in bool_list:
+        return False
+    else:
+        return True
+
+
+def update_time(mysql):
+    t_year = time.strftime("%Y", time.localtime())
+    t_month = time.strftime("%m", time.localtime())
+    t_day = time.strftime("%d", time.localtime())
+    t_h = time.strftime("%H", time.localtime())
+    t_m = time.strftime("%M", time.localtime())
+    t_s = time.strftime("%S", time.localtime())
+
+    sql = "UPDATE job_table SET t_year=%s,t_month=%s,t_day=%s,t_hour=%s,t_minute=%s,t_second=%s,function_name='run' WHERE run_mark='9'"
+    mysql.run_sql(sql, [t_year, t_month, t_day, t_h, t_m, t_s])
