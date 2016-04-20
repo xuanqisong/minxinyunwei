@@ -208,17 +208,30 @@ def get_websshbase(connect_serverip):
 
 def get_file_name_list(request):
     path = os.path.dirname(os.path.dirname(__file__))
-    user = request.user
-    if request == '':
-        dir_name = path + "/servicefilemanager/"
-    else:
-        dir_name = path + "/servicefilemanager/" + str(user) + "/"
+    # user = request.user
+    # if request == '':
+    #     dir_name = path + "/servicefilemanager/"
+    # else:
+    #     dir_name = path + "/servicefilemanager/" + str(user) + "/"
+    #
+    # if os.path.isdir(dir_name):
+    #     file_name_list = os.listdir(dir_name)
+    # else:
+    #     os.mkdir(dir_name)
+    #     file_name_list = os.listdir(dir_name)
+    dir_name = path + "/servicefilemanager/uploadfiledir"
+    file_name_list = get_all_file_name(dir_name)
+    return file_name_list
 
-    if os.path.isdir(dir_name):
-        file_name_list = os.listdir(dir_name)
+
+def get_all_file_name(base_path):
+    file_name_list = []
+    if os.path.isdir(base_path):
+        for i in os.listdir(base_path):
+            file_name_list.extend(get_all_file_name(base_path + "/" + i))
     else:
-        os.mkdir(dir_name)
-        file_name_list = os.listdir(dir_name)
+        file_name_list.append(str(base_path).split('/')[-1])
+
     return file_name_list
 
 
@@ -404,7 +417,7 @@ def analyze_message(message_di, clients):
             elif com_di['commander'] == 'uploadfile':
                 upload_download_file(com_di['ip'], com_di['localpath'], com_di['remotepath'], clients, com_di['user'],
                                      'send', html_random_id)
-            elif com_di['commander'] == 'servicefilemanager':
+            elif com_di['commander'] == 'downloadfile':
                 upload_download_file(com_di['ip'], com_di['localpath'], com_di['remotepath'], clients, com_di['user'],
                                      'receive', html_random_id)
 
@@ -416,7 +429,7 @@ def analyze_message(message_di, clients):
             elif com_di['commander'] == 'uploadfile':
                 upload_download_file(None, com_di['localpath'], com_di['remotepath'], clients, com_di['user'], 'send',
                                      html_random_id)
-            elif com_di['commander'] == 'servicefilemanager':
+            elif com_di['commander'] == 'downloadfile':
                 upload_download_file(None, com_di['localpath'], com_di['remotepath'], clients, com_di['user'],
                                      'receive', html_random_id)
 
@@ -486,7 +499,11 @@ def new_and_start_thread(web_ssh_server_list, client, html_random_id):
 def upload_download_file(ip, local_path, remote_path, clients, user, file_type, html_random_id):
     send_str = {'alert': ''}
     path = os.path.dirname(os.path.dirname(__file__))
-    lo_path = path + "/servicefilemanager/" + user + "/" + local_path
+    # lo_path = path + "/servicefilemanager/" + user + "/" + local_path
+    try:
+        lo_path = get_dir_list(path + "/servicefilemanager")[local_path]
+    except Exception as e:
+        pass
 
     monitor = monitor_random_id_di[html_random_id]
     if not monitor.is_alive():
@@ -497,7 +514,9 @@ def upload_download_file(ip, local_path, remote_path, clients, user, file_type, 
         for ip_name, file_send_receive in monitor.thread_file_send_receive.items():
             if not file_send_receive.start_t:
                 if file_type == 'receive':
-                    lo_path = path + "/servicefilemanager/" + user + "/" + str(ip_name).replace('.', '') + local_path
+                    # lo_path = path + "/servicefilemanager/" + user + "/" + str(ip_name).replace('.', '') + local_path
+                    lo_path = path + "/servicefilemanager/linuxdownloadfiledir/" + user + "/" + str(ip_name).replace(
+                        '.', '') + "_" + local_path
                 file_send_receive.local_path = lo_path
                 file_send_receive.remote_path = remote_path
                 file_send_receive.file_type = file_type
@@ -508,7 +527,9 @@ def upload_download_file(ip, local_path, remote_path, clients, user, file_type, 
         # if not paramiko_file_sendreceive_di[ip].start_t:
         if not monitor.thread_file_send_receive[ip].start_t:
             if file_type == 'receive':
-                lo_path = path + "/servicefilemanager/" + user + "/" + str(ip).replace('.', '') + local_path
+                # lo_path = path + "/servicefilemanager/" + user + "/" + str(ip).replace('.', '') + local_path
+                lo_path = path + "/servicefilemanager/linuxdownloadfiledir/" + user + "/" + str(ip).replace(
+                    '.', '') + "+" + local_path
             monitor.thread_file_send_receive[ip].local_path = lo_path
             monitor.thread_file_send_receive[ip].remote_path = remote_path
             monitor.thread_file_send_receive[ip].file_type = file_type
@@ -564,3 +585,15 @@ def start_connect(html_random_id):
             p_run.get_connect_ssh()
             p_run.get_connect_channel()
             p_run.get_connect_sftp()
+
+
+# 获取{文件名称：文件路径}
+def get_dir_list(file_path):
+    di = {}
+    if os.path.isdir(file_path):
+        for ob in os.listdir(file_path):
+            di.update(get_dir_list(file_path + "/" + ob))
+
+    else:
+        di[str(file_path).split('/')[-1]] = file_path
+    return di
