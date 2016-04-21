@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %} 首页测试 {% endblock title %}
+
+{% block script %}
+    <link rel="stylesheet" href="/templates/css/filelevels/style.css" type="text/css" />
+    <script type="text/javascript">
+	$(function(){
+		$('.cdir').click(function(){
+            $('.bdir').show();
+		});
+
+
+        $('.ok').click(function(){
+            var total = "";
+            if($('.dirshow ul').text() == ''){
+                $('.bdir').hide();
+                $('.mask').hide();
+            }else{
+                total = $('.dirshow ul').text();
+                $('.cdir').text(total);
+                $('.bdir').hide();
+                $('.mask').hide();
+            }
+        })
+
+	})
+
+
+</script>
+{#<script>#}
+{#$(document).ready(function(){#}
+{#    #}
+{#</script>#}
+<script>
+function c_dir(obj) {
+    var dir_value = obj.innerHTML;
+    var end_dir = document.getElementById("enddir");
+    var html_string = "";
+    var tr_obj = obj.parentNode.parentNode.parentNode.parentNode.parentNode;
+    var table_obj = tr_obj.parentNode;
+    var tr_id = tr_obj.id;
+    var tr2_f_id = parseInt(tr_id) + 1;
+
+    var old_tr = document.getElementById(tr2_f_id);
+    if (old_tr != null){
+        table_obj.removeChild(old_tr);
+    }
+
+    if(dir_value == 'backup'){
+        html_string += '<tr id="' + tr2_f_id + '"><td><ul class="dirul"><li>';
+        html_string += '<a><b onclick="c_dir(this)">mysql</b></a>';
+        html_string += '<a><b onclick="c_dir(this)">nginx</b></a>';
+        html_string += '<a><b onclick="c_dir(this)">python</b></a>';
+        html_string += '</li></ul></td></tr>';
+    }else if(dir_value == 'user'){
+        html_string += '<tr id="' + tr2_f_id + '"><td><ul class="dirul"><li>';
+        html_string += '<a><b onclick="c_dir(this)">u</b></a>';
+        html_string += '<a><b onclick="c_dir(this)">uu</b></a>';
+        html_string += '<a><b onclick="c_dir(this)">uuu</b></a>';
+        html_string += '</li></ul></td></tr>';
+    }else if(dir_value == 'var'){
+        html_string += '<tr id="' + tr2_f_id + '"><td><ul class="dirul"><li>';
+        html_string += '<a><b onclick="c_dir(this)">v</b></a>';
+        html_string += '<a><b onclick="c_dir(this)">vv</b></a>';
+        html_string += '<a><b onclick="c_dir(this)">vvv</b></a>';
+        html_string += '</li></ul></td></tr>';
+    }
+
+    var end_dir_txt = end_dir.innerHTML;
+    var end_dir_txt_list = end_dir_txt.split('/');
+    var end_dir_txt_list_length = end_dir_txt_list.length;
+    if (end_dir_txt_list_length >1 ){
+        if (end_dir_txt_list[tr_id] != dir_value){
+            end_dir.innerHTML = "";
+            for (var i=0; i<tr_id;i++){
+                end_dir.innerHTML += end_dir_txt_list[i] + "/"
+            }
+            end_dir.innerHTML += dir_value + "/"
+        }
+    }else{
+        end_dir.innerHTML = dir_value + "/"
+    }
+
+
+
+    document.getElementById("filedirtable").innerHTML += html_string;
+}
+</script>
+{% endblock script %}
+
+
+{% block content %}
+    <div class="mask"></div>
+    <b class="cdir">路径</b>
+
+
+
+    <div id ="wrap">
+        <div class="bdir">
+            <div class="top01-dir"  >
+                <em class="ok">确定</em><b >请选择路径</b>
+            </div>
+
+            <div class="mid01-dir">
+                <div class="dirshow" id="show">
+                    <i>路径为:</i>
+                    <ul id="enddir"></ul>
+                </div>
+                <div class="dirshow1" id="show1">
+                    <table>
+                        <tbody id="filedirtable">
+                        <tr id="0">
+                            <td>
+                                <ul class="dirul">
+                                    <li>
+                                        <a><b onclick="c_dir(this)">backup</b></a>
+                                        <a><b onclick="c_dir(this)">user</b></a>
+                                        <a><b onclick="c_dir(this)">var</b></a>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
