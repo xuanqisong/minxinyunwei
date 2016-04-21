@@ -85,6 +85,10 @@ urlpatterns += [
     # ajax
     url(r'^script/ajax/getserverdetail/', 'script.views.ajax_server_detail', name='script_ajax_server_detail'),
     # url(r'^script/ajax/filemanager/', 'script.views.ajax_file_detail', name='script_ajax_file_detail'),
+
+
+    # file levels
+    url(r'^filelevels/', 'script.views.file_levels', name='script_file_levels'),
 ]
 # antivirus
 urlpatterns += [

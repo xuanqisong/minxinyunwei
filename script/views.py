@@ -188,3 +188,8 @@ def start_shell(request):
 #     file_name = request.GET['file_name']
 #     di = use_factions.get_file_detail(file_name, request)
 #     return JsonResponse(di)
+
+# file levels
+def file_levels(request):
+    di = {}
+    return render(request, 'test_filelevels.html', di)

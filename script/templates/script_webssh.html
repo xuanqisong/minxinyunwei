@@ -6,9 +6,9 @@
 {#    CSS引入#}
     <link href="/templates/css/word_model/css/progress_bar_default.css" rel="stylesheet" type="text/css">
     <link href="/templates/css/word_model/css/progress_bar_normalize.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="/templates/css/filelevels/style.css" type="text/css" />
     <script type="text/javascript" src="/templates/js/jquery.progress.js"></script>
     <link href="/templates/css/base_css.css" rel="stylesheet">
-
 
 <script type="text/javascript">
 $(document).ready(function(){
@@ -295,7 +295,7 @@ function ExitWeb(s,html_random_id){
         </tr>
     {% endfor %}
         <tr class="trinput">
-            <td colspan="3"><input type="text" id="master_sendtext" class="sendinput"></td>
+            <td colspan="3"><input type="text" id="master_sendtext" class="sendinput" onkeydown='if(event.keyCode==13){master_send.click()}'></td>
             <td><input type="button" id="master_send" value="确定"></td>
         </tr>
         <tr class="linux">
@@ -350,7 +350,7 @@ function ExitWeb(s,html_random_id){
             </td>
         </tr>
         <tr class="trinput">
-            <td colspan="3"><input type="text" id="{{ websshbase.get_ipreplace }}sendtext" class="sendinput"></td>
+            <td colspan="3"><input type="text" id="{{ websshbase.get_ipreplace }}sendtext" class="sendinput" onkeydown='if(event.keyCode==13){ $("#{{ websshbase.get_ipreplace }}send").click() }'></td>
             <td><input type="button" id="{{ websshbase.get_ipreplace }}send"  value="确定"></td>
         </tr>
         <tr class="linux">
