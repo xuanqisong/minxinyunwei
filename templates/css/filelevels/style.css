@@ -14,7 +14,8 @@ a:hover{color:#c00;text-decoration:underline;}
 .cdir{display:block;padding-left:3px;background:url(/templates/png/filelevels/selean.gif) no-repeat;width:83px;height:30px;text-align:center;line-height:28px;font-weight:normal;cursor:pointer;display:block;white-space:nowrap;text-overflow:ellipsis;-o-text-overflow:ellipsis;overflow: hidden;margin:20px auto;}
 #wrap{width:960px;height:700px;margin:0 auto;position:relative;z-index:11;}
 /*#wrap{width:960px;height:700px;margin:0 auto;position:fixed;z-index:11;margin-left: 100px;margin-top: 100px}*/
-.bdir{width:700px;height:320px;z-index:11;display:none;z-index:11;background:#fff;border-bottom:4px solid #ff7400;position:absolute;left:180px;top:50px;}
+/*.bdir{width:700px;height:320px;z-index:11;display:none;z-index:11;background:#fff;border-bottom:4px solid #ff7400;position:absolute;left:180px;top:50px;}*/
+.bdir{width:700px;height:320px;z-index:11;display:none;background:#fff;border-bottom:4px solid #ff7400;position: static;left:180px;top:50px;}
 .top01-dir{height:27px;line-height:22px;width:100%;background:url(/templates/png/filelevels/bg01.gif) repeat-x left bottom; float:left;text-align:right;border-bottom:1px solid #ccc;}
 .top01-dir b{display:block;float:left;padding-left:27px;background:url(/templates/png/filelevels/icon01.gif) no-repeat 5px 4px;color:#fff;}
 .top01-dir .ok{float:right;cursor:pointer;font-style:normal;padding-right:10px;color:#fff;}

@@ -597,3 +597,44 @@ def get_dir_list(file_path):
     else:
         di[str(file_path).split('/')[-1]] = file_path
     return di
+
+
+# 获取服务器文件序列
+def get_ip_linux_filelist(ip, commander, html_random_id):
+    monitor = monitor_random_id_di[html_random_id]
+    p_run = monitor.prun[ip]
+    if p_run.ssh[0]:
+        stdin, stdout, stderr = p_run.ssh[1].exec_command('''ls ''' + commander + ''' -l ''')
+    else:
+        return [True, ['还未连接']]
+    li = stderr.readlines()
+    if len(li) != 0:
+        return [True, li]
+    else:
+        return [False, stdout.readlines()]
+
+
+def data_handle(ip, commander, html_random_id):
+    ch, li = get_ip_linux_filelist(ip, commander, html_random_id)
+    di = {}
+    if ch:
+        di['commander'] = 'error'
+        di['return_value'] = ''
+        for i in li:
+            di['return_value'] += i
+    else:
+        di['commander'] = 'success'
+        di['dir'] = []
+        di['file'] = []
+        for index, re_line in enumerate(li):
+            if index == 0:
+                continue
+            l = re_line.split(' ')
+            re_type = l[0][:1]
+            re_obj = str(l[-1]).replace('\n', '')
+            if re_type == 'd':
+                di['dir'].append(re_obj)
+            else:
+                di['file'].append(re_obj)
+
+    return di

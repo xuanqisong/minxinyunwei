@@ -89,6 +89,8 @@ urlpatterns += [
 
     # file levels
     url(r'^filelevels/', 'script.views.file_levels', name='script_file_levels'),
+    # file ajax
+    url(r'^script/ajax/linuxfilelevels/', 'script.views.ajax_linux_file_levels', name='script_ajax_linux_file_levels'),
 ]
 # antivirus
 urlpatterns += [

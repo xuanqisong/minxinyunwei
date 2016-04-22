@@ -9,11 +9,154 @@
     <link rel="stylesheet" href="/templates/css/filelevels/style.css" type="text/css" />
     <script type="text/javascript" src="/templates/js/jquery.progress.js"></script>
     <link href="/templates/css/base_css.css" rel="stylesheet">
+{#linux 文件列表#}
+<script>
+function add_linux_filepath(obj){
+    var ip_replace = obj.id.replace(/[lable]/g, '');
+    var ip = document.getElementById(ip_replace+"ip").innerText;
 
+    var html_string = '';
+    html_string += '<div class="bdir"><div class="top01-dir"><em class="ok" onclick="ok_click(this)" id="'+ip_replace+'ok">确定</em><b>请选择路径</b></div>';
+    html_string += '<div class="mid01-dir"><div class="dirshow" id="'+ip_replace+'show"><i>路径为:</i><ul id="'+ip_replace+'enddir"></ul></div>';
+    html_string += '<div class="dirshow1" id="show1">';
+    html_string += '<table id="'+ip_replace+'dirtable" ><tbody id="'+ ip_replace +'dirtablebody">';
+    html_string += '<tr id="0"><td><ul class="dirul"><li>';
+    $.getJSON('{% url 'script_ajax_linux_file_levels' %}',{'ip':ip,'commander':'/','html_random_id':window.r_id},function(di){
+        if (di['commander'] == 'success') {
+            var f_list = di['file'];
+            var d_list = di['dir'];
+            for (var i=0;i<f_list.length;i++){
+                html_string += '<a style="color: #53050E"><b onclick="c_dir(this,0)">';
+                html_string += f_list[i];
+                html_string += '</a></b>';
+            }
+            for (var i=0;i<d_list.length;i++){
+                html_string += '<a style="color: #141AEC"><b onclick="c_dir(this,1)">';
+                html_string += d_list[i];
+                html_string += '</a></b>';
+            }
+        }else{
+            var error_value = di['return_value'];
+            html_string += error_value + '</td></tr>';
+        }
+
+
+        html_string +='</li></ul></td></tr>';
+        html_string +='</tbody></table>';
+        html_string += '</div></div></div>';
+        var table_div = document.getElementById(ip_replace+"file_path_table");
+        table_div.innerHTML = html_string;
+        $('.bdir').show();
+    });
+}
+</script>
+<script>
+function ok_click(obj){
+    {#    获取IP#}
+    var ip_replace = obj.id.replace(/[ok]/g, '');
+    var ip = document.getElementById(ip_replace+"ip").innerText;
+    var div_obj = document.getElementById(ip_replace+"file_path_table");
+    var total_value = document.getElementById(ip_replace+"enddir").innerText;
+    if (total_value != ''){
+        div_obj.innerHTML = total_value;
+    }else{
+        div_obj.innerHTML = '';
+    }
+}
+</script>
+<script>
+function c_dir(obj, type_value){
+    console.log("value_type:"+type_value);
+{#    获取文件夹名称#}
+    var dir_name = obj.innerHTML;
+
+{#    页面字符串#}
+    var html_string = '';
+{#    获取tr控件#}
+    var tr_obj = obj.parentNode.parentNode.parentNode.parentNode.parentNode;
+{#    获取table控件#}
+    var table_obj = tr_obj.parentNode;
+{#    获取IP#}
+    var ip_replace = table_obj.id.replace(/[dirtablebody]/g, '');
+    var ip = document.getElementById(ip_replace+"ip").innerText;
+{#    获取总显示数据控件#}
+    var total_obj = document.getElementById(ip_replace+"enddir");
+{#    获取点击tr的ID#}
+    var tr_id = tr_obj.id;
+    console.log(tr_id);
+{#    获取点击tr的子ID#}
+    var tr_child_id = parseInt(tr_id) + 1;
+    console.log(tr_child_id);
+{#    获取总显示文本#}
+    var total_value = total_obj.innerHTML;
+{#    获取总显示文本拆分列表 以/拆分#}
+    var total_value_list = total_value.split('/');
+{#    获取总显示文本拆分长度#}
+    var total_value_list_len = total_value_list.length;
+{#    覆盖废弃文件夹文本#}
+    if (total_value_list_len >1){
+        if (total_value_list[tr_id] != dir_name){
+            total_value = "";
+            for(var i=0;i<tr_id;i++){
+                total_value += total_value_list[i] + "/";
+            }
+            total_value += dir_name + "/";
+        }
+    }else{
+        total_value = dir_name + "/";
+    }
+    total_obj.innerHTML = total_value;
+
+{#    获取子tr控件#}
+{#    删除旧tr控件#}
+    var old_tr = document.getElementById(tr_child_id);
+    if (old_tr != null) {
+        for (var i = tr_child_id; i < table_obj.childNodes.length + 1; i++) {
+            var o = document.getElementById(i);
+            console.log(o);
+            table_obj.removeChild(o);
+        }
+    }
+
+
+{#    后台获取数据#}
+    if (type_value == 1){
+    $.getJSON('{% url 'script_ajax_linux_file_levels' %}',{'ip':ip,'commander':total_value,'html_random_id':window.r_id},function(di){
+        console.log(di);
+        if (di['commander'] == 'success') {
+            var f_list = di['file'];
+            var d_list = di['dir'];
+            html_string += '<tr id="' + tr_child_id + '"><td><ul class="dirul"><li>';
+            for (var i=0;i<f_list.length;i++){
+                html_string += '<a style="color: #53050E"><b onclick="c_dir(this,0)">';
+                html_string += f_list[i];
+                html_string += '</a></b>';
+            }
+            for (var i=0;i<d_list.length;i++){
+                html_string += '<a style="color: #141AEC"><b onclick="c_dir(this,1)">';
+                html_string += d_list[i];
+                html_string += '</a></b>'
+            }
+        }else{
+            var error_value = di['return_value'];
+            html_string += error_value;
+        }
+
+
+        html_string +='</li></ul></td></tr>';
+        var table_div = document.getElementById(ip_replace+"dirtablebody");
+        table_div.innerHTML += html_string;
+    });
+    }
+
+}
+</script>
+{#linux 文件列表#}
 <script type="text/javascript">
 $(document).ready(function(){
-    var progress_obj = new Object();
+    var progress_obj = {};
     var html_random_id = Math.round(Math.random()*100000);
+    window.r_id = html_random_id;
     console.log(html_random_id);
     {% for websshbase in class_li  %}
         var progress_bar_var{{ websshbase.get_ipreplace }} = $("#{{ websshbase.get_ipreplace }}progress_bar").Progress({
@@ -337,7 +480,7 @@ function ExitWeb(s,html_random_id){
             <td>连接状态</td>
         </tr>
         <tr>
-            <td>{{ websshbase.get_ip }}</td>
+            <td id="{{ websshbase.get_ipreplace }}ip">{{ websshbase.get_ip }}</td>
             <td>{{ websshbase.get_user }}</td>
             <td>{{ websshbase.get_groupname }}</td>
             <td id="{{ websshbase.get_ipreplace }}statu"><a style="font-weight:bold;color: #000000">{{ websshbase.get_connectstatu }}</a></td>
@@ -362,7 +505,8 @@ function ExitWeb(s,html_random_id){
                     {% endfor %}
                 </select>
             </td>
-            <td><label for="{{ websshbase.get_ipreplace }}linux">{{ websshbase.get_ip }}:服务器文件路径<input type="text" id="{{ websshbase.get_ipreplace }}linux"></label> </td>
+{#            <td><label for="{{ websshbase.get_ipreplace }}linux">{{ websshbase.get_ip }}:服务器文件路径<input type="text" id="{{ websshbase.get_ipreplace }}linux"></label> </td>#}
+            <td><label for="{{ websshbase.get_ipreplace }}linux" onclick="add_linux_filepath(this)" id="{{ websshbase.get_ipreplace }}lable" >{{ websshbase.get_ip }}:服务器文件路径</label><div id="{{ websshbase.get_ipreplace }}file_path_table"></div> </td>
         </tr>
         <tr class="linux">
             <td>下载文件</td>

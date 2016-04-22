@@ -193,3 +193,18 @@ def start_shell(request):
 def file_levels(request):
     di = {}
     return render(request, 'test_filelevels.html', di)
+
+
+def ajax_linux_file_levels(request):
+    di = {}
+    ip = request.GET['ip']
+    commander = request.GET['commander']
+    if commander != '/':
+        try:
+            commander = '/' + str(commander).replace("\n", '')
+        except Exception as e:
+            print e
+    html_random_id = request.GET['html_random_id']
+    d = use_factions.data_handle(ip, commander, html_random_id)
+    di.update(use_factions.data_handle(ip, commander, html_random_id))
+    return JsonResponse(di)
