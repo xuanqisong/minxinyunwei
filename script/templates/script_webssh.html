@@ -19,8 +19,8 @@ function add_linux_filepath(obj){
     html_string += '<div class="bdir"><div class="top01-dir"><em class="ok" onclick="ok_click(this)" id="'+ip_replace+'ok">确定</em><b>请选择路径</b></div>';
     html_string += '<div class="mid01-dir"><div class="dirshow" id="'+ip_replace+'show"><i>路径为:</i><ul id="'+ip_replace+'enddir"></ul></div>';
     html_string += '<div class="dirshow1" id="show1">';
-    html_string += '<table border="4" id="'+ip_replace+'dirtable" ><tbody id="'+ ip_replace +'dirtablebody">';
-    html_string += '<tr id="0"><td><ul class="dirul"><li>';
+    html_string += '<table style="width: 100;" border="2" id="'+ip_replace+'dirtable" ><tbody id="'+ ip_replace +'dirtablebody">';
+    html_string += '<tr id="0"><td style="width: 100%;overflow:auto;"><ul class="dirul"><li>';
     $.getJSON('{% url 'script_ajax_linux_file_levels' %}',{'ip':ip,'commander':'/','html_random_id':window.r_id},function(di){
         if (di['commander'] == 'success') {
             var f_list = di['file'];
@@ -97,14 +97,14 @@ function c_dir(obj, type_value){
             for(var i=0;i<tr_id;i++){
                 total_value += total_value_list[i] + "/";
             }
-            if (type_value == 1){
+            if (type_value == 0){
                 total_value += dir_name;
             }else {
                 total_value += dir_name + "/";
             }
         }
     }else{
-        if (type_value ==1){
+        if (type_value ==0){
             total_value += dir_name;
         }else {
             total_value = dir_name + "/";
@@ -131,7 +131,7 @@ function c_dir(obj, type_value){
         if (di['commander'] == 'success') {
             var f_list = di['file'];
             var d_list = di['dir'];
-            html_string += '<tr id="' + tr_child_id + '"><td><ul class="dirul"><li>';
+            html_string += '<tr id="' + tr_child_id + '"><td style="width: 100%;overflow:auto;"><ul class="dirul"><li>';
             for (var i=0;i<f_list.length;i++){
                 html_string += '<a style="color: #53050E"><b onclick="c_dir(this,0)">';
                 html_string += f_list[i];
@@ -511,7 +511,7 @@ function ExitWeb(s,html_random_id){
                 </select>
             </td>
 {#            <td><label for="{{ websshbase.get_ipreplace }}linux">{{ websshbase.get_ip }}:服务器文件路径<input type="text" id="{{ websshbase.get_ipreplace }}linux"></label> </td>#}
-            <td><label for="{{ websshbase.get_ipreplace }}linux" onclick="add_linux_filepath(this)" id="{{ websshbase.get_ipreplace }}lable" >{{ websshbase.get_ip }}:服务器文件路径</label><div id="{{ websshbase.get_ipreplace }}file_path_table"></div> </td>
+            <td><label for="{{ websshbase.get_ipreplace }}linux" onclick="add_linux_filepath(this)" id="{{ websshbase.get_ipreplace }}lable" >{{ websshbase.get_ip }}:服务器文件路径</label><div id="{{ websshbase.get_ipreplace }}file_path_table" ></div> </td>
         </tr>
         <tr class="linux">
             <td>下载文件</td>

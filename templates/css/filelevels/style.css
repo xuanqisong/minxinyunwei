@@ -15,7 +15,7 @@ a:hover{color:#c00;text-decoration:underline;}
 #wrap{width:960px;height:700px;margin:0 auto;position:relative;z-index:11;}
 /*#wrap{width:960px;height:700px;margin:0 auto;position:fixed;z-index:11;margin-left: 100px;margin-top: 100px}*/
 /*.bdir{width:700px;height:320px;z-index:11;display:none;z-index:11;background:#fff;border-bottom:4px solid #ff7400;position:absolute;left:180px;top:50px;}*/
-.bdir{width:700px;height:320px;z-index:11;display:none;background:#fff;border-bottom:4px solid #ff7400;position: static;left:180px;top:50px;}
+.bdir{width:100%;height:320px;z-index:11;display:none;background:#fff;border-bottom:4px solid #ff7400;position: inherit;left:0px;top:8px;}
 .top01-dir{height:27px;line-height:22px;width:100%;background:url(/templates/png/filelevels/bg01.gif) repeat-x left bottom; float:left;text-align:right;border-bottom:1px solid #ccc;}
 .top01-dir b{display:block;float:left;padding-left:27px;background:url(/templates/png/filelevels/icon01.gif) no-repeat 5px 4px;color:#fff;}
 .top01-dir .ok{float:right;cursor:pointer;font-style:normal;padding-right:10px;color:#fff;}
@@ -27,8 +27,9 @@ a:hover{color:#c00;text-decoration:underline;}
 .dirshow ul li{float:left;padding-right:14px;}
 .dirshow ul li .check{margin-right:5px;}
 .dirul{width:100%;float:left;}
-.dirul li{width:320px;float:left;padding-bottom:7px;height:16px;line-height:16px;}
+.dirul li{width:100%;max-width:880px;line-height:16px;}
 .dirul li b{padding:0 6px;cursor:pointer;}
 
-.dirshow1{float:left;}
+/*.dirshow1{float:left;width:100%;max-width:900px;}*/
+.dirshow1{width:100%;float:left;padding-bottom:6px;margin-bottom:10px;}
 .dirshow1 i{font-style:normal;font-weight:bold;color:#ff7400;float:left;padding-right:5px;}
