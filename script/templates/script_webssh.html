@@ -11,15 +11,15 @@
     <link href="/templates/css/base_css.css" rel="stylesheet">
 {#linux 文件列表#}
 <script>
-function add_linux_filepath(obj){
+function add_linux_filepath(obj,div_type){
     var ip_replace = obj.id.replace(/[lable]/g, '');
     var ip = document.getElementById(ip_replace+"ip").innerText;
 
     var html_string = '';
-    html_string += '<div class="bdir"><div class="top01-dir"><em class="ok" onclick="ok_click(this)" id="'+ip_replace+'ok">确定</em><b>请选择路径</b></div>';
+    html_string += '<div class="bdir"><div class="top01-dir"><em class="ok" onclick="ok_click(this,\''+div_type+'\')" id="'+ip_replace+'ok">确定</em><b>请选择路径</b></div>';
     html_string += '<div class="mid01-dir"><div class="dirshow" id="'+ip_replace+'show"><i>路径为:</i><ul id="'+ip_replace+'enddir"></ul></div>';
     html_string += '<div class="dirshow1" id="show1">';
-    html_string += '<table style="width: 100;" border="2" id="'+ip_replace+'dirtable" ><tbody id="'+ ip_replace +'dirtablebody">';
+    html_string += '<table style="width: 100%;" border="2" id="'+ip_replace+'dirtable" ><tbody id="'+ ip_replace +'dirtablebody">';
     html_string += '<tr id="0"><td style="width: 100%;overflow:auto;"><ul class="dirul"><li>';
     $.getJSON('{% url 'script_ajax_linux_file_levels' %}',{'ip':ip,'commander':'/','html_random_id':window.r_id},function(di){
         if (di['commander'] == 'success') {
@@ -44,18 +44,18 @@ function add_linux_filepath(obj){
         html_string +='</li></ul></td></tr>';
         html_string +='</tbody></table>';
         html_string += '</div></div></div>';
-        var table_div = document.getElementById(ip_replace+"file_path_table");
+        var table_div = document.getElementById(ip_replace+"file_path_table"+div_type);
         table_div.innerHTML = html_string;
         $('.bdir').show();
     });
 }
 </script>
 <script>
-function ok_click(obj){
+function ok_click(obj,div_type){
     {#    获取IP#}
     var ip_replace = obj.id.replace(/[ok]/g, '');
     var ip = document.getElementById(ip_replace+"ip").innerText;
-    var div_obj = document.getElementById(ip_replace+"file_path_table");
+    var div_obj = document.getElementById(ip_replace+"file_path_table"+div_type);
     var total_value = document.getElementById(ip_replace+"enddir").innerText;
     if (total_value != ''){
         div_obj.innerHTML = total_value;
@@ -374,9 +374,11 @@ function UpLoadFile(s,html_random_id){
     {% for websshbase in class_li  %}
     $("#{{ websshbase.get_ipreplace }}uploadfile").click(function(){
         var localpath = document.getElementById("{{ websshbase.get_ipreplace }}file_name");
-        var remotepath = document.getElementById("{{ websshbase.get_ipreplace }}linux");
+{#        var remotepath = document.getElementById("{{ websshbase.get_ipreplace }}linux");#}
+        var remotepath = document.getElementById("{{ websshbase.get_ipreplace }}file_path_table1");
+        console.log(remotepath.innerHTML);
         var use_user = document.getElementById("use_user");
-        var str = "{\"single/"+html_random_id+"\":{\"commander\":\"uploadfile\",\"ip\":\"{{websshbase.get_ip}}\",\"localpath\":\""+localpath.value+"\",\"remotepath\":\""+remotepath.value+"\",\"user\":\""+use_user.value+"\"}}";
+        var str = "{\"single/"+html_random_id+"\":{\"commander\":\"uploadfile\",\"ip\":\"{{websshbase.get_ip}}\",\"localpath\":\""+localpath.value+"\",\"remotepath\":\"/"+remotepath.innerHTML+"\",\"user\":\""+use_user.value+"\"}}";
         s.send(str)
 
     });
@@ -395,9 +397,10 @@ function DownLoadFile(s,html_random_id){
     {% for websshbase in class_li  %}
     $("#{{ websshbase.get_ipreplace }}downloadfile").click(function(){
         var localpath = document.getElementById("{{ websshbase.get_ipreplace }}windows");
-        var remotepath = document.getElementById("{{ websshbase.get_ipreplace }}downloadlinux");
+        var remotepath = document.getElementById("{{ websshbase.get_ipreplace }}file_path_table2");
+        console.log(remotepath.innerHTML);
         var use_user = document.getElementById("use_user");
-        var str = "{\"single/"+html_random_id+"\":{\"commander\":\"downloadfile\",\"ip\":\"{{websshbase.get_ip}}\",\"localpath\":\""+localpath.value+"\",\"remotepath\":\""+remotepath.value+"\",\"user\":\""+use_user.value+"\"}}";
+        var str = "{\"single/"+html_random_id+"\":{\"commander\":\"downloadfile\",\"ip\":\"{{websshbase.get_ip}}\",\"localpath\":\""+localpath.value+"\",\"remotepath\":\"/"+remotepath.innerHTML+"\",\"user\":\""+use_user.value+"\"}}";
         s.send(str)
 
     });
@@ -511,12 +514,13 @@ function ExitWeb(s,html_random_id){
                 </select>
             </td>
 {#            <td><label for="{{ websshbase.get_ipreplace }}linux">{{ websshbase.get_ip }}:服务器文件路径<input type="text" id="{{ websshbase.get_ipreplace }}linux"></label> </td>#}
-            <td><label for="{{ websshbase.get_ipreplace }}linux" onclick="add_linux_filepath(this)" id="{{ websshbase.get_ipreplace }}lable" >{{ websshbase.get_ip }}:服务器文件路径</label><div id="{{ websshbase.get_ipreplace }}file_path_table" ></div> </td>
+            <td><label for="{{ websshbase.get_ipreplace }}linux" onclick="add_linux_filepath(this,'1')" id="{{ websshbase.get_ipreplace }}lable" >{{ websshbase.get_ip }}:服务器文件路径</label><div id="{{ websshbase.get_ipreplace }}file_path_table1" ></div> </td>
         </tr>
         <tr class="linux">
             <td>下载文件</td>
             <td><label for="{{ websshbase.get_ipreplace }}windows">文件名<input type="text" id="{{ websshbase.get_ipreplace }}windows"/></label><td>
-            <td><label for="{{ websshbase.get_ipreplace }}downloadlinux">{{ websshbase.get_ip }}:服务器文件路径<input type="text" id="{{ websshbase.get_ipreplace }}downloadlinux"/></label></td>
+{#            <td><label for="{{ websshbase.get_ipreplace }}downloadlinux">{{ websshbase.get_ip }}:服务器文件路径<input type="text" id="{{ websshbase.get_ipreplace }}downloadlinux"/></label></td>#}
+            <td><label onclick="add_linux_filepath(this,'2')" for="{{ websshbase.get_ipreplace }}lable" id="{{ websshbase.get_ipreplace }}lable">{{ websshbase.get_ip }}:服务器文件路径</label><div id="{{ websshbase.get_ipreplace }}file_path_table2" ></div></td>
         </tr>
         <tr id="{{ websshbase.get_ipreplace }}uploadfiletr" style="display: none">
             <td colspan="4">

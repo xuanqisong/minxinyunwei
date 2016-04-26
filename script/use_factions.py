@@ -503,7 +503,7 @@ def upload_download_file(ip, local_path, remote_path, clients, user, file_type, 
     try:
         lo_path = get_dir_list(path + "/servicefilemanager")[local_path]
     except Exception as e:
-        pass
+        lo_path = path + "/servicefilemanager/" + user + "/" + local_path
 
     monitor = monitor_random_id_di[html_random_id]
     if not monitor.is_alive():
@@ -517,6 +517,9 @@ def upload_download_file(ip, local_path, remote_path, clients, user, file_type, 
                     # lo_path = path + "/servicefilemanager/" + user + "/" + str(ip_name).replace('.', '') + local_path
                     lo_path = path + "/servicefilemanager/linuxdownloadfiledir/" + user + "/" + str(ip_name).replace(
                         '.', '') + "_" + local_path
+                else:
+                    remote_path = remote_path + local_path
+
                 file_send_receive.local_path = lo_path
                 file_send_receive.remote_path = remote_path
                 file_send_receive.file_type = file_type
@@ -530,6 +533,8 @@ def upload_download_file(ip, local_path, remote_path, clients, user, file_type, 
                 # lo_path = path + "/servicefilemanager/" + user + "/" + str(ip).replace('.', '') + local_path
                 lo_path = path + "/servicefilemanager/linuxdownloadfiledir/" + user + "/" + str(ip).replace(
                     '.', '') + "+" + local_path
+            else:
+                remote_path = remote_path + local_path
             monitor.thread_file_send_receive[ip].local_path = lo_path
             monitor.thread_file_send_receive[ip].remote_path = remote_path
             monitor.thread_file_send_receive[ip].file_type = file_type
